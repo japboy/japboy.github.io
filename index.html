@@ -28,9 +28,12 @@
         display: list-item;
       }
       ul li:before {
-        content: '✔	';
+        content: '✔ ';
       }
-      p { text-indent: 1em; }
+      p {
+        text-indent: 1em;
+        text-align: justify;
+      }
       body {
         position: absolute;
         width: 100%;
@@ -51,7 +54,7 @@
         z-index: 1;
         font-family: 'Sue Ellen Francisco', serif;
         text-align: center;
-        text-shadow: 0 0 10px DimGray;
+        text-shadow: 0 0 10px rgb(105,105,105);
       }
       header h1{
         line-height: 200%;
@@ -65,7 +68,7 @@
         margin-top: -290px;
         margin-left: -310px;
         padding: 20px;
-        opacity: 0;
+        border: 1px solid rgb(220,20,60);
         position: absolute;
         top: 50%;
         left: 50%;
@@ -74,11 +77,26 @@
         z-index: -1;
         line-height: 180%;
         color: rgb(0,0,0);
-        background-color: rgba(255,255,255,0.7);
+        background-color: rgba(255,255,255,0.8);
+        background-image:
+          -moz-linear-gradient(
+            45deg,
+            rgba(220,20,60,0.8),
+            rgba(255,255,255,0.8)
+          );
+        background-image:
+          -webkit-gradient(
+            linear,
+            left bottom,
+            right top,
+            color-stop(0.00, rgba(220,20,60,0.8)),
+            color-stop(1.00, rgba(255,255,255,0.8))
+          );
         font-family: 'mplus-1p-regular', sans-serif;
         border-radius: 5px;
         box-shadow: 0 0 10px rgb(220,20,60);
-        -webkit-transition: opacity .5s linear;
+        opacity: 0;
+        -webkit-transition: opacity 0.5s linear;
       }
       article#main:target {
         z-index: 2;

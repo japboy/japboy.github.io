@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="100"
+   height="30"
+   id="svg2"
+   inkscape:version="0.48.1 r9760"
+   sodipodi:docname="tape.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1347"
+     inkscape:window-height="892"
+     id="namedview11"
+     showgrid="false"
+     inkscape:zoom="4.79"
+     inkscape:cx="-23.277661"
+     inkscape:cy="15"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs4">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect3758"
+       is_visible="true" />
+    <linearGradient
+       id="linearGradient3757">
+      <stop
+         id="stop3759"
+         style="stop-color:#f5f5f5;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop3761"
+         style="stop-color:#f5f5f5;stop-opacity:0"
+         offset="1" />
+    </linearGradient>
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect2987" />
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Yu I.</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(0,-1022.3622)"
+     id="layer1"
+     style="fill:#dcdcdc;fill-opacity:0.58823532;stroke-width:0.10000000000000001;stroke-miterlimit:4;stroke-dasharray:none;opacity:0.90000000000000002">
+    <path
+       d="m 1.4224751,1.6927454 96.5860599,-0.284495 -4.125178,3.5561877 1.991465,2.9871977 -1.991465,3.4139402 2.418208,5.405406 -5.120911,0.426742 2.987198,1.13798 -2.84495,3.556188 3.698435,1.849218 0.284495,1.70697 1.849218,1.849217 L 95.874822,28.29303 1.2802276,28.435277 2.9871977,26.58606 2.7027027,22.460882 7.1123755,21.322902 3.4139403,20.184922 1.1379801,18.762447 5.2631579,18.051209 2.4182077,17.055477 4.9786629,15.064011 4.8364154,12.930299 2.2759602,9.5163585 1.7069701,7.0981508 C 2.3353382,6.6890417 2.9520761,6.2620694 3.5561878,5.8179232 4.2364754,5.3177721 4.9007504,4.7958418 5.5476529,4.2532006 L 2.2759602,3.257468 1.4224751,1.6927454"
+       transform="translate(0,1022.3622)"
+       id="path2985"
+       style="opacity:0.80000000000000004;fill:#dcdcdc;fill-opacity:0.58823532000000001;stroke:#000000;stroke-width:0.2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0" />
+  </g>
+</svg>

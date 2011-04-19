@@ -11,29 +11,115 @@
      href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
     <link rel="stylesheet" type="text/css"
      href="http://fonts.googleapis.com/css?family=Sue+Ellen+Francisco">
+    <link rel="stylesheet" type="text/css"
+     href="http://mplus-fonts.sourceforge.jp/webfonts/mplus_webfonts.css" />
 
     <style type="text/css">
-      p {
-        margin-top: -36px;
+      a {
+        color: rgb(106,90,205);
+        text-decoration: none;
+      }
+      a:hover {
+        color: rgb(220,60,20);
+      }
+      ul { margin-bottom: 1em; }
+      ul li {
+        margin-left: 1em;
+        display: list-item;
+      }
+      ul li:before {
+        content: '✔	';
+      }
+      p { text-indent: 1em; }
+      body {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        background-image: url('./image/heart.svg');
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+      header {
+        margin-top: -52px;
         margin-left: -160px;
         position: absolute;
         top: 50%;
         left: 50%;
         width: 320px;
-        height: 72px;
-        line-height: 200%;
+        height: 104px;
+        z-index: 1;
         font-family: 'Sue Ellen Francisco', serif;
-        font-size: 36px;
         text-align: center;
-        text-shadow: 0px 0px 10px DimGray;
+        text-shadow: 0 0 10px DimGray;
+      }
+      header h1{
+        line-height: 200%;
+        font-size: 36px;
+      }
+      header p {
+        line-height: 150%;
+        font-size: 21px;
+      }
+      article {
+        margin-top: -290px;
+        margin-left: -310px;
+        padding: 20px;
+        opacity: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 580px;
+        height: 540px;
+        z-index: -1;
+        line-height: 180%;
+        color: rgb(0,0,0);
+        background-color: rgba(255,255,255,0.7);
+        font-family: 'mplus-1p-regular', sans-serif;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgb(220,20,60);
+        -webkit-transition: opacity .5s linear;
+      }
+      article#main:target {
+        z-index: 2;
+        opacity: 1;
+      }
+      article#front:target {
+        z-index: -1;
+        opacity: 0;
+      }
+      article #temp {
+        position: absolute;
+        right: 20px;
+        bottom: 20px;
+      }
+      article h1 {
+        line-height: 200%;
+        font-size: 36px;
       }
     </style>
   </head>
 
   <body>
-    <section>
-      <p>I have nothing but love for you.</p>
-    </section>
+    <header>
+      <h1>HTML5 &amp; CSS3 Rules</h1>
+
+      <p><a href="#main">Yes, we've already had a future in our hands.</a></p>
+    </header>
+
+    <article id="main">
+      <h1>Some tryouts</h1>
+
+      <ul>
+        <li><a href="./404.html">404 Not Found</a></li>
+        <li>Still work in progress...</li>
+      </ul>
+
+      <p>目指したいのは <a href="http://hail2u.github.com">hail2u.github.com</a> の精神的 fork なページ。アイデアの無さはピカイチなので、たぶん誰かの劣化コピーが中心になると思ふ。</p>
+      <p>しかし、HTML は 1 行当たり 80 字の縛りで書こうと思うと無理すぎて死ねる。そんなところで思うのが、HTML はテンプレートと割り切って、コンテンツは JSON に収納して、XMLHttpRequest で読み込んでやるっていう方法。これなら 80 字縛りでも行けそうな気がする。しかしそうするとセマンティック web との互換性が... やっぱサーバサイドスクリプトで... ってそれなら予め HTML にコンテンツ書き込んどけば... あれ? ループ?</p>
+
+      <p id="temp"><a href="#front">Close</a></p>
+    </article>
 
     <footer>
       <a href="http://github.com/japboy">

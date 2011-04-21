@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="rights-standard" content="pd">
+
+    <title>Picasa-like Wallpaper</title>
+
+    <link rel="author" href="http://twitter.com/japboy" title="Yu I.">
+    <link rel="stylesheet" type="text/css"
+     href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+
+     <style type="text/css">
+       article {
+         position: absolute;
+         width: 100%;
+         height: 100%;
+        overflow: hidden;
+      }
+      article p {
+        padding: 10px;
+        border: 3px solid rgb(105,105,105);
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 13;
+        background-color: rgb(255,255,255);
+        font-family: sans-serif;
+        border-radius: 10px;
+      }
+      article section {
+        margin-top: -88px;
+        margin-left: -118px;
+        padding: 10px 10px 50px 10px;
+        border: 1px solid rgb(105,105,105);
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background-color: rgb(255,255,255);
+        -webkit-transition: 0.3s ease-in-out;
+      }
+
+      article section#memory1 {
+        top: 10%;
+        left: 25%;
+        z-index: 1;
+        -o-transform: rotate(6deg);
+        -moz-transform: rotate(6deg);
+        -webkit-transform: rotate(6deg);
+      }
+      article section#memory2 {
+        top: 36%;
+        left 68%;
+        z-index: 2;
+        -o-transform: rotate(5deg);
+        -moz-transform: rotate(5deg);
+        -webkit-transform: rotate(5deg);
+      }
+      article section#memory3 {
+        top: 70%;
+        left: 50%;
+        z-index: 3;
+        -o-transform: rotate(4deg);
+        -moz-transform: rotate(4deg);
+        -webkit-transform: rotate(4deg);
+      }
+      article section#memory4 {
+        top: 50%;
+        left: 90%;
+        z-index: 4;
+        -o-transform: rotate(3deg);
+        -moz-transform: rotate(3deg);
+        -webkit-transform: rotate(3deg);
+      }
+      article section#memory5 {
+        top: 20%;
+        left: 70%;
+        z-index: 5;
+        -o-transform: rotate(2deg);
+        -moz-transform: rotate(2deg);
+        -webkit-transform: rotate(2deg);
+      }
+      article section#memory6 {
+        top: 25%;
+        left: 40%;
+        z-index: 6;
+        -o-transform: rotate(1deg);
+        -moz-transform: rotate(1deg);
+        -webkit-transform: rotate(1deg);
+      }
+      article section#memory7 {
+        top: 32%;
+        left: 65%;
+        z-index: 7;
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+      }
+      article section#memory8 {
+        top: 70%;
+        left: 80%;
+        z-index: 8;
+        -o-transform: rotate(-1deg);
+        -moz-transform: rotate(-1deg);
+        -webkit-transform: rotate(-1deg);
+      }
+      article section#memory9 {
+        top: 90%;
+        left: 40%;
+        z-index: 9;
+        -o-transform: rotate(-2deg);
+        -moz-transform: rotate(-2deg);
+        -webkit-transform: rotate(-2deg);
+      }
+      article section#memory10 {
+        top: 60%;
+        left: 30%;
+        z-index: 9;
+        -o-transform: rotate(-3deg);
+        -moz-transform: rotate(-3deg);
+        -webkit-transform: rotate(-3deg);
+      }
+      article section#memory11 {
+        top: 96%;
+        left: 21%;
+        z-index: 9;
+        -o-transform: rotate(-4deg);
+        -moz-transform: rotate(-4deg);
+        -webkit-transform: rotate(-4deg);
+      }
+      article section#memory1:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory2:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory3:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory4:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory5:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory6:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory7:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory8:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory9:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory10:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+      article section#memory11:hover {
+        top: 50%;
+        left: 50%;
+        z-index: 12;
+        box-shadow: 2px 2px 20px rgb(105,105,105);
+        -o-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: scale(2.0);
+        -moz-transform: scale(2.0);
+        -webkit-transform: scale(2.0);
+      }
+    </style>
+  </head>
+
+  <body>
+    <article>
+      <section id="memory1">
+        <img src="http://lorempixum.com/300/300/abstract/" alt="">
+      </section>
+
+      <section id="memory2">
+        <img src="http://lorempixum.com/300/300/food" alt="">
+      </section>
+
+      <section id="memory3">
+        <img src="http://lorempixum.com/300/300/people" alt="">
+      </section>
+
+      <section id="memory4">
+        <img src="http://lorempixum.com/300/300/technics" alt="">
+      </section>
+
+      <section id="memory5">
+        <img src="http://lorempixum.com/300/300/animals" alt="">
+      </section>
+
+       <section id="memory6">
+        <img src="http://lorempixum.com/300/300/nightlife" alt="">
+      </section>
+
+       <section id="memory7">
+        <img src="http://lorempixum.com/300/300/nature" alt="">
+      </section>
+
+       <section id="memory8">
+        <img src="http://lorempixum.com/300/300/transport" alt="">
+      </section>
+
+       <section id="memory9">
+        <img src="http://lorempixum.com/300/300/city" alt="">
+      </section>
+
+       <section id="memory10">
+        <img src="http://lorempixum.com/300/300/fashion" alt="">
+      </section>
+
+       <section id="memory11">
+        <img src="http://lorempixum.com/300/300/sports" alt="">
+      </section>
+
+      <p>Pictures provided by <a href="http://lorempixum.com/">lorempixum</a></p>
+    </article>
+  </body>
+</html>

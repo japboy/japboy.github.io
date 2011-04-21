@@ -36,9 +36,9 @@
       }
       body {
         position: absolute;
+        z-index: 0;
         width: 100%;
         height: 100%;
-        z-index: 0;
         background-image: url('./image/heart.svg');
         background-repeat: no-repeat;
         background-position: center;
@@ -49,9 +49,9 @@
         position: absolute;
         top: 50%;
         left: 50%;
+        z-index: 1;
         width: 320px;
         height: 104px;
-        z-index: 1;
         font-family: 'Sue Ellen Francisco', serif;
         text-align: center;
         text-shadow: 0 0 10px rgb(105,105,105);
@@ -64,56 +64,99 @@
         line-height: 150%;
         font-size: 21px;
       }
-      article {
-        margin-top: -290px;
-        margin-left: -310px;
-        padding: 20px;
-        border: 1px solid rgb(220,20,60);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 580px;
-        height: 540px;
-        z-index: -1;
-        line-height: 180%;
-        color: rgb(0,0,0);
-        background-color: rgba(255,255,255,0.8);
-        background-image:
-          -moz-linear-gradient(
-            45deg,
-            rgba(220,20,60,0.8),
-            rgba(255,255,255,0.8)
-          );
-        background-image:
-          -webkit-gradient(
-            linear,
-            left bottom,
-            right top,
-            color-stop(0.00, rgba(220,20,60,0.8)),
-            color-stop(1.00, rgba(255,255,255,0.8))
-          );
-        font-family: 'mplus-1p-regular', sans-serif;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgb(220,20,60);
-        opacity: 0;
-        -webkit-transition: opacity 0.5s linear;
-      }
-      article#main:target {
-        z-index: 2;
-        opacity: 1;
-      }
-      article#front:target {
-        z-index: -1;
-        opacity: 0;
-      }
-      article #temp {
-        position: absolute;
-        right: 20px;
-        bottom: 20px;
-      }
       article h1 {
         line-height: 200%;
-        font-size: 36px;
+        font-family: 'Sue Ellen Francisco', serif;
+        font-size: 48px;
+        -webkit-transform: rotate(-3deg);
+      }
+      article p.nav {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+      article#front {
+        margin-top: -240px;
+        padding: 10px 1.5% 10px 1.5%;
+        border-top: 1px solid rgb(220,200,210);
+        border-bottom: 1px solid rgb(220,200,210);
+        display: none;
+        position: absolute;
+        top: 50%;
+        z-index: -1;
+        width: 97%;
+        height: 460px;
+        line-height: 180%;
+        overflow: auto;
+        color: rgb(0,0,0);
+        background-color: rgba(255,255,255,0.8);
+        background-image: url('./image/leaf.svg');
+        font-family: 'mplus-1p-regular', sans-serif;
+        font-size: 16px;
+        -webkit-transition: 0.2s ease-in-out;
+      }
+      article#front:target {
+        display: block;
+        z-index: 2;
+      }
+      article#front section#tryouts {
+        position: absolute;
+        bottom: 10px;
+      }
+      article#front section#tryouts dl {
+        margin-right: 10px;
+        float: left;
+      }
+      article#front section#tryouts dl dt img {
+        margin-bottom: 5px;
+        border: 1px solid rgb(105,105,105);
+        display: block;
+        border-radius: 3px;
+      }
+      article#front section#tryouts dl dd {
+        padding: 5px;
+        border: 3px solid rgb(105,105,105);
+        display: none;
+        position: absolute;
+        top: -50px;
+        background-color: rgb(255,255,255);
+        border-radius: 10px;
+      }
+      article#front section#tryouts dl dd:before {
+        border-top-width: 16px;
+        border-right-width: 8px;
+        border-bottom-width: 0;
+        border-left-width: 8px;
+        border-color: rgb(105,105,105) transparent;
+        border-style: solid;
+        display: block;
+        position: absolute;
+        bottom: -16px;
+        left: 45px;
+        width: 0;
+        height: 0;
+        content: '';
+      }
+      article#front section#tryouts dl dd:after {
+        border-top-width: 16px;
+        border-right-width: 8px;
+        border-bottom-width: 0;
+        border-left-width: 8px;
+        border-color: rgb(255,255,255) transparent;
+        border-style: solid;
+        display: block;
+        position: absolute;
+        bottom: -10px;
+        left: 45px;
+        width: 0;
+        height: 0;
+        content: '';
+      }
+      article#front section#tryouts dl:hover dd {
+        display: block;
+      }
+      article#front section#temp {
+        margin-left: 50%;
       }
     </style>
   </head>
@@ -122,21 +165,49 @@
     <header>
       <h1>HTML5 &amp; CSS3 Rules</h1>
 
-      <p><a href="#main">Yes, we've already had a future in our hands.</a></p>
+      <p><a href="#front">Yes, we've already had a future in our hands.</a></p>
     </header>
 
-    <article id="main">
+    <article id="front">
       <h1>Some tryouts</h1>
 
-      <ul>
-        <li><a href="./404.html">404 Not Found</a></li>
-        <li>Still work in progress...</li>
-      </ul>
+      <section id="tryouts">
+        <dl>
+          <dt>
+            <a href="./404.html">
+              <img src="./image/tryout-01.png" alt="" width="200" height="120">
+              404 Not Found
+            </a>
+          </dt>
+          <dd>とりあえず作った。セロハンテープ作るの楽しかった。</dd>
+        </dl>
 
-      <p>目指したいのは <a href="http://hail2u.github.com">hail2u.github.com</a> の精神的 fork なページ。アイデアの無さはピカイチなので、たぶん誰かの劣化コピーが中心になると思ふ。</p>
-      <p>しかし、HTML は 1 行当たり 80 字の縛りで書こうと思うと無理すぎて死ねる。そんなところで思うのが、HTML はテンプレートと割り切って、コンテンツは JSON に収納して、XMLHttpRequest で読み込んでやるっていう方法。これなら 80 字縛りでも行けそうな気がする。しかしそうするとセマンティック web との互換性が... やっぱサーバサイドスクリプトで... ってそれなら予め HTML にコンテンツ書き込んどけば... あれ? ループ?</p>
+        <dl>
+          <dt>
+            <a href="./picasa-like-wallpaper.html">
+              <img src="./image/tryout-02.png" alt="" width="200" height="120">
+              Picasa-like Wallpaper
+            </a>
+          </dt>
+          <dd>挙動が... でも CSS だけでもここまでっ..!</dd>
+        </dl>
 
-      <p id="temp"><a href="#front">Close</a></p>
+        <dl>
+          <dt>
+            <a>
+              <img alt="" width="200" height="120">
+              Work in progress
+            </a>
+          </dt>
+          <dd>鋭意製作中! 的な。</dd>
+        </dl>
+      </section>
+
+      <section id="temp">
+        <p>なんか色々やってたら全然シンプルじゃなくなってしまった。まったく可搬性のないその場しのぎな CSS だ。まぁいいか。 What You See Is What You Want! だ。</p>
+      </section>
+
+      <p class="nav"><a href="#">Close</a></p>
     </article>
 
     <footer>

@@ -44,10 +44,11 @@
         -moz-transform: rotate(3deg);
         -webkit-transform: rotate(3deg);
       }
-      section img {
+      section:before {
         position: absolute;
         top: -10px;
         left: -20px;
+        content: url("./image/tape.svg");
         -o-transform: rotate(-15deg);
         -moz-transform: rotate(-15deg);
         -webkit-transform: rotate(-15deg);
@@ -70,7 +71,6 @@
 
   <body>
     <section>
-      <img src="./image/tape.svg" alt="">
       <h1>Not Found</h1>
 
       <p>Now you lost your way, but no worries.</p>

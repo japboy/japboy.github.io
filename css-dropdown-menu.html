@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="rights-standard" content="pd">
+
+    <title>CSS Dropdown Menu</title>
+
+    <link rel="author" href="http://twitter.com/japboy" title="Yu I.">
+    <link rel="stylesheet" type="text/css"
+     href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+
+    <style type="text/css">
+      body {
+        padding: 50px;
+      }
+      h1 {
+        line-height: 200%;
+        font-size: 36px;
+      }
+      ul#dropdown {
+        padding: 5px;
+        height: 25.6px; /* 16px * 160% */
+        background-color: rgb(220,220,220);
+        border-radius: 5px;
+      }
+      ul#dropdown > li {
+        margin-right: 1em;
+        float: left;
+        line-height: 160%;
+        font-size: 16px;
+      }
+      ul#dropdown > li:before {
+        content: "\00bb ";
+      }
+      ul#dropdown > li * {
+        line-height: 140%;
+        font-size: 14px;
+      }
+      ul#dropdown > li li {
+        padding-right: 5px;
+        padding-left: 5px;
+        width: 102px; /* 14px * 8em - 5px -5px */
+        height: 19.6px; /* 14px * 140% */
+      }
+      ul#dropdown > li li:nth-child(even) {
+        background-color: rgb(220,220,220);
+      }
+      ul#dropdown > li li:nth-child(odd) {
+        background-color: rgb(240,240,240);
+      }
+      ul#dropdown li > ul {
+        display: none;
+      }
+      ul#dropdown li:hover > ul {
+        border: 1px solid rgb(105,105,105);
+        position: absolute;
+        display: block;
+      }
+      ul#dropdown > li > ul ul {
+        margin-top: -19.6px; /* 14px * 140% */
+        margin-left: 102px; /* 14px * 8em - 5px -5px */
+      }
+    </style>
+  </head>
+
+  <body>
+    <section>
+      <h1>Heading</h1>
+
+      <ul id="dropdown">
+        <li>Home</li>
+        <li>File
+          <ul>
+            <li>New</li>
+            <li>Recent &gt;
+              <ul>
+                <li>File A</li>
+                <li>File B</li>
+              </ul>
+            </li>
+            <li>Close</li>
+          </ul>
+        </li>
+        <li>Edit
+          <ul>
+            <li>Undo</li>
+            <li>Redo</li>
+            <li>Copy</li>
+            <li>Cut</li>
+            <li>Paste</li>
+          </ul>
+        </li>
+        <li>Window
+          <ul>
+            <li>Minimize</li>
+            <li>Zoom</li>
+            <li>Select &gt;
+              <ul>
+                <li>Window 1</li>
+                <li>Window 2</li>
+                <li>Window 3</li>
+              </ul>
+            </li>
+            <li>Bring to Front</li>
+          </ul>
+        </li>
+        <li>Help
+          <ul>
+            <li>Version</li>
+            <li>About</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+  </body>
+</html>

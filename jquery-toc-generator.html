@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="rights-standard" content="pd">
+
+    <title>jQuery TOC Generator</title>
+
+    <link rel="author" href="http://twitter.com/japboy" title="Yu I.">
+    <link rel="stylesheet" type="text/css"
+     href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+
+    <style type="text/css">
+      body {
+        padding: 50px;
+      }
+      h1 {
+        line-height: 200%;
+        font-size: 36px;
+      }
+      h2 {
+        line-height: 200%;
+        font-size: 28px;
+      }
+      h3 {
+        line-height: 200%;
+        font-size: 21px;
+      }
+      p {
+        margin-bottom: 1em;
+        text-align: justify;
+      }
+      pre {
+        margin-bottom: 1em;
+        padding: 10px;
+        background-color: rgb(240,240,240);
+        font-family: monospace;
+        font-size: smaller;
+      }
+      ol li {
+        margin-left: 1em;
+        list-style-type: decimal;
+      }
+      ul li {
+        margin-left: 1em;
+        list-style-type: disc;
+      }
+      strong {
+        font-family: sans-serif;
+        font-weight: bolder;
+      }
+
+      .toc {
+        position: absolute;
+        right: 50px;
+        font-family: sans-serif;
+        font-size: 14px;
+      }
+      #toc {
+        padding: 10px;
+        background-color: rgb(240,240,240);
+      }
+      #toc p {
+        margin-bottom: 0;
+      }
+    </style>
+
+    <script type="text/javascript" charset="UTF-8"
+     src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
+    </script> 
+    <script type="text/javascript">
+      $(function () {
+        $("#toc").bind("click", function () {
+          /**
+           * TOC generator
+           * @see http://www.mikage.to/jquery/js/jquery_site.js
+           */
+          var assigned_level = 0,
+              current_level = 0,
+              id_number = 1,
+              parent_node = "article",
+              toc_html = "";
+
+          $(parent_node + " *").each(function () {
+            if (this.nodeName.length === 2 && this.nodeName.charAt(0) === "H") {
+              $(this).attr("class", "heading");
+            }
+          });
+
+          $(".heading").each(function () {
+            current_level = this.nodeName.charAt(1);
+
+            $(this).attr("id", "toc-" + id_number);
+
+            // Close a list if a same level list follows.
+            if (assigned_level !== current_level - 1) {
+              toc_html += "</li>"
+            }
+
+            // Open parent lists if a child list follows.
+            while (assigned_level < current_level) {
+              toc_html += "<ol>";
+              assigned_level += 1;
+            }
+
+            // Close child lists and the parent list if
+            // the same level parent list follows.
+            while (assigned_level > current_level) {
+              toc_html += "</ol></li>";
+              assigned_level -= 1;
+            }
+
+            toc_html += 
+              '<li><a href="#' + this.id + '">' + $(this).text() + "</a>";
+            id_number += 1;
+          });
+
+          // Close everything
+          while (assigned_level > 0) {
+            toc_html += "</li></ol>";
+            assigned_level -= 1;
+          }
+
+          $(".heading").append('<a href="#toc" class="toc">Back to TOC</a>');
+          $("#toc").unbind("click");
+          $("#toc").html(toc_html);
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <header>
+      <h1>jQuery TOC Generator</h1>
+
+      <section id="toc">
+        <p><strong>Click here</strong> to generate the table of contents for this page.</p>
+      </section>
+    </header>
+
+    <article>
+      <h1>How to generate TOC in JavaScript</h1>
+
+      <p>First of all, the HTML code that I want to generate is something like this:</p>
+
+<pre>
+&lt;ol&gt;
+  &lt;li&gt;
+    Heading 1
+    &lt;ol&gt;
+      &lt;li&gt;
+        Heading 1-1
+        &lt;ol&gt;
+          &lt;li&gt;
+            Heading 1-1-1
+          &lt;/li&gt;
+          &lt;li&gt;
+            Heading 1-1-2
+          &lt;/li&gt;
+          &lt;li&gt;
+            Heading 1-1-3
+          &lt;/li&gt;
+        &lt;/ol&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        Heading 1-2
+      &lt;/li&gt;
+      &lt;li&gt;
+        Heading 1-3
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    Heading 2
+  &lt;/li&gt;
+  &lt;li&gt;
+    Heading 3
+  &lt;/li&gt;
+&lt;/ol&gt;
+</pre>
+
+      <p>Importance is that &lt;li&gt; element includes &lt;ol&gt; element. This sometimes is misunderstood.</p>
+
+      <h2>Compatibility with HTML 5</h2>
+
+      <p>I don't think this script works with HTML 5 as we expect or hope so, because HTML 5 supports recursive &lt;h1&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;h4&gt;, &lt;h5&gt;, &lt;h6&gt;. We can use &lt;h1&gt; after &lt;h1&gt; if it is inside of nested &lt;section&gt; or inside of something like that. This probably cause generating broken TOC lists.</p>
+
+      <h2>Hardest parts</h2>
+
+      <ul>
+        <li>Closing &lt;/li&gt; if the list has children</li>
+        <li>Starting new &lt;li&gt; right after closing children of previous lists</li>
+      </ul>
+
+      <h1>Test Heading 2</h1>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+
+      <h2>Test Heading 2-1</h2>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+
+      <h2>Test Heading 2-2</h2>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+
+      <h3>Test Heading 2-2-1</h3>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+
+      <h3>Test Heading 2-2-2</h3>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+
+      <h1>Test Heading 3</h1>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+
+      <h2>Test Heading 3-1</h2>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+
+      <h3>Test Heading 3-1-1</h3>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+
+      <h3>Test Heading 3-1-2</h3>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+
+      <h2>Test Heading 3-2</h2>
+
+      <p>Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? Bla bla bla. Bla bla bla! Bla bla bla? </p>
+    </article>
+  </body>
+</html>

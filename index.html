@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="rights-standard" content="pd">
 
-    <title>git.youck.org</title>
+    <title>lab.youck.org</title>
 
     <link rel="author" href="http://twitter.com/japboy" title="Yu I.">
     <link rel="stylesheet" type="text/css"
@@ -15,6 +15,10 @@
      href="http://mplus-fonts.sourceforge.jp/webfonts/mplus_webfonts.css">
 
     <style type="text/css">
+      /**
+       * Basic design
+       * Alphabetical element order
+       */
       a {
         color: rgb(106,90,205);
         text-decoration: none;
@@ -22,7 +26,9 @@
       a:hover {
         color: rgb(220,60,20);
       }
-      ul { margin-bottom: 1em; }
+      ul {
+        margin-bottom: 1em;
+      }
       ul li {
         margin-left: 1em;
         display: list-item;
@@ -34,14 +40,21 @@
         text-indent: 1em;
         text-align: justify;
       }
+
+      /**
+       * Page design
+       * Appearance order in page
+       */
       body {
         position: absolute;
         z-index: 0;
         width: 100%;
         height: 100%;
+        color: rgb(0,0,0);
+        background-color: rgb(255,255,255);
         background-image: url("./image/heart.svg");
         background-repeat: no-repeat;
-        background-position: center;
+        background-position: 50% 50%;
       }
       header {
         margin-top: -52px;
@@ -56,7 +69,7 @@
         text-align: center;
         text-shadow: 0 0 10px rgb(105,105,105);
       }
-      header h1{
+      header h1 {
         line-height: 200%;
         font-size: 36px;
       }
@@ -65,15 +78,19 @@
         font-size: 21px;
       }
       article h1 {
+        position: fixed;
         line-height: 200%;
         font-family: "Sue Ellen Francisco", serif;
         font-size: 48px;
         -webkit-transform: rotate(-3deg);
       }
       article p.nav {
-        position: absolute;
-        top: 10px;
-        right: 10px;
+        position: fixed;
+        right: 1.5%;
+      }
+      article p#comment {
+        position: fixed;
+        top: 40%;
       }
       article#front {
         margin-top: -240px;
@@ -101,28 +118,37 @@
       }
       article#front section#tryouts {
         position: absolute;
-        bottom: 10px;
+        bottom: 20px;
+        left: 1.5%;
+        width: 1500px; /* (240px + 10px) * 6 */
+        height: 140px;
       }
       article#front section#tryouts dl {
-        margin-right: 10px;
+        padding-right: 10px;
+        padding-left: 10px;
         float: left;
+        width: 230px;
+        height: 143px; /* 120px + 5px + 16px + 1px + 1px */
       }
       article#front section#tryouts dl dt img {
         margin-bottom: 5px;
         border: 1px solid rgb(105,105,105);
         display: block;
-        border-radius: 3px;
+        border-radius: 5px;
       }
       article#front section#tryouts dl dd {
+        display: none;
+      }
+      article#front section#tryouts dl:hover dd {
         padding: 5px;
         border: 3px solid rgb(105,105,105);
-        display: none;
+        display: block;
         position: absolute;
         top: -50px;
         background-color: rgb(255,255,255);
         border-radius: 10px;
       }
-      article#front section#tryouts dl dd:before {
+      article#front section#tryouts dl:hover dd:before {
         border-top-width: 16px;
         border-right-width: 8px;
         border-bottom-width: 0;
@@ -137,7 +163,7 @@
         height: 0;
         content: "";
       }
-      article#front section#tryouts dl dd:after {
+      article#front section#tryouts dl:hover dd:after {
         border-top-width: 16px;
         border-right-width: 8px;
         border-bottom-width: 0;
@@ -152,13 +178,33 @@
         height: 0;
         content: "";
       }
-      article#front section#tryouts dl:hover dd {
-        display: block;
-      }
-      article#front section#temp {
-        margin-left: 50%;
-      }
     </style>
+
+    <script type="text/javascript" charset="UTF-8"
+     src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
+    </script>
+    <script type="text/javascript" charset="UTF-8"
+     src="./script/jquery.mousewheel.min.js">
+    </script>
+    <script type="text/javascript">
+      $(function () {
+        $('article').mousewheel(function(event, moves) {
+          var speed = 50;
+
+          $(this).scrollLeft($(this).scrollLeft() - moves * speed);
+          return false;
+        });
+
+        $('a.nav').click(function(event) {
+          var $anchor = $(this);
+
+          $('article').stop().animate({
+            scrollLeft: $($anchor.attr('href')).offset().left
+          }, 500);
+          event.preventDefault();
+        });
+      });
+    </script>
   </head>
 
   <body>
@@ -171,8 +217,10 @@
     <article id="front">
       <h1>Some tryouts</h1>
 
+      <p id="comment">久しぶりに弄ったので、色々忘れてた。</p>
+
       <section id="tryouts">
-        <dl>
+        <dl id="tryout-01">
           <dt>
             <a href="./404.html">
               <img src="./image/tryout-01.png" alt="" width="200" height="120">
@@ -214,6 +262,16 @@
 
         <dl>
           <dt>
+            <a href="./css-property-order.html">
+              <img src="./image/tryout-05.png" alt="" width="200" height="120">
+              CSS Property Order
+            </a>
+          </dt>
+          <dd>いい加減、自分用のつくった。</dd>
+        </dl>
+
+        <dl id="tryout-progress">
+          <dt>
             <a>
               <img alt="" width="200" height="120">
               Work in progress
@@ -221,10 +279,6 @@
           </dt>
           <dd>鋭意製作中! 的な。</dd>
         </dl>
-      </section>
-
-      <section id="temp">
-        <p>なんか色々やってたら全然シンプルじゃなくなってしまった。まったく可搬性のないその場しのぎな CSS だ。まぁいいか。 What You See Is What You Want! だ。</p>
       </section>
 
       <p class="nav"><a href="#">Close</a></p>

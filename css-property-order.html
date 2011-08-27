@@ -11,12 +11,23 @@
      href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
 
     <style type="text/css">
+      a {
+        text-decoration: none;
+      }
       body {
         padding: 50px;
       }
       h1 {
         line-height: 200%;
         font-size: 36px;
+      }
+      h2 {
+        line-height: 160%;
+        font-size: 24px;
+      }
+      ins {
+        border-bottom: 1px dashed rgb(0,0,0);
+        text-decoration: none;
       }
       ol {
         margin-bottom: 1em;
@@ -29,10 +40,10 @@
         margin-bottom: 1em;
       }
       q:before {
-        content: "\201C"; /* &ldquo; */
+        content: "\00A0\201C"; /* &nbsp;&ldquo; */
       }
       q:after {
-        content: "\201D"; /* &rdquo; */
+        content: "\201D\00A0"; /* &rdquo;&nbsp; */
       }
       ul {
         margin-bottom: 1em;
@@ -48,188 +59,433 @@
     <header>
       <h1>CSS Property Order</h1>
 
-      <p><a href="http://www.amazon.co.jp/gp/product/4774136840/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&tag=superstring-22&linkCode=as2&camp=247&creative=1211&creativeASIN=4774136840">実践 Web Standards Design</a> と <a href="http://hail2u.net/blog/webdesign/css2-property-order.html">hail2u の記事</a>に敬意を表しつつ、最近メンテされてないみたいなので、自分用に再編した CSS 3 プロパティ出現順序。原典との違い等は <a href="#footnote">footnote</a> 参照。</p>
+      <p><a href="http://www.amazon.co.jp/gp/product/4774136840/ref=as_li_qf_sp_asin_il_tl?ie=UTF8&tag=superstring-22&linkCode=as2&camp=247&creative=1211&creativeASIN=4774136840">実践 Web Standards Design</a> と <a href="http://hail2u.net/blog/webdesign/css2-property-order.html">hail2u の記事</a>に敬意を表しつつ、最近メンテされてないみたいなので、自分用に再編した CSS 3 プロパティ出現順序。<ins>メンテされてないと思ったら<a href="http://hail2u.net/blog/coding/perl-sort-css-properties.html">スクリプト化されてる</a>事に後で気付いた。なので大幅加筆修正。ついでに<a href="#script">こっちもスクリプト化してみた。</a></ins>原典との違い等は <a href="#footnote">footnote</a> 参照。</p>
     </header>
 
     <article>
-      <h1>CSS 2.1 Specification (CSS 3 Core)</h1>
+      <section>
+        <h1>CSS 2.1 Specification (CSS 3 Core)</h1>
 
-      <ol>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties">margin-top</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties">margin-right</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties">margin-bottom</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties">margin-left</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties">margin</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties">padding-top</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties">padding-right</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties">padding-bottom</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties">padding-left</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties">padding</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties">border-top-width</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties">border-right-width</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties">border-bottom-width</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties">border-left-width</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties">border-width</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties">border-top-color</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties">border-right-color</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties">border-bottom-color</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties">border-left-color</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties">border-color</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties">border-top-style</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties">border-right-style</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties">border-bottom-style</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties">border-left-style</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties">border-style</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties">border-top</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties">border-right</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties">border-bottom</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties">border-left</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties">border</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#display-prop">display</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#choose-position">position</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#position-props">top</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#position-props">right</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#position-props">bottom</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#position-props">left</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#float-position">float</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#flow-control">clear</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#z-index">z-index</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#direction">direction</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visuren.html#direction">unicode-bidi</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visudet.html#the-width-property">width</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-widths">min-width</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-widths">max-width</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visudet.html#the-height-property">height</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-heights">min-height</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-heights">max-height</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visudet.html#line-height">line-height</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visudet.html#line-height">vertical-align</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visufx.html#overflow">overflow</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visufx.html#clipping">clip</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/visufx.html#visibility">visibility</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/generate.html#content">content</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/generate.html#quotes-specify">quotes</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/generate.html#counters">counter-reset</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/generate.html#counters">counter-increment</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/generate.html#list-style">list-style-type</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/generate.html#list-style">list-style-image</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/generate.html#list-style">list-style-position</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/generate.html#list-style">list-style</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/page.html#page-break-props">page-break-before</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/page.html#page-break-props">page-break-after</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/page.html#page-break-props">page-break-inside</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/page.html#break-inside">orphans</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/page.html#break-inside">widows</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/colors.html#colors">color</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties">background-color</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties">background-image</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties">background-repeat</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties">background-attachment</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties">background-position</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties">background</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-family-prop">font-family</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-styling">font-style</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/fonts.html#small-caps">font-variant</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-boldness">font-weight</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-size-props">font-size</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-shorthand">font</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/text.html#indentation-prop">text-indent</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/text.html#alignment-prop">text-align</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/text.html#lining-striking-props">text-decoration</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/text.html#spacing-props">letter-spacing</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/text.html#spacing-props">word-spacing</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/text.html#caps-prop">text-transform</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/text.html#white-space-prop">white-space</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/tables.html#caption-position">caption-side</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/tables.html#width-layout">table-layout</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/tables.html#borders">border-collapse</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/tables.html#separated-borders">border-spacing</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/tables.html#empty-cells">empty-cells</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/ui.html#cursor-props">cursor</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines">outline</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines">outline-width</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines">outline-style</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines">outline-color</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#volume-props">volume</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#speaking-props">speak</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#pause-props">pause-before</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#pause-props">pause-after</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#pause-props">pause</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#cue-props">cue-before</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#cue-props">cue-after</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#cue-props">cue</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#mixing-props">play-during</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#spatial-props">azimuth</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#spatial-props">elevation</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props">speech-rate</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props">voice-family</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props">pitch</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props">pitch-range</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props">stress</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props">richness</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#speech-props">speak-punctuation</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#speech-props">speak-numeral</a></li>
-        <li><a href="http://www.w3.org/TR/CSS21/aural.html#speech-props">speak-header</a></li>
-      </ol>
+        <ol>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties"><code>margin-top</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties"><code>margin-right</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties"><code>margin-bottom</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties"><code>margin-left</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#margin-properties"><code>margin</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties"><code>padding-top</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties"><code>padding-right</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties"><code>padding-bottom</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties"><code>padding-left</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#padding-properties"><code>padding</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties"><code>border-top-width</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties"><code>border-right-width</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties"><code>border-bottom-width</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties"><code>border-left-width</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-width-properties"><code>border-width</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties"><code>border-top-color</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties"><code>border-right-color</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties"><code>border-bottom-color</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties"><code>border-left-color</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-color-properties"><code>border-color</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties"><code>border-top-style</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties"><code>border-right-style</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties"><code>border-bottom-style</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties"><code>border-left-style</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-style-properties"><code>border-style</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties"><code>border-top</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties"><code>border-right</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties"><code>border-bottom</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties"><code>border-left</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties"><code>border</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#display-prop"><code>display</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#choose-position"><code>position</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#position-props"><code>top</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#position-props"><code>right</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#position-props"><code>bottom</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#position-props"><code>left</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#float-position"><code>float</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#flow-control"><code>clear</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#z-index"><code>z-index</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#direction"><code>direction</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visuren.html#direction"><code>unicode-bidi</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visudet.html#the-width-property"><code>width</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-widths"><code>min-width</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-widths"><code>max-width</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visudet.html#the-height-property"><code>height</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-heights"><code>min-height</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visudet.html#min-max-heights"><code>max-height</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visudet.html#line-height"><code>line-height</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visudet.html#line-height"><code>vertical-align</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visufx.html#overflow"><code>overflow</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visufx.html#clipping"><code>clip</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/visufx.html#visibility"><code>visibility</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/generate.html#content"><code>content</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/generate.html#quotes-specify"><code>quotes</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/generate.html#counters"><code>counter-reset</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/generate.html#counters"><code>counter-increment</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/generate.html#list-style"><code>list-style-type</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/generate.html#list-style"><code>list-style-image</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/generate.html#list-style"><code>list-style-position</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/generate.html#list-style"><code>list-style</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/page.html#page-break-props"><code>page-break-before</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/page.html#page-break-props"><code>page-break-after</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/page.html#page-break-props"><code>page-break-inside</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/page.html#break-inside"><code>orphans</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/page.html#break-inside"><code>widows</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/colors.html#colors"><code>color</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties"><code>background-color</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties"><code>background-image</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties"><code>background-repeat</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties"><code>background-attachment</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties"><code>background-position</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/colors.html#background-properties"><code>background</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-family-prop"><code>font-family</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-styling"><code>font-style</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/fonts.html#small-caps"><code>font-variant</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-boldness"><code>font-weight</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-size-props"><code>font-size</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/fonts.html#font-shorthand"><code>font</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/text.html#indentation-prop"><code>text-indent</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/text.html#alignment-prop"><code>text-align</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/text.html#lining-striking-props"><code>text-decoration</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/text.html#spacing-props"><code>letter-spacing</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/text.html#spacing-props"><code>word-spacing</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/text.html#caps-prop"><code>text-transform</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/text.html#white-space-prop"><code>white-space</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/tables.html#caption-position"><code>caption-side</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/tables.html#width-layout"><code>table-layout</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/tables.html#borders"><code>border-collapse</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/tables.html#separated-borders"><code>border-spacing</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/tables.html#empty-cells"><code>empty-cells</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/ui.html#cursor-props"><code>cursor</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines"><code>outline</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines"><code>outline-width</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines"><code>outline-style</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines"><code>outline-color</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#volume-props"><code>volume</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#speaking-props"><code>speak</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#pause-props"><code>pause-before</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#pause-props"><code>pause-after</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#pause-props"><code>pause</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#cue-props"><code>cue-before</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#cue-props"><code>cue-after</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#cue-props"><code>cue</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#mixing-props"><code>play-during</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#spatial-props"><code>azimuth</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#spatial-props"><code>elevation</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props"><code>speech-rate</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props"><code>voice-family</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props"><code>pitch</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props"><code>pitch-range</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props"><code>stress</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#voice-char-props"><code>richness</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#speech-props"><code>speak-punctuation</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#speech-props"><code>speak-numeral</code></a></li>
+          <li><a href="http://www.w3.org/TR/CSS21/aural.html#speech-props"><code>speak-header</code></a></li>
+        </ol>
 
-      <h1>CSS Backgrounds and Borders Module</h1>
+        <h1>CSS 3 Modules</h1>
 
-      <ol>
-        <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius">border-top-right-radius</a></li>
-        <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius">border-bottom-right-radius</a></li>
-        <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius">border-bottom-left-radius</a></li>
-        <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius">border-top-left-radius</a></li>
-        <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius">border-radius</a></li>
-        <li><a href="http://www.w3.org/TR/css3-background/#the-box-shadow">box-shadow</a></li>
-        <li><a href="http://developer.mozilla.org/en/CSS/border-radius">-moz-border-radius</a></li>
-        <li><a href="http://developer.mozilla.org/en/css/box-shadow">-moz-box-shadow</a></li>
-        <li>-webkit-border-radius</li>
-        <li>-webkit-box-shadow</li>
-      </ol>
+        <h2>2D Transforms Module</h2>
 
-      <h1>CSS Color Module</h1>
+        <ol>
+          <li><a href="http://www.w3.org/TR/css3-2d-transforms/#transform-property"><code>transform</code></a></li>
+          <li><a href="http://developer.mozilla.org/en/transform"><code>-moz-transform</code></a></li>
+          <li><code>-o-transform</code></li>
+          <li><code>-webkit-transform</code></li>
+          <li><code>transform-origin</code></li>
+          <li><code>-moz-transform-origin</code></li>
+          <li><code>-webkit-transform-origin</code></li>
+        </ol>
 
-      <ol>
-        <li><a href="http://www.w3.org/TR/css3-color/#transparency">opacity</a></li>
-      </ol>
+        <h2>3D Transforms Module</h2>
 
-      <h1>CSS Image Values and Replaced Content Module</h1>
+        <ol>
+          <li><code>perspective</code></li>
+          <li><code>-webkit-perspective</code></li>
+          <li><code>perspective-origin</code></li>
+          <li><code>-webkit-perspective-origin</code></li>
+          <li><code>backface-visibility</code></li>
+          <li><code>-webkit-backface-visibility</code></li>
+        </ol>
 
-      <ol>
-        <li><a href="http://dev.w3.org/csswg/css3-images/#linear-gradients">linear-gradient</a></li>
-        <li><a href="http://developer.mozilla.org/en/CSS/-moz-linear-gradient">-moz-linear-gradient</a></li>
-        <li>-webkit-gradient</li>
-      </ol>
+        <h2>Animations Module</h2>
 
-      <h1>CSS Multi-column Layout Module</h1>
+        <ol>
+          <li><code>animation-name</code></li>
+          <li><code>-webkit-animation-name</code></li>
+          <li><code>animation-duration</code></li>
+          <li><code>-webkit-animation-duration</code></li>
+          <li><code>animation-timing-function</code></li>
+          <li><code>-webkit-animation-timing-function</code></li>
+          <li><code>animation-iteration-count</code></li>
+          <li><code>-webkit-animation-iteration-count</code></li>
+          <li><code>animation-direction</code></li>
+          <li><code>-webkit-animation-direction</code></li>
+          <li><code>animation-play-state</code></li>
+          <li><code>-webkit-animation-play-state</code></li>
+          <li><code>animation-delay</code></li>
+          <li><code>-webkit-animation-delay</code></li>
+          <li><code>animation</code></li>
+          <li><code>-webkit-animation</code></li>
+        </ol>
 
-      <ol>
-        <li><a href="http://www.w3.org/TR/css3-multicol/#cc">column-count</a></li>
-        <li><a href="http://www.w3.org/TR/css3-multicol/#column-gap">column-gap</a></li>
-        <li><a href="http://www.w3.org/TR/css3-multicol/#column-rule">column-rule</a></li>
-        <li><a href="http://developer.mozilla.org/en/CSS/-moz-column-count">-moz-column-count</a></li>
-        <li><a href="http://developer.mozilla.org/en/CSS/-moz-column-gap">-moz-column-gap</a></li>
-        <li><a href="http://developer.mozilla.org/en/CSS/-moz-column-rule">-moz-column-rule</a></li>
-        <li>-webkit-column-count</li>
-        <li>-webkit-column-gap</li>
-        <li>-webkit-column-rule</li>
-      </ol>
+        <h2>Backgrounds and Borders Module</h2>
 
-      <h1>CSS Text Module</h1>
+        <ol>
+          <li><code>background-clip</code></li>
+          <li><code>-moz-background-clip</code></li>
+          <li><code>-webkit-background-clip</code></li>
+          <li><code>background-origin</code></li>
+          <li><code>-moz-background-origin</code></li>
+          <li><code>-webkit-background-origin</code></li>
+          <li><code>background-size</code></li>
+          <li><code>-moz-background-size</code></li>
+          <li><code>-o-background-size</code></li>
+          <li><code>-webkit-background-size</code></li>
+          <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius"><code>border-top-right-radius</code></a></li>
+          <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius"><code>border-bottom-right-radius</code></a></li>
+          <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius"><code>border-bottom-left-radius</code></a></li>
+          <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius"><code>border-top-left-radius</code></a></li>
+          <li><a href="http://www.w3.org/TR/css3-background/#the-border-radius"><code>border-radius</code></a></li>
+          <li><a href="http://developer.mozilla.org/en/CSS/border-radius"><code>-moz-border-radius</code></a></li>
+          <li><code>-webkit-border-radius</code></li>
+          <li><code>border-image-source</code></li>
+          <li><code>border-image-slice</code></li>
+          <li><code>border-image-width</code></li>
+          <li><code>border-image-outset</code></li>
+          <li><code>border-image-repeat</code></li>
+          <li><code>border-image</code></li>
+          <li><code>-moz-border-image</code></li>
+          <li><code>-webkit-border-image</code></li>
+          <li><code>box-decoration-break</code></li>
+          <li><a href="http://www.w3.org/TR/css3-background/#the-box-shadow"><code>box-shadow</code></a></li>
+          <li><a href="http://developer.mozilla.org/en/css/box-shadow"><code>-moz-box-shadow</code></a></li>
+          <li><code>-webkit-box-shadow</code></li>
+        </ol>
 
-      <ol>
-        <li><a href="http://www.w3.org/TR/css3-text/#text-shadow">text-shadow</a></li>
-      </ol>
+        <h2>Basic Box Model Module</h2>
 
-      <h1>CSS 2D Transforms Module</h1>
+        <ol>
+          <li><code>overflow-x</code></li>
+          <li><code>-ms-overflow-x</code></li>
+          <li><code>overflow-y</code></li>
+          <li><code>-ms-overflow-y</code></li>
+          <li><code>overflow-style</code></li>
+          <li><code>marquee-style</code></li>
+          <li><code>-webkit-marquee-style</code></li>
+          <li><code>marquee-loop</code></li>
+          <li><code>marquee-direction</code></li>
+          <li><code>-webkit-marquee-direction</code></li>
+          <li><code>marquee-speed</code></li>
+          <li><code>-webkit-marquee-speed</code></li>
+          <li><code>-webkit-marquee</code></li>
+          <li><code>rotation</code></li>
+          <li><code>rotation-point</code></li>
+        </ol>
 
-      <ol>
-        <li><a href="http://www.w3.org/TR/css3-2d-transforms/#transform-property">transform</a></li>
-        <li><a href="http://developer.mozilla.org/En/transform">-moz-transform</a></li>
-        <li>-o-transform</li>
-        <li>-webkit-transform</li>
-      </ol>
+        <h2>Basic User Interface Module</h2>
 
+        <ol>
+          <li><code>appearance</code></li>
+          <li><code>-moz-appearance</code></li>
+          <li><code>-webkit-appearance</code></li>
+          <li><code>icon</code></li>
+          <li><a href="http://www.w3.org/TR/css3-ui/#box-sizing"><code>box-sizing</code></a></li>
+          <li><a href="http://developer.mozilla.org/en/CSS/box-sizing"><code>-moz-box-sizing</code></a></li>
+          <li><code>-webkit-box-sizing</code></li>
+          <li><code>outline-offset</code></li>
+          <li><code>resize</code></li>
+          <li><code>nav-index</code></li>
+        </ol>
+
+        <h2>Color Module</h2>
+
+        <ol>
+          <li><a href="http://www.w3.org/TR/css3-color/#transparency"><code>opacity</code></a></li>
+        </ol>
+
+        <h2>Fonts Module</h2>
+
+        <ol>
+          <li><code>font-stretch</code></li>
+          <li><code>font-size-adjust</code></li>
+          <li><code>src</code></li>
+          <li><code>unicode-range</code></li>
+        </ol>
+
+        <h2>Generated Content for Paged Media Module</h2>
+
+        <ol>
+          <li><code>string-set</code></li>
+          <li><code>bookmark-level</code></li>
+          <li><code>bookmark-label</code></li>
+          <li><code>bookmark-target</code></li>
+          <li><code>bookmark-state</code></li>
+        </ol>
+
+        <h2>Grid Positioning Module</h2>
+
+        <ol>
+          <li><code>grid-columns</code></li>
+          <li><code>grid-rows</code></li>
+        </ol>
+
+        <h2>Hyperlink Presentation Module</h2>
+
+        <ol>
+          <li><code>target-name</code></li>
+          <li><code>target-new</code></li>
+          <li><code>target-position</code></li>
+          <li><code>target</code></li>
+        </ol>
+
+        <h2>Image Values and Replaced Content Module</h2>
+
+        <ol>
+          <li><a href="http://dev.w3.org/csswg/css3-images/#linear-gradients"><code>linear-gradient</code></a></li>
+          <li><a href="http://developer.mozilla.org/en/CSS/-moz-linear-gradient"><code>-moz-linear-gradient</code></a></li>
+          <li><code>-webkit-gradient</code></li>
+          <li><code>image-resolution</code></li>
+        </ol>
+
+        <h2>Line Box Module</h2>
+
+        <ol>
+          <li><code>line-stacking-strategy</code></li>
+          <li><code>line-stacking-ruby</code></li>
+          <li><code>line-stacking-shift</code></li>
+          <li><code>line-stacking</code></li>
+          <li><code>alignment-baseline</code></li>
+          <li><code>alignment-adjust</code></li>
+          <li><code>baseline-shift</code></li>
+          <li><code>inline-box-align</code></li>
+          <li><code>drop-initial-size</code></li>
+          <li><code>drop-initial-value</code></li>
+          <li><code>drop-initial-before-align</code></li>
+          <li><code>drop-initial-before-adjust</code></li>
+          <li><code>drop-initial-after-align</code></li>
+          <li><code>drop-initial-after-adjust</code></li>
+        </ol>
+
+        <h2>Multi-column Layout Module</h2>
+
+        <ol>
+          <li><code>column-width</code></li>
+          <li><code>-moz-column-width</code></li>
+          <li><code>-webkit-column-width</code></li>
+          <li><a href="http://www.w3.org/TR/css3-multicol/#cc"><code>column-count</code></a></li>
+          <li><a href="http://developer.mozilla.org/en/CSS/-moz-column-count"><code>-moz-column-count</code></a></li>
+          <li><code>-webkit-column-count</code></li>
+          <li><code>columns</code></li>
+          <li><code>-webkit-columns</code></li>
+          <li><a href="http://www.w3.org/TR/css3-multicol/#column-gap"><code>column-gap</code></a></li>
+          <li><a href="http://developer.mozilla.org/en/CSS/-moz-column-gap"><code>-moz-column-gap</code></a></li>
+          <li><code>-webkit-column-gap</code></li>
+          <li><code>column-rule-color</code></li>
+          <li><code>-moz-column-rule-color</code></li>
+          <li><code>-webkit-column-rule-color</code></li>
+          <li><code>column-rule-style</code></li>
+          <li><code>-moz-column-rule-style</code></li>
+          <li><code>-webkit-column-rule-style</code></li>
+          <li><code>column-rule-width</code></li>
+          <li><code>-moz-column-rule-width</code></li>
+          <li><code>-webkit-column-rule-width</code></li>
+          <li><a href="http://www.w3.org/TR/css3-multicol/#column-rule"><code>column-rule</code></a></li>
+          <li><a href="http://developer.mozilla.org/en/CSS/-moz-column-rule"><code>-moz-column-rule</code></a></li>
+          <li><code>-webkit-column-rule</code></li>
+          <li><code>column-span</code></li>
+          <li><code>column-fill</code></li>
+        </ol>
+
+        <h2>Paged Media Module</h2>
+
+        <ol>
+          <li><code>size</code></li>
+          <li><code>page</code></li>
+          <li><code>image-orientation</code></li>
+          <li><code>fit</code></li>
+          <li><code>fit-position</code></li>
+        </ol>
+
+        <h2>Presentation Levels Module</h2>
+
+        <ol>
+          <li><code>presentation-level</code></li>
+        </ol>
+
+        <h2>Ruby Module</h2>
+
+        <ol>
+          <li><code>ruby-position</code></li>
+          <li><code>ruby-align</code></li>
+          <li><code>ruby-overhang</code></li>
+          <li><code>ruby-span</code></li>
+        </ol>
+
+        <h2>Speech Module</h2>
+
+        <ol>
+          <li><code>voice-volume</code></li>
+          <li><code>voice-balance</code></li>
+          <li><code>rest-before</code></li>
+          <li><code>rest-after</code></li>
+          <li><code>rest</code></li>
+          <li><code>voice-rate</code></li>
+          <li><code>voice-pitch</code></li>
+          <li><code>voice-range</code></li>
+          <li><code>voice-stress</code></li>
+          <li><code>voice-duration</code></li>
+        </ol>
+
+        <h2>Text Module</h2>
+
+        <ol>
+          <li><code>bikeshedding</code></li>
+          <li><a href="http://www.w3.org/TR/css3-text/#word-break"><code>word-break</code></a></li>
+          <li><code>-ms-word-break</code></li>
+          <li><code>hyphens</code></li>
+          <li><code>hyphenate-character</code></li>
+          <li><code>hyphenate-resource</code></li>
+          <li><code>text-wrap</code></li>
+          <li><a href="http://www.w3.org/TR/css3-text/#word-wrap"><code>word-wrap</code></a></li>
+          <li><code>-ms-word-wrap</code></li>
+          <li><code>text-align-last</code></li>
+          <li><code>-ms-text-align-last</code></li>
+          <li><a href="http://www.w3.org/TR/css3-text/#text-justify"><code>text-justify</code></a></li>
+          <li><code>-ms-text-justify</code></li>
+          <li><a href="http://www.w3.org/TR/css3-text/#text-shadow"><code>text-shadow</code></a></li>
+          <li><code>text-indent</code></li>
+          <li><code>hanging-punctuation</code></li>
+          <li><code>text-emphasis</code></li>
+          <li><code>text-shadow</code></li>
+          <li><code>text-outline</code></li>
+        </ol>
+
+        <h2>Transitions Module</h2>
+
+        <ol>
+          <li><code>transition-property</code></li>
+          <li><code>-webkit-transition-property</code></li>
+          <li><code>transition-duration</code></li>
+          <li><code>-webkit-transition-duration</code></li>
+          <li><code>transition-timing-function</code></li>
+          <li><code>-webkit-transition-timing-function</code></li>
+          <li><code>transition-delay</code></li>
+          <li><code>-webkit-transition-delay</code></li>
+          <li><code>transition</code></li>
+          <li><code>-webkit-transition</code></li>
+        </ol>
+      </section>
+
+      <section id="script">
+        <h1>CSS Property Sorter Script</h1>
+
+        <p>Perl は分からないので、Python で実装。出来は微妙。</p>
+        <script type="text/javascript" charset="UTF-8"
+         src="https://gist.github.com/1175081.js?file=css_prop_sorter.py">
+        </script>
+      </section>
     </article>
 
     <footer>
@@ -237,10 +493,21 @@
 
       <ul>
         <li>誤植っぽい箇所を修正した。</li>
-        <li><q>プロパティの記述順はCSS2 Specificationで出てくる順序です</q>に厳格に沿うべく shorthand property を各プロパティグループの最後にした (<code>outline</code> のみ specification に沿って shorthand property が最初)。</li>
-        <li><a href="http://www.w3.org/TR/CSS21/">CSS 2.1</a> 準拠を再確認した。加えて <a href="http://css3.mikeplate.com/">CSS3 Playground by Mike Plate</a> で使用できる CSS 3 プロパティを各モジュール (アルファベット順) ごとの出現順序で追加した。</li>
-        <li>各 UserAgent 独自プロパティも一部追加した。<code>-moz</code>, <code>-o</code>, <code>-webkit</code> のアルファベット順で最後尾に追加し、CSS 3 Specification の出現順序による。</li>
-        <li>各プロパティに出典のリンクを追加した。</li>
+        <li><q>プロパティの記述順はCSS2 Specificationで出てくる順序です</q>に厳格に沿うべく shorthand property を各プロパティグループの最後にした (一部 specification に沿って shorthand property が最初)。</li>
+        <li>CSS 3 はモジュールをアルファベット順に列挙。 各モジュールの specification 出現順序で、標準プロパティに続いて対応するベンダ拡張プロパティを <code>-moz-</code>, <code>-ms-</code>, <code>-o-</code>, <code>-webkit-</code> の順で追加。</li>
+        <li>CSS 3 の網羅性はかなりテキトー。</li>
+        <li>プロパティに出典のリンクを追加した。</li>
+      </ul>
+
+      <h2>References</h2>
+
+      <ul>
+        <li>CSS 2.1: <a href="http://www.w3.org/TR/CSS21/">Cascading Style Sheets Level 2 Revision 1 (CSS 2.1) Specification</a></li>
+        <li>CSS 3 Modules: <a href="http://www.w3.org/Style/CSS/current-work">CSS current work & how to participate</a></li>
+        <li><code>-moz-</code> extension: <a href="http://developer.mozilla.org/en/CSS">CSS - MDN Docs</a></li>
+        <li><code>-ms-</code> extension: <a href="http://msdn.microsoft.com/library/ms531207">CSS Attributes: Index - MSDN</a></li>
+        <li><code>-o-</code> extension: <a href="http://www.opera.com/docs/specs/css/properties/">Opera: CSS 2.1 Properties support in Opera Presto 2.8</a></li>
+        <li><code>-webkit-</code> extension: <a href="http://developer.apple.com/library/safari/#documentation/appleapplications/reference/SafariCSSRef/Articles/StandardCSSProperties.html">Safari CSS Reference: Supported CSS Properties</a></li>
       </ul>
     </footer>
   </body>

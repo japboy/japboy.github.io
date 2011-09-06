@@ -29,7 +29,7 @@
         font-family: sans-serif;
         border-radius: 10px;
       }
-      article section {
+      .picture {
         margin-top: -174.5px;
         margin-left: -161px;
         padding: 10px 10px 10px 10px;
@@ -42,10 +42,8 @@
         font-family: "Waiting for the Sunrise", serif;
         font-size: 18px;
         text-align: center;
-        -webkit-transition: 0.3s ease-in-out;
       }
-
-      article section:hover {
+      .picture:hover {
         top: 50%;
         left: 50%;
         z-index: 12;
@@ -57,88 +55,108 @@
         -o-transform: scale(2.0);
         -moz-transform: scale(2.0);
         -webkit-transform: scale(2.0);
+        -webkit-transition: 0.3s ease-in-out;
       }
     </style>
 
     <script type="text/javascript" charset="UTF-8"
      src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
-    </script> 
+    </script>
     <script type="text/javascript">
       $(function () {
-        for (var i = 1; i < 12; i++) {
-          $("article section#memory" + i)
-             .css("top", Math.ceil(Math.random() * 100) + "%");
-          $("article section#memory" + i)
-            .css("left", Math.ceil(Math.random() * 100) + "%");
-          $("article section#memory" + i)
-            .css("z-index", i);
-          $("article section#memory" + i)
-            .css("-o-transform",
-                 "rotate(" + (Math.ceil(Math.random() * 12) - 6) + "deg)");
-          $("article section#memory" + i)
-            .css("-moz-transform",
-                 "rotate(" + (Math.ceil(Math.random() * 12) - 6) + "deg)");
-          $("article section#memory" + i)
-            .css("-webkit-transform",
-                 "rotate(" + (Math.ceil(Math.random() * 12) - 6) + "deg)");   
-        }
+        var css_cache = {};
+
+        $('.picture').each(function(index, element) {
+          $(element).css({
+            "top": Math.ceil(Math.random() * 100) + "%",
+            "left": Math.ceil(Math.random() * 100) + "%",
+            "z-index": index + 1,
+            "-o-transform":
+              "rotate(" + (Math.ceil(Math.random() * 12) - 6) + "deg)",
+            "-moz-transform":
+              "rotate(" + (Math.ceil(Math.random() * 12) - 6) + "deg)",
+            "-webkit-transform":
+              "rotate(" + (Math.ceil(Math.random() * 12) - 6) + "deg)"
+          });
+        });
+        $('.picture').hover(function() {
+          css_cache = {
+            "top": $(this).css('top'),
+            "left": $(this).css('left'),
+            "z-index": $(this).css('z-index'),
+            "-o-transform": $(this).css('-o-transform'),
+            "-moz-transform": $(this).css('-moz-transform'),
+            "-webkit-transform": $(this).css('-webkit-transform')
+          };
+
+          $(this).css({
+            "top": '',
+            "left": '',
+            "z-index": '',
+            "-o-transform": '',
+            "-moz-transform": '',
+            "-webkit-transform": ''
+          });
+        }, function() {
+          $(this).css(css_cache);
+        });
       });
     </script>
   </head>
 
   <body>
     <article>
-      <section id="memory1">
+      <section class="picture">
         <img src="http://lorempixum.com/300/300/abstract/" alt="" width="300" height="300">
         Abstract
       </section>
 
-      <section id="memory2">
+      <section class="picture">
         <img src="http://lorempixum.com/300/300/food" alt="" width="300" height="300">
         Food
       </section>
 
-      <section id="memory3">
+      <section class="picture">
         <img src="http://lorempixum.com/300/300/people" alt="" width="300" height="300">
         People
       </section>
 
-      <section id="memory4">
+      <section class="picture">
         <img src="http://lorempixum.com/300/300/technics" alt="" width="300" height="300">
         Technics
       </section>
 
-      <section id="memory5">
+      <section class="picture">
         <img src="http://lorempixum.com/300/300/animals" alt="" width="300" height="300">
         Animals
       </section>
 
-       <section id="memory6">
+       <section class="picture">
         <img src="http://lorempixum.com/300/300/nightlife" alt="" width="300" height="300">
         Nightlife
       </section>
 
-       <section id="memory7">
+       <section class="picture">
         <img src="http://lorempixum.com/300/300/nature" alt="" width="300" height="300">
         Nature
       </section>
 
-       <section id="memory8">
+       <section class="picture">
         <img src="http://lorempixum.com/300/300/transport" alt="" width="300" height="300">
         Transport
       </section>
 
-       <section id="memory9">
+       <section class="picture">
         <img src="http://lorempixum.com/300/300/city" alt="" width="300" height="300">
         City
       </section>
 
-       <section id="memory10">
+       <section class="picture">
         <img src="http://lorempixum.com/300/300/fashion" alt="" width="300" height="300">
         Fashion
       </section>
 
-       <section id="memory11">
+       <section class="picture">
         <img src="http://lorempixum.com/300/300/sports" alt="" width="300" height="300">
         Sports
       </section>

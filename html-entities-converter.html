@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="rights-standard" content="pd">
+
+    <title>HTML Entities Converter</title>
+
+    <link rel="author" href="http://twitter.com/japboy" title="Yu I.">
+    <link rel="stylesheet" type="text/css"
+     href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+
+    <style type="text/css">
+      body {
+        padding: 50px;
+      }
+      h1 {
+        line-height: 200%;
+        font-size: 36px;
+      }
+      table {
+        margin: auto;
+      }
+      table tr td.input {
+        padding-bottom: 15px;
+      }
+      table tr td.input input {
+        padding: 10px;
+        border: 1px inset rgb(200,200,200);
+        width: 100%;
+        font-family: sans-serif;
+        font-size: 240%;
+        border-radius: 10px;
+        box-sizing: border-box;
+      }
+      table tr td.output {
+        padding: 15px;
+      }
+      table tr th.output {
+        position: absolute;
+        vertical-align: bottom;
+        z-index: 3;
+        color: rgb(200,200,200);
+        font-family: sans-serif;
+        font-size: 80%;
+      }
+      table tr td.output input {
+        padding: 5px;
+        border-style: none;
+        border-bottom: 1px solid rgb(200,200,200);
+        width: 100%;
+        background-color: transparent;
+        font-family: sans-serif;
+        font-size: 120%;
+      }
+      dl {
+        margin-bottom: 1em;
+      }
+      dl dt {
+        color: rgb(200,200,200);
+      }
+      dl dd {
+        font-size: 160%;
+        font-family: sans-serif;
+      }
+      section {
+        margin-bottom: 2em;
+      }
+    </style>
+
+    <script type="text/javascript" charset="UTF-8"
+     src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
+    </script>
+    <script type="text/javascript">
+      $(function () {
+        var msg = 'Put characters here',
+
+        named_entities = {
+          // ISO 8859-1 Symbol
+          160: '&nbsp;',
+          161: '&iexcl;',
+          162: '&cent;',
+          163: '&pound;',
+          164: '&curren;',
+          165: '&yen;',
+          166: '&brvbar;',
+          167: '&sect;',
+          168: '&uml;',
+          169: '&copy;',
+          170: '&ordf;',
+          171: '&laquo;',
+          172: '&not;',
+          173: '&shy;',
+          174: '&reg;',
+          175: '&macr;',
+          176: '&deg;',
+          177: '&plusmn;',
+          178: '&sup2;',
+          179: '&sup3;',
+          180: '&acute;',
+          181: '&micro;',
+          182: '&para;',
+          183: '&middot;',
+          184: '&cedil;',
+          185: '&sup1;',
+          186: '&ordm;',
+          187: '&raquo;',
+          188: '&frac14;',
+          189: '&frac12;',
+          190: '&frac34;',
+          191: '&iquest;',
+          215: '&times;',
+          247: '&divide;',
+          // ISO 8859-1 Letter
+          192: '&Agrave;',
+          193: '&Aacute;',
+          194: '&Acirc;',
+          195: '&Atilde;',
+          196: '&Auml;',
+          197: '&Aring;',
+          198: '&AElig;',
+          199: '&Ccedil;',
+          200: '&Egrave;',
+          201: '&Eacute;',
+          202: '&Ecirc;',
+          203: '&Euml;',
+          204: '&Igrave;',
+          205: '&Iacute;',
+          206: '&Icirc;',
+          207: '&Iuml;',
+          208: '&ETH;',
+          209: '&Ntilde;',
+          210: '&Ograve;',
+          211: '&Oacute;',
+          212: '&Ocirc;',
+          213: '&Otilde;',
+          214: '&Ouml;',
+          216: '&Oslash;',
+          217: '&Ugrave;',
+          218: '&Uacute;',
+          219: '&Ucirc;',
+          220: '&Uuml;',
+          221: '&Yacute;',
+          222: '&THORN;',
+          223: '&szlig;',
+          224: '&agrave;',
+          225: '&aacute;',
+          226: '&acirc;',
+          227: '&atilde;',
+          228: '&auml;',
+          229: '&aring;',
+          230: '&aelig;',
+          231: '&ccedil;',
+          232: '&egrave;',
+          233: '&eacute;',
+          234: '&ecirc;',
+          235: '&euml;',
+          236: '&igrave;',
+          237: '&iacute;',
+          238: '&icirc;',
+          239: '&iuml;',
+          240: '&eth;',
+          241: '&ntilde;',
+          242: '&ograve;',
+          243: '&oacute;',
+          244: '&ocirc;',
+          245: '&otilde;',
+          246: '&ouml;',
+          248: '&oslash;',
+          249: '&ugrave;',
+          250: '&uacute;',
+          251: '&ucirc;',
+          252: '&uuml;',
+          253: '&yacute;',
+          254: '&thorn;',
+          255: '&yuml;',
+          // More
+          913: '&Alpha;',
+          914: '&Beta;',
+          915: '&Gamma;',
+          916: '&Delta;',
+          917: '&Epsilon;',
+          918: '&Zeta;',
+          919: '&Eta;',
+          920: '&Theta;',
+          921: '&Iota;',
+          922: '&Kappa;',
+          923: '&Lambda;',
+          924: '&Mu;',
+          925: '&Nu;',
+          926: '&Xi;',
+          927: '&Omicron;',
+          928: '&Pi;',
+          931: '&Sigma;',
+          932: '&Tau;',
+          933: '&Upsilon;',
+          934: '&Phi;',
+          935: '&Chi;',
+          936: '&Psi;',
+          937: '&Omega;',
+          945: '&alpha;',
+          946: '&beta;',
+          947: '&gamma;',
+          948: '&delta;',
+          949: '&epsilon;',
+          950: '&zeta;',
+          951: '&eta;',
+          952: '&theta;',
+          953: '&iota;',
+          954: '&kappa;',
+          955: '&lambda;',
+          956: '&mu;',
+          957: '&nu;',
+          958: '&xi;',
+          959: '&omicron;',
+          960: '&pi;',
+          961: '&rho;',
+          962: '&sigmaf;',
+          963: '&sigma;',
+          964: '&tau;',
+          965: '&upsilon;',
+          966: '&phi;',
+          967: '&chi;',
+          968: '&psi;',
+          969: '&omega;',
+          977: '&thetasym;',
+          978: '&upsih;',
+          982: '&piv;',
+          8226: '&bull;',
+          8230: '&hellip;',
+          8242: '&prime;',
+          8243: '&Prime;',
+          8254: '&oline;',
+          8260: '&frasl;',
+          8472: '&weierp;',
+          8465: '&image;',
+          8476: '&real;',
+          8482: '&trade;',
+          8501: '&alefsym;',
+          8592: '&larr;',
+          8593: '&uarr;',
+          8594: '&rarr;',
+          8595: '&darr;',
+          8596: '&harr;',
+          8629: '&crarr;',
+          8656: '&lArr;',
+          8657: '&uArr;',
+          8658: '&rArr;',
+          8659: '&dArr;',
+          8660: '&hArr;',
+          8704: '&forall;',
+          8706: '&part;',
+          8707: '&exist;',
+          8709: '&empty;',
+          8711: '&nabla;',
+          8712: '&isin;',
+          8713: '&notin;',
+          8715: '&ni;',
+          8719: '&prod;',
+          8721: '&sum;',
+          8722: '&minus;',
+          8727: '&lowast;',
+          8730: '&radic;',
+          8733: '&prop;',
+          8734: '&infin;',
+          8736: '&ang;',
+          8743: '&and;',
+          8744: '&or;',
+          8745: '&cap;',
+          8746: '&cup;',
+          8747: '&int;',
+          8756: '&there4;',
+          8764: '&sim;',
+          8773: '&cong;',
+          8776: '&asymp;',
+          8800: '&ne;',
+          8801: '&equiv;',
+          8804: '&le;',
+          8805: '&ge;',
+          8834: '&sub;',
+          8835: '&sup;',
+          8836: '&nsub;',
+          8838: '&sube;',
+          8839: '&supe;',
+          8853: '&oplus;',
+          8855: '&otimes;',
+          8869: '&perp;',
+          8901: '&sdot;',
+          8968: '&lceil;',
+          8969: '&rceil;',
+          8970: '&lfloor;',
+          8971: '&rfloor;',
+          9001: '&lang;',
+          9002: '&rang;',
+          9674: '&loz;',
+          9824: '&spades;',
+          9827: '&clubs;',
+          9829: '&hearts;',
+          9830: '&diams;',
+          // more and more
+          34: '&quot;',
+          38: '&amp;',
+          60: '&lt;',
+          62: '&gt;',
+          338: '&OElig;',
+          339: '&oelig;',
+          352: '&Scaron;',
+          353: '&scaron;',
+          376: '&Yuml;',
+          710: '&circ;',
+          732: '&tilde;',
+          8194: '&ensp;',
+          8195: '&emsp;',
+          8201: '&thinsp;',
+          8204: '&zwnj;',
+          8205: '&zwj;',
+          8206: '&lrm;',
+          8207: '&rlm;',
+          8211: '&ndash;',
+          8212: '&mdash;',
+          8216: '&lsquo;',
+          8217: '&rsquo;',
+          8218: '&sbquo;',
+          8220: '&ldquo;',
+          8221: '&rdquo;',
+          8222: '&bdquo;',
+          8224: '&dagger;',
+          8225: '&Dagger;',
+          8240: '&permil;',
+          8249: '&lsaquo;',
+          8250: '&rsaquo;',
+          8364: '&euro;',
+          // Additional
+          39: '&apos;',
+        },
+
+         /**
+         * Add 0 if the number is not 2 digits
+         * @see http://temping-amagramer.blogspot.com/2009/08/javascript0002.html
+         * @param {Number} number A number that has to be 2 digits.
+         * @return {String} A string contains number of 2 digits.
+         */
+        getDigits = function(number) {
+            return (function(string) {
+                return string.substr(string.length - 4, 4);
+            }('0000' + number.toString()));
+        };
+
+        $('#characters').val(msg).css('color', 'rgb(200,200,200)');
+
+        $('#characters').focus(function() {
+          if (msg === $(this).val()) {
+            $(this).val('').css('color', '');
+          }
+        });
+
+        $('#characters').blur(function() {
+          if ($(this).val() === '') {
+            $(this).val(msg).css('color', 'rgb(200,200,200)');
+          }
+        });
+
+        $('#characters').keyup(function() {
+          var chars = $(this).val().split(''),
+              chars_length = chars.length;
+              named_chars = [],
+              dec_chars = [],
+              oct_chars = [],
+              hex_chars = [];
+
+          for (var i = 0; i < chars_length; i++) {
+            var dec_char = chars[i].charCodeAt(0).toString(),
+                oct_char = parseInt(dec_char).toString(8);
+                hex_char = parseInt(dec_char).toString(16);
+
+            dec_chars.push('&#' + dec_char + ';');
+            oct_chars.push('\\' + oct_char);
+            hex_chars.push('\\' + getDigits(hex_char));
+
+            if (parseInt(dec_char) in named_entities) {
+              named_chars.push(named_entities[parseInt(dec_char)]);
+            }
+            else {
+              named_chars.push('&#' + dec_char + ';');
+            }
+          }
+
+          named_chars = named_chars.join('');
+          dec_chars = dec_chars.join('');
+          oct_chars = oct_chars.join('');
+          hex_chars = hex_chars.join('');
+
+          $('#html-named-entity').val(named_chars);
+          $('#html-entity').val(dec_chars);
+          $('#css-entity').val(hex_chars);
+          $('#javascript-entity').val(oct_chars);
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <section>
+      <form>
+        <table>
+          <tr>
+            <td colspan="2" class="input"><input type="text" id="characters"></td>
+          </tr>
+          <tr>
+            <th class="output">HTML (Named)</th>
+            <td class="output"><input type="text" id="html-named-entity"></td>
+          </tr>
+          <tr>
+            <th class="output">HTML (Numeric)</th>
+            <td class="output"><input type="text" id="html-entity"></td>
+          </tr>
+          <tr>
+            <th class="output">CSS</th>
+            <td class="output"><input type="text" id="css-entity"></td>
+          </tr>
+          <tr>
+            <th class="output">JavaScript</th>
+            <td class="output"><input type="text" id="javascript-entity"></td>
+          </tr>
+        </table>
+      </form>
+    </section>
+
+    <section>
+      <dl>
+        <dt>ISO 8859-1 symbol characters</dt>
+        <dd>
+          &iexcl;
+          &cent;
+          &pound;
+          &curren;
+          &yen;
+          &brvbar;
+          &sect;
+          &uml;
+          &copy;
+          &ordf;
+          &laquo;
+          &not;
+          &shy;
+          &reg;
+          &macr;
+          &deg;
+          &plusmn;
+          &sup2;
+          &sup3;
+          &acute;
+          &micro;
+          &para;
+          &middot;
+          &cedil;
+          &sup1;
+          &ordm;
+          &raquo;
+          &frac14;
+          &frac12;
+          &frac34;
+          &iquest;
+          &times;
+          &divide;
+        </dd>
+      </dl>
+      <dl>
+        <dt>ISO 8859-1 letter characters</dt>
+        <dd>
+          &Agrave;
+          &Aacute;
+          &Acirc;
+          &Atilde;
+          &Auml;
+          &Aring;
+          &AElig;
+          &Ccedil;
+          &Egrave;
+          &Eacute;
+          &Ecirc;
+          &Euml;
+          &Igrave;
+          &Iacute;
+          &Icirc;
+          &Iuml;
+          &ETH;
+          &Ntilde;
+          &Ograve;
+          &Oacute;
+          &Ocirc;
+          &Otilde;
+          &Ouml;
+          &Oslash;
+          &Ugrave;
+          &Uacute;
+          &Ucirc;
+          &Uuml;
+          &Yacute;
+          &THORN;
+          &szlig;
+          &agrave;
+          &aacute;
+          &acirc;
+          &atilde;
+          &auml;
+          &aring;
+          &aelig;
+          &ccedil;
+          &egrave;
+          &eacute;
+          &ecirc;
+          &euml;
+          &igrave;
+          &iacute;
+          &icirc;
+          &iuml;
+          &eth;
+          &ntilde;
+          &ograve;
+          &oacute;
+          &ocirc;
+          &otilde;
+          &ouml;
+          &oslash;
+          &ugrave;
+          &uacute;
+          &ucirc;
+          &uuml;
+          &yacute;
+          &thorn;
+          &yuml;
+        </dd>
+      </dl>
+      <dl>
+        <dt>Symbols, mathematical symbols, and Greek letters</dt>
+        <dd>
+          &Alpha;
+          &Beta;
+          &Gamma;
+          &Delta;
+          &Epsilon;
+          &Zeta;
+          &Eta;
+          &Theta;
+          &Iota;
+          &Kappa;
+          &Lambda;
+          &Mu;
+          &Nu;
+          &Xi;
+          &Omicron;
+          &Pi;
+          &Sigma;
+          &Tau;
+          &Upsilon;
+          &Phi;
+          &Chi;
+          &Psi;
+          &Omega;
+          &alpha;
+          &beta;
+          &gamma;
+          &delta;
+          &epsilon;
+          &zeta;
+          &eta;
+          &theta;
+          &iota;
+          &kappa;
+          &lambda;
+          &mu;
+          &nu;
+          &xi;
+          &omicron;
+          &pi;
+          &rho;
+          &sigmaf;
+          &sigma;
+          &tau;
+          &upsilon;
+          &phi;
+          &chi;
+          &psi;
+          &omega;
+          &thetasym;
+          &upsih;
+          &piv;
+          &bull;
+          &hellip;
+          &prime;
+          &Prime;
+          &oline;
+          &frasl;
+          &weierp;
+          &image;
+          &real;
+          &trade;
+          &alefsym;
+          &larr;
+          &uarr;
+          &rarr;
+          &darr;
+          &harr;
+          &crarr;
+          &lArr;
+          &uArr;
+          &rArr;
+          &dArr;
+          &hArr;
+          &forall;
+          &part;
+          &exist;
+          &empty;
+          &nabla;
+          &isin;
+          &notin;
+          &ni;
+          &prod;
+          &sum;
+          &minus;
+          &lowast;
+          &radic;
+          &prop;
+          &infin;
+          &ang;
+          &and;
+          &or;
+          &cap;
+          &cup;
+          &int;
+          &there4;
+          &sim;
+          &cong;
+          &asymp;
+          &ne;
+          &equiv;
+          &le;
+          &ge;
+          &sub;
+          &sup;
+          &nsub;
+          &sube;
+          &supe;
+          &oplus;
+          &otimes;
+          &perp;
+          &sdot;
+          &lceil;
+          &rceil;
+          &lfloor;
+          &rfloor;
+          &lang;
+          &rang;
+          &loz;
+          &spades;
+          &clubs;
+          &hearts;
+          &diams;
+        </dd>
+      </dl>
+      <dl>
+        <dt>Markup-significant and internationalization characters</dt>
+        <dd>
+          &quot;
+          &amp;
+          &lt;
+          &gt;
+          &OElig;
+          &oelig;
+          &Scaron;
+          &scaron;
+          &Yuml;
+          &circ;
+          &tilde;
+          &ensp;
+          &emsp;
+          &thinsp;
+          &zwnj;
+          &zwj;
+          &lrm;
+          &rlm;
+          &ndash;
+          &mdash;
+          &lsquo;
+          &rsquo;
+          &sbquo;
+          &ldquo;
+          &rdquo;
+          &bdquo;
+          &dagger;
+          &Dagger;
+          &permil;
+          &lsaquo;
+          &rsaquo;
+          &euro;
+        </dd>
+      </dl>
+      <dl>
+        <dt>Additional characters</dt>
+        <dd>&apos;</dd>
+      </dl>
+    </section>
+
+    <section>
+    <p><a href="http://www.w3.org/TR/html4/sgml/entities.html">HTML 4</a> のエンティティ一覧。<a href="http://www.w3.org/TR/html5/named-character-references.html">HTML 5</a> のは多過ぎて心が挫けた。</p>
+    </section>
+  </body>
+</html>

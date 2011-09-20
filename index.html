@@ -92,6 +92,7 @@
       article p#comment {
         position: fixed;
         top: 40%;
+        width: 80%;
       }
       article#front {
         margin-top: -240px;
@@ -111,7 +112,6 @@
         background-image: url("./image/leaf.svg");
         font-family: "mplus-1p-regular", sans-serif;
         font-size: 16px;
-        -webkit-transition: 0.2s ease-in-out;
       }
       article#front:target {
         display: block;
@@ -121,7 +121,7 @@
         position: absolute;
         bottom: 20px;
         left: 1.5%;
-        width: 1500px; /* (240px + 10px) * 6 */
+        width: 1750px; /* (240px + 10px) * 7 */
         height: 140px;
       }
       article#front section#tryouts dl {
@@ -218,7 +218,7 @@
     <article id="front">
       <h1>Some tryouts</h1>
 
-      <p id="comment">久しぶりに弄ったので、色々忘れてた。</p>
+      <p id="comment">つくってみたものをちょこちょこ公開。Chromium・Firefox・Opera の最新版で大体問題なかったら載せる感じで。早く世の中が HTML 5 と CSS 3 と ECMAScript 5.1 で満たされたらいいと思う。</p>
 
       <section id="tryouts">
         <dl id="tryout-01">
@@ -269,6 +269,16 @@
             </a>
           </dt>
           <dd>本家に追い付くべくスクリプト化もした。</dd>
+        </dl>
+
+        <dl>
+          <dt>
+            <a href="./html-entities-converter.html">
+              <img src="./image/tryout-06.png" alt="" width="200" height="120">
+              HTML Entities Converter
+            </a>
+          </dt>
+          <dd>HTML エンティティお気楽変換!</dd>
         </dl>
 
         <dl id="tryout-progress">

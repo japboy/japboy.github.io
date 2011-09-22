@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="ja-JP">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="rights" content="Copyright 2011 Yu Inao">
+
+    <title>Portfolio of Yu I.</title>
+
+    <link rel="author" href="http://twitter.com/japboy" title="Yu I.">
+    <link rel="stylesheet" type="text/css"
+     href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+    <link rel="stylesheet" type="text/css"
+     href="http://fonts.googleapis.com/css?family=Sigmar+One">
+    <style type="text/css">
+      /**
+       * Basic design
+       * Alphabetical element order
+       */
+      * {
+        font-family: "IPAexGothic", sans-serif;
+        line-height: 160%;
+      }
+      h1 {
+        margin-top: 20px;
+        margin-bottom: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 200%;
+        font-weight: bolder;
+        color: rgb(255,255,255);
+        background-color: rgb(158,109,78);
+        width: 50%;
+        box-shadow: 0 0 10px rgb(158,109,78);
+      }
+      h2 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-size: 160%;
+        color: rgb(255,255,255);
+        background-color: rgb(207,182,153);
+        width: 50%;
+        box-shadow: 0 0 10px rgb(207,182,153);
+      }
+      dl {
+        margin-bottom: 1em;
+      }
+      dl:last-child {
+        margin-bottom: 0;
+      }
+      dl dt {
+        padding-top: 5px;
+        padding-right: 10px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        border: 1px solid rgb(0,0,0);
+        width: 50%;
+        background-color: rgb(255,255,255);
+        font-family: "IPAexMincho", serif;
+        font-weight: bolder;
+        font-size: 120%;
+        border-radius: 5px;
+      }
+      dl dd {
+        margin-top: -10px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid rgb(0,0,0);
+        border-radius: 5px;
+        background-color: rgb(255,255,255);
+        z-index: 1;
+      }
+      dl dd:last-child {
+        margin-bottom: 0;
+      }
+      ul li {
+        margin-left: 1.5em;
+        list-style-type: disc;
+      }
+      p {
+        margin-bottom: 1em;
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+      a {
+        text-decoration: none;
+      }
+      a:link {
+        color: rgb(250,140,177);
+      }
+      a:visited {
+        color: rgb(253,197,201);
+      }
+
+      /**
+       * Page design
+       * Appearance order in page
+       */
+      html {
+        background-color: rgb(255,255,255);
+        background-image: url("./image/color.png");
+        background-repeat: repeat-x;
+      }
+      body {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        background-image: url("./image/dotpattern.png");
+      }
+      header {
+        padding: 25px;
+        height: 150px;
+      }
+      header h1 {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        line-height: 150%;
+        color: rgb(0,0,0);
+        background-color: transparent;
+        background-image: none;
+        font-weight: normal;
+        font-family: "Sigmar One", sans-serif;
+        font-size: 60px;
+        text-align: center;
+        letter-spacing: 0.5em;
+        box-shadow: 0 0 0 transparent;
+      }
+      nav {
+        margin-top: -71px;
+        margin-left: -400px;
+        position: absolute;
+        top: 200px;
+        left: 50%;
+        border-top: 1px solid rgb(0,0,0);
+        border-bottom: 1px solid rgb(0,0,0);
+        width: 800px;
+        height: 120px;
+        z-index: 1;
+        overflow: hidden;
+      }
+      nav > ul {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 5px;
+        padding-right: 5px;
+        width: 960px;
+      }
+      nav > ul > li {
+        margin-left: 5px;
+        margin-right: 5px;
+        display: block;
+        float: left;
+        width: 150px;
+        height: 100px;
+        box-shadow: 0 0 10px rgb(207,182,153);
+      }
+      article {
+        margin: 100px auto;
+        width: 800px;
+      }
+      article > section {
+        display: none;
+      }
+      article > section#intro {
+        display: block;
+      }
+      footer {
+        padding: 25px;
+        text-align: center;
+      }
+    </style>
+
+    <script type="text/javascript" charset="UTF-8"
+     src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
+    </script>
+    <script type="text/javascript" charset="UTF-8"
+     src="./script/jquery.mousewheel.min.js">
+    </script>
+    <script type="text/javascript">
+      $(function() {
+        var moves = 0,
+            left_moves = true,
+
+        scroll_ = setInterval(function() {
+          if (moves >= 170) {
+            left_moves = false;
+          }
+
+          if (moves <= 0) {
+            left_moves = true;
+          }
+
+          if (left_moves) {
+            moves += 1;
+          }
+          else {
+            moves -= 1;
+          }
+
+          $('nav').scrollLeft(moves);
+        }, 100);
+
+        $('nav a').click(function(event) {
+            var ref = $(this).attr('href');
+
+            $('article section').fadeOut('fast');
+            $('article section' + ref).fadeIn('slow');
+            event.preventDefault()
+        });
+
+        $('nav').mousewheel(function(event, delta) {
+          this.scrollLeft -= (delta * 50);
+
+          event.preventDefault();
+          clearInterval(scroll_);
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="wrapper">
+      <header>
+        <h1 id="title">Portfolio</h1>
+      </header>
+
+      <nav>
+        <ul>
+          <li>
+            <a href="#intro" title="プロフィール"><img src="./image/portfolio-thumb-intro.png" alt=""></a>
+          </li>
+          <li>
+            <a href="#p02" title="Smartwiki"><img src="./image/portfolio-thumb-p02.png" alt=""></a>
+          </li>
+          <li>
+            <a href="#c03" title="Cloudsn"><img src="./image/portfolio-thumb-c03.png" alt=""></a>
+          </li>
+          <li>
+            <a href="#p01" title="Sidetalk"><img src="./image/portfolio-thumb-p01.png" alt=""></a>
+          </li>
+          <li>
+            <a href="#c02" title="googsystray"><img src="./image/portfolio-thumb-c02.png" alt=""></a>
+          </li>
+          <li>
+            <a href="#c01" title="Pro Git"><img src="./image/portfolio-thumb-c01.png" alt=""></a>
+          </li>
+        </ul>
+      </nav>
+
+      <article>
+        <section class="introduction" id="intro">
+          <h1>プロフィール</h1>
+
+          <p><img src="./image/portfolio-intro-01.png" alt=""></p>
+
+          <dl class="vcard">
+            <dt class="fn">稲尾 遊</dt>
+            <dd>
+              <ul>
+                <li>1984 年生まれ 27 歳</li>
+                <li>東京下町生まれ下町育ち</li>
+                <li>水泳が趣味</li>
+                <li>バランスボールに座りながらパソコンに向かう健康オタク</li>
+              </ul>
+            </dd>
+          </dl>
+
+          <h2>スキル</h2>
+
+          <ul>
+            <li>自然言語
+              <ul>
+                <li>日本語</li>
+                <li>英語 <em>TOEIC 600+</em></li>
+              </ul>
+            </li>
+            <li>プログラミング言語
+              <ul>
+                <li>Bash</li>
+                <li>CSS</li>
+                <li>HTML</li>
+                <li>JavaScript</li>
+                <li>Python</li>
+              </ul>
+            </li>
+            <li>ソフトウェア
+              <ul>
+                <li>GIMP</li>
+                <li>Inkscape</li>
+                <li>Vim</li>
+              </ul>
+            </li>
+          </ul>
+
+        </section>
+
+        <section class="product" id="p02">
+          <h1>Smartwiki</h1>
+
+          <dl>
+            <dt>概要</dt>
+            <dd>
+             <p>Google App Engine 上で動く 簡易 wiki エンジン。GitHub Wiki のような wiki システムを作ってみたいと思い、作成を始めました。現在は簡易なプロトタイプです。ソースコードは <a href="https://github.com/japboy/smartwiki">GiHub で公開しています。</a></p>
+            </dd>
+            <dt>時期</dt>
+            <dd>
+              <ul>
+                <li>2011 年 9 月</li>
+              </ul>
+            </dd>
+            <dt>環境</dt>
+            <dd>
+              <ul>
+                <li>Google App Engine</li>
+                <li>Python</li>
+              </ul>
+            </dd>
+          </dl>
+
+          <p>約 1 週間で作成したプロトタイプです。こだわった部分は、再利用性です。既存の軽量マークアップ言語を wiki 記法に用いいること (= 新しい記法を学習するコストの削減) と HTML テンプレートの記法も既存言語の再利用という点で XML 記法でテンプレートが書ける Genshi を使用しています。</p>
+        </section>
+
+        <section class="contribution" id="c03">
+          <h1>Cloudsn</h1>
+
+          <dl>
+            <dt>概要</dt>
+            <dd>
+              <p>Linux GNOME 環境向け Google サービスのデスクトップ通知アプリケーションです。日本語化に貢献しました。以前、日本語化した googsystray の更新が停滞しているので、代替アプリケーションを探す中で見つけました。<a href="https://github.com/chuchiperriman/cloud-services-notifications">GitHub でソースコードが公開</a>されています。</p>
+            </dd>
+            <dt>時期</dt>
+            <dd>
+              <ul>
+                <li>2011年 9 月</li>
+              </ul>
+            </dd>
+            <dt>担当</dt>
+            <dd>
+              <p>GitHub 上で fork したソースコードに pot ファイルから ja.po を作成し、Poedit で日本語化したものをコミットし、マージのリクエストをしました。</p>
+            </dd>
+            <dt>環境</dt>
+            <dd>
+              <ul>
+                <li>gettext</li>
+                <li>Git</li>
+                <li>GitHub</li>
+                <li>Poedit</li>
+                <li>Python</li>
+              </ul>
+            </dd>
+          </dl>
+        </section>
+
+        <section class="product" id="p01">
+          <h1>Sidetalk</h1>
+
+
+          <dl>
+            <dt>概要</dt>
+            <dd>
+              <p>Google Chrome 上で、現在開いている web ページのつぶやきをチェックするエクステンションを作成しました。JavaScript 学習成果として、<a href="https://github.com/japboy/sidetalk">GitHub 上にてソースコードを公開</a>しています。</p>
+            </dd>
+            <dt>時期</dt>
+            <dd>
+              <ul>
+                <li>2011 年 4 月</li>
+              </ul>
+            </dd>
+            <dt>環境</dt>
+            <dd>
+              <ul>
+                <li>Google Chrome</li>
+                <li>JavaScript</li>
+              </ul>
+            </dd>
+          </dl>
+
+          <p>JavaScript の勉強過程で作ってみたいと思い自作したエクステンションです。勉強の意味で jQuery 等のライブラリは使わず、直接 XHR で Topsy API にリクエストを発行し、JSON 形式のレスポンスをパースしたものから Twitter のつぶやきを取得し、HTML/CSS でレイアウトしたものを表示します。</p>
+          <p>着想は bit.ly のブックマークレットです。このブックマークレットには、短縮 URL を生成する時、backtype を利用した Twitter のつぶやきが表示する機能があります。時折、このつぶやきの中に面白いつぶやきがあった事から、同様のことが出来るブラウザ拡張がほしいと思っていました。</p>
+          <p><img src="./image/portfolio-p01-01.png" alt=""></p>
+        </section>
+
+        <section class="contribution" id="c02">
+          <h1>googsystray</h1>
+
+          <dl>
+            <dt>概要</dt>
+            <dd>
+              <p>Jim Duchek 氏による Windows/Linux GNOME 環境向け Google サービスのデスクトップ通知アプリケーションです。<a href="http://googsystray.sourceforge.net/">公式サイト</a>の翻訳者募集告知を見て、もともと愛用していたこともあり、日本語化に貢献しました。</p>
+            </dd>
+            <dt>時期</dt>
+            <dd>
+              <ul>
+                <li>2010 年 5 月</li>
+              </ul>
+            </dd>
+            <dt>担当</dt>
+            <dd>
+              <p>作者とコンタクトをとり、gettext による UI メッセージの日本語化を担当させていただきました。Subversion リポジトリからソースコードを取得し、Python のビルドコマンドより pot ファイルを作成し、ja.po の翻訳をしたものをメールでやりとりする形で作業しました。</p>
+            </dd>
+            <dt>環境</dt>
+            <dd>
+              <ul>
+                <li>gettext</li>
+                <li>Poedit</li>
+                <li>Python</li>
+                <li>Subversion</li>
+                <li>SourceForge.net</li>
+              </ul>
+            </dd>
+          </dl>
+
+          <p>Pro Git の翻訳経験を生かし、翻訳作業の中で定訳表を作成しながら進めました。また一般的な語彙は Launchpad を参照したりしながら、標準的な和訳を行うよう心がけて作業しました。</p>
+          <p>この貢献を通して、gettext を用いた翻訳作業の流れを勉強する事が出来ました。</p>
+        </section>
+
+        <section class="contribution" id="c01">
+          <h1>Pro Git</h1>
+
+          <p><img src="./image/portfolio-c01-01.png" alt=""></p>
+
+          <dl>
+            <dt>概要</dt>
+            <dd>
+            <p>Scott Chacon 著作のバージョン管理システム Git の解説書です。<a href="http://www.apress.com/9781430218333">Apress より英語版ペーパーバックが発売されており</a>、また<a href="http://progit.org/">公式サイト</a>では英語版含め各国語翻訳版を無償で読めます。こちらの日本語訳に貢献しました。<a href="https://github.com/progit/progit">GitHub にてソースコード公開</a>されています。</p>
+            </dd>
+            <dt>時期</dt>
+            <dd>
+              <ul>
+                <li>2009 年 8 月</li>
+              </ul>
+            </dd>
+            <dt>担当</dt>
+            <dd>
+            <p>日本国内最初のコミッターとして、Chapter 1 の翻訳に貢献しました。公式サイトにて<a href="http://progit.org/2009/08/19/translate-this.html">翻訳者としてクレジットして頂きました。</a></p>
+            </dd>
+            <dt>環境</dt>
+            <dd>
+              <ul>
+                <li>Git</li>
+                <li>GitHub</li>
+                <li>Markdown</li>
+              </ul>
+            </dd>
+          </dl>
+
+          <p>当時の勤め先は、ファイル名の接頭辞を更新日付にして差分管理をするという方法をとっていました。私はもっと良い方法はないかと思い、VCS について調べ始め、そして Git に出会いました。CVS や Subversion を知らなかったせいか、Git は簡単に使い始めることが出来ました。</p>
+          <p>使い方を調べていく中で、偶然 Pro Git を見つけ、またソースコードが GitHub 上で公開されていた事から、自身の勉強兼ねて翻訳を始めました。その当時はまだ注目度も低かった事もあり、私は結果的に本書の日本語訳最初のコミッターとなりました。</p>
+          <p>この経験を通して、Git 含め GitHub サービスや軽量マークアップ言語 Markdown などに触れる機会を得て、日常的にこれらを使うようになりました。また Chapter 1 以降の翻訳を担当頂いてる方々には、定訳表の作成を勧めていただいたり、共同翻訳についてご指導頂き、以降の翻訳コミットにあたっての貴重なノウハウを得ることが出来ました。</p>
+        </section>
+      </article>
+
+      <footer>
+        <address>
+          Copyright &copy; 2011 <a href="mailto:&#103;&#114;&#117;&#118;&#97;&#110;&#64;&#121;&#111;&#117;&#99;&#107;&#46;&#111;&#114;&#103;">Yu Inao</a>
+        </address>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -10,79 +10,18 @@
     <link rel="stylesheet" type="text/css"
      href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
     <link rel="stylesheet" type="text/css"
-     href="http://fonts.googleapis.com/css?family=Sigmar+One">
+    href="http://fonts.googleapis.com/css?family=Sigmar+One">
+    <link rel="stylesheet" type="text/css"
+     href="http://fonts.googleapis.com/css?family=Andika">
     <style type="text/css">
       /**
        * Basic design
        * Alphabetical element order
        */
-      * {
-        font-family: "IPAexGothic", sans-serif;
+       * {
+        color: rgb(100,100,100);
+        font-family: "IPAexGothic", "IPAGothic", sans-serif;
         line-height: 160%;
-      }
-      h1 {
-        margin-top: 20px;
-        margin-bottom: 30px;
-        padding-left: 10px;
-        padding-right: 10px;
-        font-size: 200%;
-        font-weight: bolder;
-        color: rgb(255,255,255);
-        background-color: rgb(158,109,78);
-        width: 50%;
-        box-shadow: 0 0 10px rgb(158,109,78);
-      }
-      h2 {
-        margin-top: 20px;
-        margin-bottom: 20px;
-        padding-left: 10px;
-        padding-right: 10px;
-        font-size: 160%;
-        color: rgb(255,255,255);
-        background-color: rgb(207,182,153);
-        width: 50%;
-        box-shadow: 0 0 10px rgb(207,182,153);
-      }
-      dl {
-        margin-bottom: 1em;
-      }
-      dl:last-child {
-        margin-bottom: 0;
-      }
-      dl dt {
-        padding-top: 5px;
-        padding-right: 10px;
-        padding-bottom: 10px;
-        padding-left: 10px;
-        border: 1px solid rgb(0,0,0);
-        width: 50%;
-        background-color: rgb(255,255,255);
-        font-family: "IPAexMincho", serif;
-        font-weight: bolder;
-        font-size: 120%;
-        border-radius: 5px;
-      }
-      dl dd {
-        margin-top: -10px;
-        margin-bottom: 10px;
-        padding: 10px;
-        border: 1px solid rgb(0,0,0);
-        border-radius: 5px;
-        background-color: rgb(255,255,255);
-        z-index: 1;
-      }
-      dl dd:last-child {
-        margin-bottom: 0;
-      }
-      ul li {
-        margin-left: 1.5em;
-        list-style-type: disc;
-      }
-      p {
-        margin-bottom: 1em;
-      }
-      p:last-child {
-        margin-bottom: 0;
       }
       a {
         text-decoration: none;
@@ -92,6 +31,89 @@
       }
       a:visited {
         color: rgb(253,197,201);
+      }
+      dl {
+        margin-bottom: 1em;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-top: 3px solid rgb(207,182,153);
+        border-bottom: 3px solid rgb(207,182,153);
+        position: relative;
+      }
+      dl:before, dl:after {
+        top: -3px;
+        border-top: 3px solid rgb(207,182,153);
+        border-bottom: 3px solid rgb(207,182,153);
+        position: absolute;
+        height: 100%;
+        width: 100px;
+        content: "";
+      }
+      dl:before {
+        right: 100%;
+      }
+      dl:after {
+        left: 100%;
+      }
+      dl:last-child {
+        margin-bottom: 0;
+      }
+      dl > dt {
+        font-family: "IPAexMincho", "IPAMincho", serif;
+        font-weight: bolder;
+        font-size: 120%;
+      }
+      dl > dd {
+        margin-bottom: 1em;
+      }
+      dl > dd:last-child {
+        margin-bottom: 0;
+      }
+      h1 {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-family: "Andika", sans-serif;
+        font-size: 200%;
+        font-weight: bolder;
+        color: rgb(60,60,60);
+      }
+      h1:after {
+        margin-left: 0.25em;
+        content: "\2022";
+        font-size: 80%;
+        text-shadow: none;
+      }
+      h2 {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-weight: bolder;
+        font-size: 160%;
+        color: rgb(60,60,60);
+      }
+      p {
+        margin-bottom: 1em;
+      }
+      p:last-child {
+        margin-bottom: 0;
+      }
+      table {
+        margin-bottom: 1em;
+      }
+      table:last-child {
+        margin-bottom: 0;
+      }
+      table tr > th {
+        padding: 5px;
+        border-top: 3px solid rgb(207,182,153);
+        background-color: rgb(255,254,225);
+      }
+      table tr > td {
+        padding: 5px;
+        background-color: rgb(255,255,255);
+      }
+      ul li {
+        margin-left: 1.5em;
+        list-style-type: disc;
       }
 
       /**
@@ -105,10 +127,11 @@
       }
       body {
         position: absolute;
+        z-index: 0;
         width: 100%;
         height: 100%;
-        z-index: 0;
         background-image: url("./image/dotpattern.png");
+        overflow-x: hidden;
       }
       header {
         padding: 25px;
@@ -117,41 +140,41 @@
       header h1 {
         margin: 0;
         padding: 0;
-        width: 100%;
         line-height: 150%;
-        color: rgb(0,0,0);
-        background-color: transparent;
-        background-image: none;
-        font-weight: normal;
+        color: rgb(158,109,78);
         font-family: "Sigmar One", sans-serif;
+        font-weight: normal;
         font-size: 60px;
         text-align: center;
         letter-spacing: 0.5em;
-        box-shadow: 0 0 0 transparent;
+        text-shadow: 1px 2px 0 rgb(253,197,201), 1px 3px 0 rgb(207,182,153);
+      }
+      header h1:after {
+        content: none;
       }
       nav {
         margin-top: -71px;
         margin-left: -400px;
+        border-top: 1px solid rgb(253,197,201);
+        border-bottom: 1px solid rgb(253,197,201);
         position: absolute;
         top: 200px;
         left: 50%;
-        border-top: 1px solid rgb(0,0,0);
-        border-bottom: 1px solid rgb(0,0,0);
+        z-index: 1;
         width: 800px;
         height: 120px;
-        z-index: 1;
         overflow: hidden;
       }
       nav > ul {
         padding-top: 10px;
+        padding-right: 5px;
         padding-bottom: 10px;
         padding-left: 5px;
-        padding-right: 5px;
         width: 960px;
       }
       nav > ul > li {
-        margin-left: 5px;
         margin-right: 5px;
+        margin-left: 5px;
         display: block;
         float: left;
         width: 150px;
@@ -165,8 +188,54 @@
       article > section {
         display: none;
       }
+      article > section > p.gallery {
+        text-align: center;
+      }
+      article > section > p.gallery img {
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 75px;
+        box-shadow: 0 0 10px rgb(207,182,153);
+      }
+      article > section > p.gallery > a > img:hover {
+        transform: rotate(6deg);
+        -moz-transform: rotate(6deg);
+        -o-transform: rotate(6deg);
+        -webkit-transform: rotate(6deg);
+      }
       article > section#intro {
         display: block;
+      }
+      article > section#gallery {
+        display: none;
+      }
+      article > section#gallery > div.wrapper {
+        display: table;
+        position: absolute;
+        position: absolute;
+        left: 0;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+      }
+      article > section#gallery > div.wrapper > div.wrapper {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+      }
+      article > section#gallery > div.wrapper > div.wrapper img {
+        padding-top: 2em;
+        padding-left: 2em;
+        padding-right: 2em;
+        padding-bottom: 4em;
+        border: 1px solid rgb(0,0,0);
+        background-color: rgb(255,255,255);
+      }
+      article > section#gallery > div.wrapper > div.wrapper span {
+      position: absolute;
+        width: 100%;
+        margin-top: -3em;
       }
       footer {
         padding: 25px;
@@ -181,284 +250,386 @@
      src="./script/jquery.mousewheel.min.js">
     </script>
     <script type="text/javascript">
-      $(function() {
-        var moves = 0,
+      $(function () {
+        var scroll_moves = 0,
             left_moves = true,
+            interval_id = 0,
+            timeout_id = 0,
 
-        scroll_ = setInterval(function() {
-          if (moves >= 170) {
+        scroller = function() {
+          if (scroll_moves >= 170) {
             left_moves = false;
           }
 
-          if (moves <= 0) {
+          if (scroll_moves <= 0) {
             left_moves = true;
           }
 
           if (left_moves) {
-            moves += 1;
+            scroll_moves += 1;
           }
           else {
-            moves -= 1;
+            scroll_moves -= 1;
           }
 
-          $('nav').scrollLeft(moves);
-        }, 100);
+          $('nav').scrollLeft(scroll_moves);
+        };
+
+        interval_id = setInterval(scroller, 100);
+
+        $('nav').mousewheel(function(event, delta) {
+          this.scrollLeft -= (delta * 50);
+
+          event.preventDefault();
+          clearInterval(interval_id);
+
+          if (!timeout_id) {
+            timeout_id = setTimeout(function() {
+              scroll_moves = $('nav').scrollLeft();
+              interval_id = setInterval(scroller, 100);
+              timeout_id = undefined;
+            }, 3000);
+          }
+        });
 
         $('nav a').click(function(event) {
             var ref = $(this).attr('href');
 
             $('article section').fadeOut('fast');
             $('article section' + ref).fadeIn('slow');
-            event.preventDefault()
+            event.preventDefault();
         });
 
-        $('nav').mousewheel(function(event, delta) {
-          this.scrollLeft -= (delta * 50);
+        $('.gallery a').click(function(event) {
+          var path = $(this).attr('href'),
+              desc = $(this).attr('title') || '',
 
+          clicker = $('#gallery').bind('click', function() {
+            $('body').css('overflow', '');
+            $('#gallery > .wrapper').css('top', '');
+            $('#gallery div.wrapper div.wrapper').html('');
+            $('#gallery').fadeOut('fast');
+            $(this).unbind(clicker);
+          });
+
+          $('body').css('overflow', 'hidden');
+          $('#gallery > .wrapper').css('top', $(document).scrollTop());
+          $('#gallery > .wrapper > .wrapper').html('<img src="' +
+            path + '" alt=""><br><span>' + desc + '</span>');
+          $('#gallery').fadeIn('slow');
           event.preventDefault();
-          clearInterval(scroll_);
         });
       });
     </script>
   </head>
 
   <body>
-    <div id="wrapper">
-      <header>
-        <h1 id="title">Portfolio</h1>
-      </header>
+    <header>
+      <h1 id="title">Portfolio</h1>
+    </header>
 
-      <nav>
-        <ul>
-          <li>
-            <a href="#intro" title="プロフィール"><img src="./image/portfolio-thumb-intro.png" alt=""></a>
-          </li>
-          <li>
-            <a href="#p02" title="Smartwiki"><img src="./image/portfolio-thumb-p02.png" alt=""></a>
-          </li>
-          <li>
-            <a href="#c03" title="Cloudsn"><img src="./image/portfolio-thumb-c03.png" alt=""></a>
-          </li>
-          <li>
-            <a href="#p01" title="Sidetalk"><img src="./image/portfolio-thumb-p01.png" alt=""></a>
-          </li>
-          <li>
-            <a href="#c02" title="googsystray"><img src="./image/portfolio-thumb-c02.png" alt=""></a>
-          </li>
-          <li>
-            <a href="#c01" title="Pro Git"><img src="./image/portfolio-thumb-c01.png" alt=""></a>
-          </li>
-        </ul>
-      </nav>
+    <nav>
+      <ul>
+        <li>
+          <a href="#intro" title="Profile">
+            <img src="./image/portfolio-thumb-intro.png" alt="Profile">
+          </a>
+        </li>
+        <li>
+          <a href="#e02" title="Smartwiki">
+            <img src="./image/portfolio-thumb-e02.png" alt="Smartwiki">
+          </a>
+        </li>
+        <li>
+          <a href="#c03" title="Cloudsn">
+            <img src="./image/portfolio-thumb-c03.png" alt="Cloudsn">
+          </a>
+        </li>
+        <li>
+          <a href="#e01" title="Sidetalk">
+            <img src="./image/portfolio-thumb-e01.png" alt="Sidetalk">
+          </a>
+        </li>
+        <li>
+          <a href="#c02" title="googsystray">
+            <img src="./image/portfolio-thumb-c02.png" alt="googsystray">
+          </a>
+        </li>
+        <li>
+          <a href="#c01" title="Pro Git">
+            <img src="./image/portfolio-thumb-c01.png" alt="Pro Git">
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-      <article>
-        <section class="introduction vcard" id="intro">
-          <h1>プロフィール</h1>
+    <article>
+      <section class="introduction vcard" id="intro">
+        <h1>Profile</h1>
 
-          <p><img src="./image/portfolio-intro-01.png" alt="" class="photo"></p>
+        <p class="gallery">
+          <img src="./image/portfolio-intro-thumb-01.png" alt="" class="photo">
+          <a href="./image/portfolio-intro-02.png" title="ポストカード作例 (2011 年 7 月)">
+            <img src="./image/portfolio-intro-thumb-03.png" alt="">
+          </a>
+          <a href="./image/portfolio-intro-01.png" title="ポストカード作例 (2011 年 6 月)">
+            <img src="./image/portfolio-intro-thumb-02.png" alt="">
+          </a>
+        </p>
 
-          <dl>
-            <dt class="fn">稲尾 遊</dt>
-            <dd>
-              <ul>
-                <li class="bday" title="1984">1984 年生まれ 27 歳</li>
-                <li class="adr region" title="東京都">東京下町生まれ下町育ち</li>
-                <li>水泳が趣味</li>
-                <li>バランスボールに座りながらパソコンに向かう健康オタク</li>
-              </ul>
-            </dd>
-          </dl>
+        <dl>
+          <dt class="fn">稲尾 遊</dt>
+          <dd>
+            <ul>
+              <li class="bday" title="1984">1984 年生まれ 27 歳</li>
+              <li class="adr region" title="東京都">東京下町生まれ下町育ち</li>
+              <li>デザインとかも割と好きなプログラマー志望</li>
+              <li>水泳が趣味</li>
+              <li>バランスボールに座りながらパソコンに向かう健康オタク</li>
+            </ul>
+          </dd>
+        </dl>
 
-          <h2>スキル</h2>
+        <h2>スキル</h2>
 
-          <ul>
-            <li>自然言語
-              <ul>
-                <li>日本語</li>
-                <li>英語 <em>TOEIC 600+</em></li>
-              </ul>
-            </li>
-            <li>プログラミング言語
-              <ul>
-                <li>Bash</li>
-                <li>CSS</li>
-                <li>HTML</li>
-                <li>JavaScript</li>
-                <li>Python</li>
-              </ul>
-            </li>
-            <li>ソフトウェア
-              <ul>
-                <li>GIMP</li>
-                <li>Inkscape</li>
-                <li>Vim</li>
-              </ul>
-            </li>
-          </ul>
+        <table>
+          <tr>
+            <th colspan="2">自然言語</th>
 
-        </section>
+            <th colspan="2">プログラミング言語</th>
+          </tr>
+          <tr>
+            <td>日本語</td>
+            <td>&#10025;&#10025;&#10025;</td>
 
-        <section class="product" id="p02">
-          <h1>Smartwiki</h1>
+            <td>Bash</td>
+            <td>&#10025;</td>
+          </tr>
+          <tr>
+            <td>英語</td>
+            <td>&#10025;</td>
 
-          <dl>
-            <dt>概要</dt>
-            <dd>
-             <p>Google App Engine 上で動く 簡易 wiki エンジン。GitHub Wiki のような wiki システムを作ってみたいと思い、作成を始めました。現在は簡易なプロトタイプです。ソースコードは <a href="https://github.com/japboy/smartwiki">GiHub で公開しています。</a></p>
-            </dd>
-            <dt>時期</dt>
-            <dd>
-              <ul>
-                <li>2011 年 9 月</li>
-              </ul>
-            </dd>
-            <dt>環境</dt>
-            <dd>
-              <ul>
-                <li>Google App Engine</li>
-                <li>Python</li>
-              </ul>
-            </dd>
-          </dl>
+            <td>CSS</td>
+            <td>&#10025;&#10025;</td>
+          </tr>
+          <tr>
+            <td colspan="2" rowspan="3"></td>
 
-          <p>約 1 週間で作成したプロトタイプです。こだわった部分は、再利用性です。既存の軽量マークアップ言語を wiki 記法に用いいること (= 新しい記法を学習するコストの削減) と HTML テンプレートの記法も既存言語の再利用という点で XML 記法でテンプレートが書ける Genshi を使用しています。</p>
-        </section>
+            <td>HTML</td>
+            <td>&#10025;&#10025;&#10025;</td>
+          </tr>
+          <tr>
+            <td>JavaScript</td>
+            <td>&#10025;</td>
+          </tr>
+          <tr>
+            <td>Python</td>
+            <td>&#10025;</td>
+          </tr>
+          <tr>
+            <th colspan="2">OS</th>
+            <th colspan="2">アプリケーション</th>
+          </tr>
+          <tr>
+            <td>Mac OS X</td>
+            <td>&#10025;&#10025;&#10025;</td>
 
-        <section class="contribution" id="c03">
-          <h1>Cloudsn</h1>
+            <td>GIMP</td>
+            <td>&#10025;</td>
+          </tr>
+          <tr>
+            <td>Linux</td>
+            <td>&#10025;&#10025;</td>
 
-          <dl>
-            <dt>概要</dt>
-            <dd>
-              <p>Linux GNOME 環境向け Google サービスのデスクトップ通知アプリケーションです。日本語化に貢献しました。以前、日本語化した googsystray の更新が停滞しているので、代替アプリケーションを探す中で見つけました。<a href="https://github.com/chuchiperriman/cloud-services-notifications">GitHub でソースコードが公開</a>されています。</p>
-            </dd>
-            <dt>時期</dt>
-            <dd>
-              <ul>
-                <li>2011年 9 月</li>
-              </ul>
-            </dd>
-            <dt>担当</dt>
-            <dd>
-              <p>GitHub 上で fork したソースコードに pot ファイルから ja.po を作成し、Poedit で日本語化したものをコミットし、マージのリクエストをしました。</p>
-            </dd>
-            <dt>環境</dt>
-            <dd>
-              <ul>
-                <li>gettext</li>
-                <li>Git</li>
-                <li>GitHub</li>
-                <li>Poedit</li>
-                <li>Python</li>
-              </ul>
-            </dd>
-          </dl>
-        </section>
+            <td>Inkscape</td>
+            <td>&#10025;</td>
+          </tr>
+          <tr>
+            <td>Windows</td>
+            <td>&#10025;&#10025;&#10025;</td>
 
-        <section class="product" id="p01">
-          <h1>Sidetalk</h1>
+            <td>Vim</td>
+            <td>&#10025;</td>
+          </tr>
+        </table>
+      </section>
 
+      <section class="effort" id="e02">
+        <h1>Smartwiki</h1>
 
-          <dl>
-            <dt>概要</dt>
-            <dd>
-              <p>Google Chrome 上で、現在開いている web ページのつぶやきをチェックするエクステンションを作成しました。JavaScript 学習成果として、<a href="https://github.com/japboy/sidetalk">GitHub 上にてソースコードを公開</a>しています。</p>
-            </dd>
-            <dt>時期</dt>
-            <dd>
-              <ul>
-                <li>2011 年 4 月</li>
-              </ul>
-            </dd>
-            <dt>環境</dt>
-            <dd>
-              <ul>
-                <li>Google Chrome</li>
-                <li>JavaScript</li>
-              </ul>
-            </dd>
-          </dl>
+        <dl>
+          <dt>概要</dt>
+          <dd>
+            <p>Google App Engine 上で動く 簡易 wiki エンジン。GitHub Wiki のような wiki システムを作ってみたいと思い、作成を始めました。現在は簡易なプロトタイプです。<a href="http://0-1-1-alpha.driwak.appspot.com/">動作サンプル</a>と<a href="https://github.com/japboy/smartwiki">ソースコード</a>を公開しています。</a></p>
+          </dd>
+          <dt>時期</dt>
+          <dd>
+            <ul>
+              <li>2011 年 9 月</li>
+            </ul>
+          </dd>
+          <dt>環境</dt>
+          <dd>
+            <ul>
+              <li>Google App Engine</li>
+              <li>Python</li>
+            </ul>
+          </dd>
+        </dl>
 
-          <p>JavaScript の勉強過程で作ってみたいと思い自作したエクステンションです。勉強の意味で jQuery 等のライブラリは使わず、直接 XHR で Topsy API にリクエストを発行し、JSON 形式のレスポンスをパースしたものから Twitter のつぶやきを取得し、HTML/CSS でレイアウトしたものを表示します。</p>
-          <p>着想は bit.ly のブックマークレットです。このブックマークレットには、短縮 URL を生成する時、backtype を利用した Twitter のつぶやきが表示する機能があります。時折、このつぶやきの中に面白いつぶやきがあった事から、同様のことが出来るブラウザ拡張がほしいと思っていました。</p>
-          <p><img src="./image/portfolio-p01-01.png" alt=""></p>
-        </section>
+        <p>約 1 週間で作成したプロトタイプです。こだわった部分は、再利用性です。既存の軽量マークアップ言語を wiki 記法に用いいること (= 新しい記法を学習するコストの削減) と HTML テンプレートの記法も既存言語の再利用という点で XML 記法でテンプレートが書ける Genshi を使用しています。</p>
+      </section>
 
-        <section class="contribution" id="c02">
-          <h1>googsystray</h1>
+      <section class="contribution" id="c03">
+        <h1>Cloudsn</h1>
 
-          <dl>
-            <dt>概要</dt>
-            <dd>
-              <p>Jim Duchek 氏による Windows/Linux GNOME 環境向け Google サービスのデスクトップ通知アプリケーションです。<a href="http://googsystray.sourceforge.net/">公式サイト</a>の翻訳者募集告知を見て、もともと愛用していたこともあり、日本語化に貢献しました。</p>
-            </dd>
-            <dt>時期</dt>
-            <dd>
-              <ul>
-                <li>2010 年 5 月</li>
-              </ul>
-            </dd>
-            <dt>担当</dt>
-            <dd>
-              <p>作者とコンタクトをとり、gettext による UI メッセージの日本語化を担当させていただきました。Subversion リポジトリからソースコードを取得し、Python のビルドコマンドより pot ファイルを作成し、ja.po の翻訳をしたものをメールでやりとりする形で作業しました。</p>
-            </dd>
-            <dt>環境</dt>
-            <dd>
-              <ul>
-                <li>gettext</li>
-                <li>Poedit</li>
-                <li>Python</li>
-                <li>Subversion</li>
-                <li>SourceForge.net</li>
-              </ul>
-            </dd>
-          </dl>
+        <dl>
+          <dt>概要</dt>
+          <dd>
+            <p>Linux GNOME 環境向け Google サービスのデスクトップ通知アプリケーションです。日本語化に貢献しました。以前、日本語化した googsystray の更新が停滞しているので、代替アプリケーションを探す中で見つけました。<a href="https://github.com/chuchiperriman/cloud-services-notifications">GitHub でソースコードが公開</a>されています。</p>
+          </dd>
+          <dt>時期</dt>
+          <dd>
+            <ul>
+              <li>2011年 9 月</li>
+            </ul>
+          </dd>
+          <dt>担当</dt>
+          <dd>
+            <p>GitHub 上で fork したソースコードに pot ファイルから ja.po を作成し、Poedit で日本語化したものをコミットし、マージのリクエストをしました。</p>
+          </dd>
+          <dt>環境</dt>
+          <dd>
+            <ul>
+              <li>gettext</li>
+              <li>Git</li>
+              <li>GitHub</li>
+              <li>Poedit</li>
+              <li>Python</li>
+            </ul>
+          </dd>
+        </dl>
+      </section>
 
-          <p>Pro Git の翻訳経験を生かし、翻訳作業の中で定訳表を作成しながら進めました。また一般的な語彙は Launchpad を参照したりしながら、標準的な和訳を行うよう心がけて作業しました。</p>
-          <p>この貢献を通して、gettext を用いた翻訳作業の流れを勉強する事が出来ました。</p>
-        </section>
+      <section class="effort" id="e01">
+        <h1>Sidetalk</h1>
 
-        <section class="contribution" id="c01">
-          <h1>Pro Git</h1>
+        <p class="gallery">
+          <img src="./image/portfolio-e01-thumb-01.png" alt="">
+          <a href="./image/portfolio-e01-01.png" title="Sidetalk 動作画面">
+            <img src="./image/portfolio-e01-thumb-02.png" alt="">
+          </a>
+          <img src="./image/portfolio-e01-thumb-03.png" alt="">
+        </p>
 
-          <p><img src="./image/portfolio-c01-01.png" alt=""></p>
+        <dl>
+          <dt>概要</dt>
+          <dd>
+            <p>Google Chrome 上で、現在開いている web ページのつぶやきをチェックするエクステンションを作成しました。JavaScript 学習成果として、<a href="https://github.com/japboy/sidetalk">GitHub 上にてソースコードを公開</a>しています。</p>
+          </dd>
+          <dt>時期</dt>
+          <dd>
+            <ul>
+              <li>2011 年 4 月</li>
+            </ul>
+          </dd>
+          <dt>環境</dt>
+          <dd>
+            <ul>
+              <li>Google Chrome</li>
+              <li>JavaScript</li>
+            </ul>
+          </dd>
+        </dl>
 
-          <dl>
-            <dt>概要</dt>
-            <dd>
-            <p>Scott Chacon 著作のバージョン管理システム Git の解説書です。<a href="http://www.apress.com/9781430218333">Apress より英語版ペーパーバックが発売されており</a>、また<a href="http://progit.org/">公式サイト</a>では英語版含め各国語翻訳版を無償で読めます。こちらの日本語訳に貢献しました。<a href="https://github.com/progit/progit">GitHub にてソースコード公開</a>されています。</p>
-            </dd>
-            <dt>時期</dt>
-            <dd>
-              <ul>
-                <li>2009 年 8 月</li>
-              </ul>
-            </dd>
-            <dt>担当</dt>
-            <dd>
-            <p>日本国内最初のコミッターとして、Chapter 1 の翻訳に貢献しました。公式サイトにて<a href="http://progit.org/2009/08/19/translate-this.html">翻訳者としてクレジットして頂きました。</a></p>
-            </dd>
-            <dt>環境</dt>
-            <dd>
-              <ul>
-                <li>Git</li>
-                <li>GitHub</li>
-                <li>Markdown</li>
-              </ul>
-            </dd>
-          </dl>
+        <p>JavaScript の勉強過程で作ってみたいと思い自作したエクステンションです。勉強の意味で jQuery 等のライブラリは使わず、直接 XHR で Topsy API にリクエストを発行し、JSON 形式のレスポンスをパースしたものから Twitter のつぶやきを取得し、HTML/CSS でレイアウトしたものを表示します。</p>
+        <p>着想は bit.ly のブックマークレットです。このブックマークレットには、短縮 URL を生成する時、backtype を利用した Twitter のつぶやきが表示する機能があります。時折、このつぶやきの中に面白いつぶやきがあった事から、同様のことが出来るブラウザ拡張がほしいと思っていました。</p>
+        <p>こうして、欲しかったものを自分で作れるようになるのはとても楽しいです。</p>
+      </section>
 
-          <p>当時の勤め先は、ファイル名の接頭辞を更新日付にして差分管理をするという方法をとっていました。私はもっと良い方法はないかと思い、VCS について調べ始め、そして Git に出会いました。CVS や Subversion を知らなかったせいか、Git は簡単に使い始めることが出来ました。</p>
-          <p>使い方を調べていく中で、偶然 Pro Git を見つけ、またソースコードが GitHub 上で公開されていた事から、自身の勉強兼ねて翻訳を始めました。その当時はまだ注目度も低かった事もあり、私は結果的に本書の日本語訳最初のコミッターとなりました。</p>
-          <p>この経験を通して、Git 含め GitHub サービスや軽量マークアップ言語 Markdown などに触れる機会を得て、日常的にこれらを使うようになりました。また Chapter 1 以降の翻訳を担当頂いてる方々には、定訳表の作成を勧めていただいたり、共同翻訳についてご指導頂き、以降の翻訳コミットにあたっての貴重なノウハウを得ることが出来ました。</p>
-        </section>
-      </article>
+      <section class="contribution" id="c02">
+        <h1>googsystray</h1>
 
-      <footer>
-        <address>
-          Copyright &copy; 2011 <a href="mailto:&#103;&#114;&#117;&#118;&#97;&#110;&#64;&#121;&#111;&#117;&#99;&#107;&#46;&#111;&#114;&#103;">Yu Inao</a>
-        </address>
-      </footer>
-    </div>
+        <dl>
+          <dt>概要</dt>
+          <dd>
+            <p>Jim Duchek 氏による Windows/Linux GNOME 環境向け Google サービスのデスクトップ通知アプリケーションです。<a href="http://googsystray.sourceforge.net/">公式サイト</a>の翻訳者募集告知を見て、もともと愛用していたこともあり、日本語化に貢献しました。</p>
+          </dd>
+          <dt>時期</dt>
+          <dd>
+            <ul>
+              <li>2010 年 5 月</li>
+            </ul>
+          </dd>
+          <dt>担当</dt>
+          <dd>
+            <p>作者とコンタクトをとり、gettext による UI メッセージの日本語化を担当させていただきました。Subversion リポジトリからソースコードを取得し、Python のビルドコマンドより pot ファイルを作成し、ja.po の翻訳をしたものをメールでやりとりする形で作業しました。</p>
+          </dd>
+          <dt>環境</dt>
+          <dd>
+            <ul>
+              <li>gettext</li>
+              <li>Poedit</li>
+              <li>Python</li>
+              <li>Subversion</li>
+              <li>SourceForge.net</li>
+            </ul>
+          </dd>
+        </dl>
+
+        <p>Pro Git の翻訳経験を生かし、翻訳作業の中で定訳表を作成しながら進めました。また一般的な語彙は Launchpad を参照したりしながら、標準的な和訳を行うよう心がけて作業しました。</p>
+        <p>この貢献を通して、gettext を用いた翻訳作業の流れを勉強する事が出来ました。</p>
+      </section>
+
+      <section class="contribution" id="c01">
+        <h1>Pro Git</h1>
+
+        <p class="gallery">
+          <img src="./image/portfolio-c01-01.png" alt="">
+        </p>
+
+        <dl>
+          <dt>概要</dt>
+          <dd>
+          <p>Scott Chacon 著作のバージョン管理システム Git の解説書です。<a href="http://www.apress.com/9781430218333">Apress より英語版ペーパーバックが発売されており</a>、また<a href="http://progit.org/">公式サイト</a>では英語版含め各国語翻訳版を無償で読めます。こちらの日本語訳に貢献しました。<a href="https://github.com/progit/progit">GitHub にてソースコード公開</a>されています。</p>
+          </dd>
+          <dt>時期</dt>
+          <dd>
+            <ul>
+              <li>2009 年 8 月</li>
+            </ul>
+          </dd>
+          <dt>担当</dt>
+          <dd>
+          <p>日本国内最初のコミッターとして、Chapter 1 の翻訳に貢献しました。公式サイトにて<a href="http://progit.org/2009/08/19/translate-this.html">翻訳者としてクレジットして頂きました。</a></p>
+          </dd>
+          <dt>環境</dt>
+          <dd>
+            <ul>
+              <li>Git</li>
+              <li>GitHub</li>
+              <li>Markdown</li>
+            </ul>
+          </dd>
+        </dl>
+
+        <p>当時の勤め先は、ファイル名の接頭辞を更新日付にして差分管理をするという方法をとっていました。私はもっと良い方法はないかと思い、VCS について調べ始め、そして Git に出会いました。CVS や Subversion を知らなかったせいか、Git は簡単に使い始めることが出来ました。</p>
+        <p>使い方を調べていく中で、偶然 Pro Git を見つけ、またソースコードが GitHub 上で公開されていた事から、自身の勉強兼ねて翻訳を始めました。その当時はまだ注目度も低かった事もあり、私は結果的に本書の日本語訳最初のコミッターとなりました。</p>
+        <p>この経験を通して、Git 含め GitHub サービスや軽量マークアップ言語 Markdown などに触れる機会を得て、日常的にこれらを使うようになりました。また Chapter 1 以降の翻訳を担当頂いてる方々には、定訳表の作成を勧めていただいたり、共同翻訳についてご指導頂き、以降の翻訳コミットにあたっての貴重なノウハウを得ることが出来ました。</p>
+      </section>
+
+      <section id="gallery">
+        <div class="wrapper">
+          <div class="wrapper">
+          </div>
+        </div>
+      </section>
+    </article>
+
+    <footer>
+      <address>
+        Copyright &copy; 2011 <a href="mailto:&#103;&#114;&#117;&#118;&#97;&#110;&#64;&#121;&#111;&#117;&#99;&#107;&#46;&#111;&#114;&#103;">Yu Inao</a>
+      </address>
+    </footer>
   </body>
 </html>

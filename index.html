@@ -179,6 +179,22 @@
         height: 0;
         content: "";
       }
+      aside {
+        padding: 10px;
+        font-family: sans-serif;
+        display: none; /* for jQuery slideUp trick */
+        position: absolute;
+        bottom: 0;
+        left: 30px;
+        border-top: 5px solid rgb(220,200,210);
+        border-left: 5px solid rgb(220,200,210);
+        border-right: 5px solid rgb(220,200,210);
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+      }
+      aside p {
+        text-indent: 0;
+      }
     </style>
 
     <script type="text/javascript" charset="UTF-8"
@@ -189,6 +205,17 @@
     </script>
     <script type="text/javascript">
       $(function () {
+        $(document).ready(function() {
+          var container = $('aside');
+
+          if (container.is(':visible')) {
+            container.slideUp('slow');
+          }
+          else {
+            container.slideDown('slow');
+          }
+        });
+
         $('article').mousewheel(function(event, moves) {
           var speed = 50;
 
@@ -295,6 +322,10 @@
 
       <p class="nav"><a href="#">Close</a></p>
     </article>
+
+    <aside>
+      <p><a href="./portfolio.html">Portfolio</a></p>
+    </aside>
 
     <footer>
       <a href="http://github.com/japboy">

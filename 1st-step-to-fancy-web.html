@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="rights-standard" content="pd">
+
+    <title>First Step to Fancy Web</title>
+
+    <link rel="author" href="http://twitter.com/japboy" title="Yu I.">
+    <link rel="stylesheet" type="text/css"
+     href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css">
+    <link rel="stylesheet" type="text/css"
+     href="http://fonts.googleapis.com/css?family=Open+Sans:800">
+    <style type="text/css">
+      body {
+        overflow: hidden;
+      }
+      h1 {
+        margin-top: -380px;
+        margin-left: -620px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 1;
+        color: rgb(255,255,255);
+        font-family: "Open Sans", sans-serif;
+        font-weight: 800;
+        font-size: 40px;
+        text-shadow: 0 0 5px rgb(0,0,0);
+      }
+      #mycanvas {
+        margin-top: -360px;
+        margin-left: -640px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 0;
+        box-shadow: 0 0 10px rgb(100,100,100);
+      }
+    </style>
+
+    <script type="text/javascript" charset="UTF-8"
+     src="./script/processing-1.3.6.min.js">
+    </script>
+  </head>
+
+  <body>
+    <section>
+      <h1>First Step to Fancy Web</h1>
+
+      <script type="application/processing">
+        void setup() {
+          background(0);
+          frameRate(20);
+          smooth;
+          size(1280, 720);
+        }
+
+        int count = 0;
+        String[] messages = new String[2];
+        messages[0] = '会社のみんなが';
+        messages[1] = '格好良いコトやってる人ばかりなので';
+        messages[2] = 'とりあえず Processing.js';
+        messages[3] = 'やってみた。';
+        messages[4] = '(*ﾟ∀ﾟ)=3';
+
+        void draw() {
+          fadeOut();
+          //println('Hello to debug console!');
+        }
+
+        void mouseMoved() {
+          if (random(10) < 2) {
+            int circle_size = random(80);
+            int circle_stroke = random(10);
+          }
+          else {
+            int circle_size = random(50);
+            int circle_stroke = random(1);
+          }
+
+          stroke(200 + random(55),
+                 200 + random(55),
+                 200 + random(55));
+          strokeWeight(circle_stroke);
+          fill(200 + random(55),
+               200 + random(55),
+               200 + random(55),
+               random(255));
+
+          ellipse(mouseX, mouseY, circle_size, circle_size);
+        }
+
+        void mouseDragged() {
+          if (random(10) < 2) {
+            int circle_size = random(120);
+            int circle_stroke = random(10);
+          }
+          else {
+            int circle_size = random(50);
+            int circle_stroke = random(1);
+          }
+
+          stroke(200 + random(55),
+                 200 + random(55),
+                 200 + random(55));
+          strokeWeight(circle_stroke);
+          fill(0);
+          ellipse(mouseX, mouseY, circle_size, circle_size);
+        }
+
+        void mousePressed() {
+          fill(255);
+          textSize(20);
+          text(messages[count], 800, 400 + count * 25);
+
+          if (messages.length() - 1 > count) {
+            count = count + 1;
+          }
+          else {
+            count = 0;
+          }
+        }
+
+        void fadeOut() {
+          noStroke();
+          fill(0, 10);
+          rectMode(CORNER);
+          rect(0, 0, width, height);
+        }
+      </script>
+      <canvas id="mycanvas"></canvas>
+    </section>
+  </body>
+</html>

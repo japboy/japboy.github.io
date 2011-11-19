@@ -121,7 +121,7 @@
         position: absolute;
         bottom: 20px;
         left: 1.5%;
-        width: 1750px; /* (240px + 10px) * 7 */
+        width: 2000px; /* (240px + 10px) * 8 */
         height: 140px;
       }
       article#front section#tryouts dl {
@@ -194,15 +194,6 @@
 
           $(this).scrollLeft($(this).scrollLeft() - moves * speed);
           return false;
-        });
-
-        $('a.nav').click(function(event) {
-          var $anchor = $(this);
-
-          $('article').stop().animate({
-            scrollLeft: $($anchor.attr('href')).offset().left
-          }, 500);
-          event.preventDefault();
         });
       });
     </script>
@@ -279,6 +270,16 @@
             </a>
           </dt>
           <dd>HTML エンティティお気楽変換!</dd>
+        </dl>
+
+        <dl>
+          <dt>
+            <a href="./1st-step-to-fancy-web.html">
+              <img src="./image/tryout-07.png" alt="" width="200" height="120">
+              First Step to Fancy Web
+            </a>
+          </dt>
+          <dd>Processing.js でシャレオツ!</dd>
         </dl>
 
         <dl id="tryout-progress">

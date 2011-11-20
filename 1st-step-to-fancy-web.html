@@ -49,20 +49,21 @@
       <h1>First Step to Fancy Web</h1>
 
       <script type="application/processing">
-        void setup() {
-          background(0);
-          frameRate(20);
-          smooth;
-          size(1280, 720);
-        }
-
         int count = 0;
         String[] messages = new String[5];
+
         messages[0] = '会社のみんなが';
         messages[1] = '格好良いコトやってる人ばかりなので';
         messages[2] = 'とりあえず Processing.js';
         messages[3] = 'やってみた。';
         messages[4] = '(*ﾟ∀ﾟ)=3';
+
+        void setup() {
+          background(0);
+          frameRate(15);
+          smooth;
+          size(1280, 720);
+        }
 
         void draw() {
           fadeOut();
@@ -70,43 +71,22 @@
         }
 
         void mouseMoved() {
-          if (random(10) < 2) {
-            int circle_size = random(80);
-            int circle_stroke = random(10);
-          }
-          else {
-            int circle_size = random(50);
-            int circle_stroke = random(1);
-          }
-
           stroke(200 + random(55),
-                 200 + random(55),
-                 200 + random(55));
-          strokeWeight(circle_stroke);
+                 100,
+                 100);
           fill(200 + random(55),
-               200 + random(55),
-               200 + random(55),
+               100,
+               100,
                random(255));
-
-          ellipse(mouseX, mouseY, circle_size, circle_size);
+          variableEllipse(mouseX, mouseY, pmouseX, pmouseY);
         }
 
         void mouseDragged() {
-          if (random(10) < 2) {
-            int circle_size = random(120);
-            int circle_stroke = random(10);
-          }
-          else {
-            int circle_size = random(50);
-            int circle_stroke = random(1);
-          }
-
           stroke(200 + random(55),
                  200 + random(55),
-                 200 + random(55));
-          strokeWeight(circle_stroke);
+                 100);
           fill(0);
-          ellipse(mouseX, mouseY, circle_size, circle_size);
+          variableEllipse(mouseX, mouseY, pmouseX, pmouseY);
         }
 
         void mousePressed() {
@@ -127,6 +107,13 @@
           fill(0, 10);
           rectMode(CORNER);
           rect(0, 0, width, height);
+        }
+
+        void variableEllipse(int x, int y, int px, int py) {
+          float speed = abs(x - px) + abs(y - py);
+
+          strokeWeight(speed / 100);
+          ellipse(x, y, speed, speed);
         }
       </script>
       <canvas id="mycanvas"></canvas>

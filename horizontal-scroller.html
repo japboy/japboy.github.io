@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="rights-standard" content="pd">
+
+    <title>Horizontal Scroller</title>
+
+    <link rel="author" href="http://twitter.com/japboy" title="Yu I.">
+    <link rel="stylesheet" type="text/css"
+     href="http://normalize-css.googlecode.com/svn/trunk/normalize.min.css">
+
+    <style type="text/css">
+      body {
+        color: rgb(200,200,200);
+      }
+
+      a:link, a:visited {
+        text-decoration: none;
+      }
+
+      .active {
+        color: rgb(0,0,0);
+        font-family: sans-serif;
+        font-weight: bolder;
+      }
+
+      #slide-outer {
+        position: relative;
+        z-index: 0;
+        width: 100%;
+        overflow: hidden;
+      }
+      #slide-outer > #slide-inner {
+        z-index: 1;
+        width: 9999px; /* Expected to be overridden by JavaScript */
+      }
+      #slide-outer > #slide-inner > .slide-inner-box {
+        margin: 0;
+        float: left;
+        width: 400px; /* Possiblly overridden by JavaScript */
+        height: 300px;
+        z-index: 2;
+        font-size: 1500%;
+        line-height: 100%;
+        text-align: center;
+      }
+      #slide-outer > #slide-nav > * {
+        margin: 0;
+        padding: 0;
+        position: fixed;
+        top: 20%;
+        width: 75px;
+        height: 75px;
+        line-height: 75px;
+        list-style-type: none;
+        background-color: rgb(255,255,255);
+        color: rgb(0,0,0);
+        text-align: center;
+        border-radius: 37.5px;
+        box-shadow: 0 0 10px rgb(100,100,100);
+      }
+      #slide-outer > #slide-nav > * > a {
+        color: rgb(0,0,0);
+        font-family: sans-serif;
+      }
+      #slide-outer > #slide-nav > *:hover {
+        background-color: rgb(200,200,200);
+      }
+      #slide-outer > #slide-nav > *:hover > a {
+        color: rgb(255,255,255);
+      }
+      #slide-outer > #slide-nav > #slide-nav-prev {
+        left: 30px;
+      }
+      #slide-outer > #slide-nav > #slide-nav-next {
+        right: 30px;
+      }
+
+      #nav-outer {
+        margin-left: -40%; /* FIXME: `margin: auto` causes buggy scrolling */
+        position: relative;
+        left: 50%;
+        z-index: 0;
+        width: 80%;
+        overflow: hidden;
+      }
+      #nav-outer > #nav-inner {
+        margin: 0;
+        padding: 0;
+        width: 9999px; /* Expected to be overridden by JavaScript */
+      }
+      #nav-outer > #nav-inner > .nav-inner-box {
+        margin: 0;
+        padding: 0;
+        float: left;
+        width: 8em;
+        list-style-type: none;
+        text-align: center;
+      }
+      #nav-outer > #nav-inner > .nav-inner-box.active {
+        background-color: rgb(200,200,200);
+      }
+      #nav-outer > #nav-inner > .nav-inner-box.active > a:link {
+        color: rgb(255,255,255);
+      }
+      #nav-outer > #nav-nav > * {
+        margin: 0;
+        padding-right: 10px;
+        padding-left: 10px;
+        border: 1px solid rgb(0,0,0);
+        position: fixed;
+        top: 307px;
+        list-style-type: none;
+        background-color: rgb(255,255,255);
+      }
+      #nav-outer > #nav-nav > * > a {
+        font-family: sans-serif;
+      }
+      #nav-outer > #nav-nav > #nav-nav-prev {
+        left: 10%;
+      }
+      #nav-outer > #nav-nav > #nav-nav-next {
+        right: 10%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <section id="slide-outer">
+      <div id="slide-inner">
+        <section id="slide-0" class="slide-inner-box">1</section>
+        <section id="slide-1" class="slide-inner-box">2</section>
+        <section id="slide-2" class="slide-inner-box">3</section>
+        <section id="slide-3" class="slide-inner-box">4</section>
+        <section id="slide-4" class="slide-inner-box">5</section>
+        <section id="slide-5" class="slide-inner-box">6</section>
+        <section id="slide-6" class="slide-inner-box">7</section>
+        <section id="slide-7" class="slide-inner-box">8</section>
+        <section id="slide-8" class="slide-inner-box">9</section>
+        <section id="slide-9" class="slide-inner-box">10</section>
+        <section id="slide-10" class="slide-inner-box">11</section>
+      </div>
+      <ul id="slide-nav">
+        <li id="slide-nav-prev"><a href="">&lt; Prev</a></li>
+        <li id="slide-nav-next"><a href="">Next &gt;</a></li>
+      </ul>
+    </section>
+
+    <section id="nav-outer">
+      <ul id="nav-inner">
+        <li id="nav-0" class="nav-inner-box">
+          <a href="#slide-0">SLIDE 1</a>
+        </li>
+        <li id="nav-1" class="nav-inner-box">
+          <a href="#slide-1">SLIDE 2</a>
+        </li>
+        <li id="nav-2" class="nav-inner-box">
+          <a href="#slide-2">SLIDE 3</a>
+        </li>
+        <li id="nav-3" class="nav-inner-box">
+          <a href="#slide-3">SLIDE 4</a>
+        </li>
+        <li id="nav-4" class="nav-inner-box">
+          <a href="#slide-4">SLIDE 5</a>
+        </li>
+        <li id="nav-5" class="nav-inner-box">
+          <a href="#slide-5">SLIDE 6</a>
+        </li>
+        <li id="nav-6" class="nav-inner-box">
+          <a href="#slide-6">SLIDE 7</a>
+        </li>
+        <li id="nav-7" class="nav-inner-box">
+          <a href="#slide-7">SLIDE 8</a>
+        </li>
+        <li id="nav-8" class="nav-inner-box">
+          <a href="#slide-8">SLIDE 9</a>
+        </li>
+        <li id="nav-9" class="nav-inner-box">
+          <a href="#slide-9">SLIDE 10</a>
+        </li>
+        <li id="nav-10" class="nav-inner-box">
+          <a href="#slide-10">SLIDE 11</a>
+        </li>
+      </ul>
+      <ul id="nav-nav">
+        <li id="nav-nav-prev"><a href="">&laquo;</a></li>
+        <li id="nav-nav-next"><a href="">&raquo;</a></li>
+      </ul>
+    </section>
+
+    <script type="text/javascript" charset="UTF-8"
+     src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+    </script>
+    <script type="text/javascript" charset="UTF-8"
+     src="http://gsgd.co.uk/sandbox/jquery/easing/jquery.easing.1.3.js">
+    </script>
+    <script type="text/javascript">
+      (function($) {
+        /**
+         * Maximize CSS width of inner box
+         */
+        $.fn.maximizeWidthBy = function(outerId) {
+          this.css({width: $(outerId).width() + 'px'});
+        };
+
+        /**
+         * Adjust CSS width of inner
+         */
+        $.fn.adjustWidthWith = function(outerId, innerBoxClass) {
+          var boxes = $(innerBoxClass)
+              boxes_length = boxes.length,
+              box_width = boxes.width(),
+              outer_width = $(outerId).width(),
+              that = this;
+
+          this.css({width: boxes_length * box_width + 'px'});
+
+          return {
+            adjustTips: function() {
+              var adjustment = outer_width / 2 - box_width / 2;
+
+              $(innerBoxClass + ':first').css({paddingLeft: adjustment + 'px'});
+              $(innerBoxClass + ':last').css({paddingRight: adjustment + 'px'});
+
+              that.css(
+                {width: boxes_length * box_width + adjustment * 2 + 'px'}
+              );
+            }
+          };
+        };
+
+        /**
+         * Scroll to specified inner box
+         */
+        $.fn.scrollTo = function(innerBoxId, innerBoxClass, easing) {
+          var box = $(innerBoxId),
+              box_width = box.width(),
+              box_pos_left = box.position().left,
+              outer_width = this.width(),
+              outer_pos_center = outer_width / 2 - box_width / 2,
+              outer_scroll_left = this.scrollLeft(),
+              moves = box_pos_left - outer_pos_center + outer_scroll_left;
+
+          $(innerBoxClass).removeClass('active');
+          $(innerBoxId).addClass('active');
+
+          if (easing) {
+            this.animate({scrollLeft: moves}, 'slow', easing);
+          }
+          else {
+            this.scrollLeft(moves);
+          }
+        };
+      })(jQuery);
+
+      $(function() {
+        // On resize
+        $(window).on('resize', function(event) {
+          var re_token = /^[a-z]+-([0-9]+)$/,
+              current_id = $('#slide-inner .active').attr('id'),
+              current = parseInt(current_id.replace(re_token, '$1'));
+
+          //$('.slide-inner-box').maximizeWidthBy('#slide-outer');
+          $('#slide-inner')
+            .adjustWidthWith('#slide-outer', '.slide-inner-box')
+            .adjustTips();
+          $('#nav-inner').adjustWidthWith('#slide-outer', '.nav-inner-box');
+
+          $('#slide-outer').scrollTo('#slide-' + current, '.slide-inner-box');
+          $('#nav-outer').scrollTo('#nav-' + current, '.nav-inner-box');
+        });
+
+        // On click (Navi)
+        $('.nav-inner-box a').on('click', function(event) {
+          var target_element = $(this).attr('href'),
+              target_token = /^#[a-z]+[-]([0-9]+)$/,
+              target = target_element.replace(target_token, '$1');
+
+          $('#slide-outer').scrollTo('#slide-' + target,
+                                     '.slide-inner-box',
+                                     'easeInOutCirc');
+          $('#nav-outer').scrollTo('#nav-' + target,
+                                   '.nav-inner-box',
+                                   'easeInOutCirc');
+
+          event.preventDefault();
+        });
+
+        // On click (Prev)
+        $('#slide-nav-prev a').on('click', function(event) {
+          var re_token = /^[a-z]+-([0-9]+)$/,
+              current_id = $('#slide-inner .active').attr('id'),
+              current = parseInt(current_id.replace(re_token, '$1')),
+              target = 0,
+              min = 0;
+
+          target = parseInt(current) - 1;
+
+          if (target >= min) {
+            $('#slide-outer').scrollTo('#slide-' + target,
+                                       '.slide-inner-box',
+                                       'easeInOutCirc');
+            $('#nav-outer').scrollTo('#nav-' + target,
+                                     '.nav-inner-box',
+                                     'easeInOutCirc');
+          }
+
+          event.preventDefault();
+        });
+
+        // On click (Next)
+        $('#slide-nav-next a').on('click', function(event) {
+          var re_token = /^[a-z]+-([0-9]+)$/,
+              current_id = $('#slide-inner .active').attr('id'),
+              current = parseInt(current_id.replace(re_token, '$1')),
+              target = 0,
+              max = $('.slide-inner-box').length;
+
+          target = current + 1;
+
+          if (target < max) {
+            $('#slide-outer').scrollTo('#slide-' + target,
+                                       '.slide-inner-box',
+                                       'easeInOutCirc');
+            $('#nav-outer').scrollTo('#nav-' + target,
+                                     '.nav-inner-box',
+                                     'easeInOutCirc');
+          }
+
+          event.preventDefault();
+        });
+
+        // On click (Nav Prev)
+        $('#nav-nav-prev a').on('click', function(event) {
+          var scroll = $('#nav-outer').scrollLeft();
+          $('#nav-outer').animate({scrollLeft: scroll - 100}, 'slow');
+          event.preventDefault();
+        });
+
+        // On click (Nav Next)
+        $('#nav-nav-next a').on('click', function(event) {
+          var scroll = $('#nav-outer').scrollLeft();
+          $('#nav-outer').animate({scrollLeft: scroll + 100}, 'slow');
+          event.preventDefault();
+        });
+
+        // Default
+        //$('.slide-inner-box').maximizeWidthBy('#slide-outer');
+        $('#slide-inner')
+          .adjustWidthWith('#slide-outer', '.slide-inner-box')
+          .adjustTips();
+        $('#nav-inner').adjustWidthWith('#slide-outer', '.nav-inner-box');
+        $('#slide-outer').scrollTo('#slide-6',
+                                   '.slide-inner-box',
+                                   'easeInOutCirc');
+        $('#nav-outer').scrollTo('#nav-6', '.nav-inner-box', 'easeInOutCirc');
+      });
+    </script>
+  </body>
+</html>

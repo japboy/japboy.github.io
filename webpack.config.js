@@ -1,6 +1,7 @@
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -68,7 +69,12 @@ module.exports = {
       }
     ]),
     new HtmlWebpackPlugin({
-      template: './src/template.html'
+      template: './src/index.html',
+      inject: 'head',
+    }),
+    new ScriptExtHtmlWebpackPlugin({
+      defaultAttribute: 'defer',
+      module: /^app/,
     }),
     new webpack.IgnorePlugin(/vertx/),
     // new webpack.HotModuleReplacementPlugin(),

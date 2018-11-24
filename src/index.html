@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>My portal.</title>
+
+    <meta name="description" content="My portal.">
+
+    <style>
+      :root {
+        --app-baseline-regular: 8px;
+        --app-baseline-small: 4px;
+
+        --app-gutter: calc(var(--app-baseline-regular) * 1);
+        --app-margin: calc(var(--app-baseline-regular) * 1);
+        --app-column-count: 4;
+        --app-column-gutter: calc(var(--app-gutter) * (var(--app-column-count) - 1));
+        --app-column-margin: calc(var(--app-margin) * 2);
+        --app-column: calc((100% - var(--app-column-gutter) - var(--app-column-margin)) / var(--app-column-count));
+      }
+
+      body {
+        background-color: #fff;
+        font-family: "Roboto", "Noto", sans-serif;
+        line-height: 1.5;
+        margin: 0;
+        min-height: 100vh;
+      }
+    </style>
+
+    <script>
+      window.MyAppGlobals = { rootPath: '/' };
+    </script>
+  </head>
+  <body>
+    <page-home></page-home>
+  </body>
+</html>

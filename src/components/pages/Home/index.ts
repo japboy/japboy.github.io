@@ -1,21 +1,23 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { LitElement, html } from '@polymer/lit-element';
 
-import { TemplateHome } from '@/components/templates/Home';
+import '@/components/templates/Home';
 
-export class PageHome extends PolymerElement {
-  static get template() {
-    return html`
-      <template-home></template-home>
-    `;
+export class PageHome extends LitElement {
+
+  static get properties() {
+    return {};
   }
 
   constructor() {
     super();
   }
 
-  static get properties() {
-    return {};
+  render() {
+    return html`
+      <template-home></template-home>
+    `;
   }
+
 }
 
-window.customElements.define('template-home', TemplateHome);
+window.customElements.define('page-home', PageHome);

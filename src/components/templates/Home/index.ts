@@ -1,18 +1,39 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { LitElement, html } from '@polymer/lit-element';
 
-import '@polymer/app-layout/app-drawer/app-drawer';
-import '@polymer/app-layout/app-drawer-layout/app-drawer-layout';
-import '@polymer/app-layout/app-header/app-header';
-import '@polymer/app-layout/app-header-layout/app-header-layout';
-import '@polymer/app-layout/app-scroll-effects/app-scroll-effects';
-import '@polymer/app-layout/app-toolbar/app-toolbar';
+import '@/components/atoms/Layout';
+import '@/components/atoms/Heading';
 
-import '@/components/atoms/SharedStyles';
+class TemplateHome extends LitElement {
 
-export class TemplateHome extends PolymerElement {
-  static get template() {
+  messages: string[];
+
+  static get properties() {
+    return {
+      messages: { type: Array },
+    };
+  }
+
+  constructor() {
+    super();
+    this.messages = [
+      'Hey',
+      'Hi!',
+      'Hello.',
+      'Greetings!',
+      'Yo',
+      'Hola~',
+      'Hey',
+      'Hi!',
+      'Hello.',
+      'Greetings!',
+      'Yo',
+      'Hola~',
+    ];
+  }
+
+  render() {
     return html`
-      <style include="shared-styles">
+      <style>
         :host {
           --app-primary-color: #eee;
           --app-secondary-color: #000;
@@ -20,72 +41,32 @@ export class TemplateHome extends PolymerElement {
           display: block;
         }
 
-        app-drawer-layout:not([narrow]) [drawer-toggle] {
-          display: none;
-        }
-
-        app-header {
-          color: #000;
-          background-color: var(--app-primary-color);
-        }
-
-        app-header paper-icon-button {
-          --paper-icon-button-ink-color: white;
-        }
-
-        .drawer-list {
-          margin: 0 20px;
-        }
-
-        .drawer-list a {
-          display: block;
-          padding: 0 16px;
-          text-decoration: none;
-          color: var(--app-secondary-color);
-          line-height: 40px;
-        }
-
-        .drawer-list a.iron-selected {
-          color: black;
-          font-weight: bold;
-        }
-
-        .content {
-          padding: 16px;
+        .testing {
+          background-color: #eee;
         }
       </style>
 
-      <app-drawer-layout fullbleed="" narrow="{{narrow}}">
-        <!-- Drawer content -->
-        <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-          <app-toolbar>&hearts; Web Components</app-toolbar>
-          <section class="content">
-            <p>Polymer is great.</p>
-          </section>
-        </app-drawer>
+      <atom-layout margin="3">
+        <header>
+          <h1>My portal.</h1>
+          <ul role="navigation">
+            <li>Unko</li>
+            <li>Unko</li>
+            <li>Unko</li>
+          </ul>
+        </header>
 
-        <!-- Main content -->
-        <app-header-layout has-scrolling-region="">
-
-          <app-header slot="header" condenses="" reveals="" effects="waterfall">
-            <app-toolbar>
-              <div main-title="">My portal.</div>
-            </app-toolbar>
-          </app-header>
-
-          <section class="content">
-            <p>web is awesome.</p>
-          </section>
-        </app-header-layout>
-      </app-drawer-layout>
+        <main>
+          ${this.messages.map((message) => html`
+            <atom-layout-grid column="3">
+              <p>${message}</p>
+            </atom-layout-grid>
+          `)}
+        </main>
+      </atom-layout>
     `;
   }
 
-  constructor() {
-    super();
-  }
-
-  static get properties() {
-    return {};
-  }
 }
+
+window.customElements.define('template-home', TemplateHome);

@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "baseBranches": ["v2018"],
+  "timezone": "Asia/Tokyo",
+  "node": {
+    "supportPolicy": ["lts_latest"]
+  },
+  "npm": {
+    "minor": {
+      "automerge": true,
+      "unpublishSafe": true
+    },
+    "patch": {
+      "automerge": true,
+      "unpublishSafe": true
+    },
+    "packageRules": [
+      {
+        "automerge": false,
+        "packageNames": ["typescript"]
+      }
+    ]
+  }
+}

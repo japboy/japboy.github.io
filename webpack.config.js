@@ -12,6 +12,12 @@ const env = process.env.NODE_ENV || 'production';
 module.exports = {
   // @see https://webpack.js.org/configuration/entry-context/
   entry: {
+    'shadydom': ['@webcomponents/shadydom'],
+    'shadycss': [
+      '@webcomponents/shadycss/entrypoints/apply-shim',
+      '@webcomponents/shadycss/entrypoints/custom-style-interface',
+      '@webcomponents/shadycss/entrypoints/scoping-shim',
+    ],
     // 'custom-elements-es5-adapter': ['@webcomponents/webcomponentsjs/custom-elements-es5-adapter'],
     'webcomponents-loader': ['@webcomponents/webcomponentsjs/webcomponents-loader'],
     // vendor: ['./src/vendor'],

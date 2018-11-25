@@ -82,6 +82,7 @@ module.exports = {
   // @see https://webpack.js.org/configuration/dev-server/
   devServer: {
     contentBase: path.resolve(__dirname, 'build'),
+    host: '0.0.0.0',
     hot: false,
   },
   // @see https://webpack.js.org/configuration/devtool/

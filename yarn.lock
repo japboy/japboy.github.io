@@ -141,9 +141,9 @@
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/@webcomponents/shadydom/-/shadydom-1.3.1.tgz#6d8ec0666c9d35ae1278f64c76034abd0073ed11"
 
-"@webcomponents/webcomponentsjs@2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@webcomponents/webcomponentsjs/-/webcomponentsjs-2.2.0.tgz#52f3415a259ef3abc2599ee7520d151bee6037a1"
+"@webcomponents/webcomponentsjs@2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@webcomponents/webcomponentsjs/-/webcomponentsjs-2.2.1.tgz#bf28cdad466aaf85d88ee56aebed32c83f4c1328"
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"

@@ -14,7 +14,7 @@ export class PageHome extends LitElement {
 
   render() {
     return html`
-      <template-home></template-home>
+      <template-home gravatar="1e4b7d2f20a2ecb20497d9b8704e6107"></template-home>
     `;
   }
 

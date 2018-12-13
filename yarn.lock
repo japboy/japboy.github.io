@@ -2,11 +2,11 @@
 # yarn lockfile v1
 
 
-"@polymer/lit-element@0.6.4":
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/@polymer/lit-element/-/lit-element-0.6.4.tgz#84806454a7f5e5280947d6ec84b613e09aa3d466"
+"@polymer/lit-element@0.6.5":
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/@polymer/lit-element/-/lit-element-0.6.5.tgz#c614b9638a0809883ba52bf43fca5b6ed51b7aa8"
   dependencies:
-    lit-html "^0.14.0"
+    lit-html "^1.0.0-rc.1"
 
 "@webassemblyjs/ast@1.7.11":
   version "1.7.11"
@@ -1966,9 +1966,9 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
-lit-html@^0.14.0:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-0.14.0.tgz#d6830e8f55fb923b0f5824decf7da082a1d22997"
+lit-html@^1.0.0-rc.1:
+  version "1.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-1.0.0-rc.1.tgz#a83d45ed86fc7c5d4612f3092e83fd095baf1fc3"
 
 loader-runner@^2.3.0:
   version "2.3.0"

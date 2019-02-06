@@ -137,9 +137,9 @@
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.9.0.tgz#8450465037370d4f5c32e801bb2554a7cf2f5037"
 
-"@webcomponents/shadydom@1.4.3":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@webcomponents/shadydom/-/shadydom-1.4.3.tgz#11dde3801a3906b6619f83371c39225e51a72799"
+"@webcomponents/shadydom@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@webcomponents/shadydom/-/shadydom-1.5.0.tgz#7cf7517eb63871f47bf4b3ec734146b9af944b0c"
 
 "@webcomponents/webcomponentsjs@2.2.6":
   version "2.2.6"

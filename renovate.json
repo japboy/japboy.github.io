@@ -8,18 +8,28 @@
     "supportPolicy": ["lts_latest"]
   },
   "npm": {
-    "minor": {
-      "automerge": true,
-      "unpublishSafe": true
-    },
-    "patch": {
-      "automerge": true,
-      "unpublishSafe": true
-    },
+    "separateMinorPatch": true,
+    "unpublishSafe": true,
     "packageRules": [
       {
-        "automerge": false,
-        "packageNames": ["typescript"]
+        "updateTypes": [
+          "minor",
+          "patch"
+        ],
+        "excludePackageNames": ["typescript"],
+        "minor": {
+          "groupName": "all NPM minor dependencies",
+          "groupSlug": "all-npm-minor"
+        },
+        "patch": {
+          "groupName": "all NPM patch dependencies",
+          "groupSlug": "all-npm-patch"
+        },
+        "automerge": true
+      },
+      {
+        "packageNames": ["typescript"],
+        "automerge": false
       }
     ]
   }

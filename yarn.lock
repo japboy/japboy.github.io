@@ -153,10 +153,10 @@
   resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.9.1.tgz#d769fbadfa504f11b84caeef26701f89070ec49a"
   integrity sha512-IaZOnWOKXHghqk/WfPNDRIgDBi3RsVPY2IFAw6tYiL9UBGvQRy5R6uC+Fk7qTZsReTJ0xh5MTT8yAcb3MUR4mQ==
 
-"@webcomponents/shadydom@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webcomponents/shadydom/-/shadydom-1.5.1.tgz#713e9db5d432daf77ff09b4a740780d52837e04e"
-  integrity sha512-eXuHt+r0bSyYgjEySUmJjwil7VADt5NJn/SZ3mAYMhYasfRLcuLhcz9uSH1v+oyt20MUrAbztfgQw4sw60ZofA==
+"@webcomponents/shadydom@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@webcomponents/shadydom/-/shadydom-1.6.0.tgz#5918eccd07ff506a3a258fa0a7339bd7434bcf0a"
+  integrity sha512-2r9SGHv13MS488ZwYXd2W123bXn/ZjWo5/pO4s9FOZmpEYv8ALWRc4VazmiFNl+3n4Cdu0uvCwju4V6ivgZKXA==
 
 "@webcomponents/webcomponentsjs@2.2.8":
   version "2.2.8"

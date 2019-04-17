@@ -158,10 +158,10 @@
   resolved "https://registry.yarnpkg.com/@webcomponents/shadydom/-/shadydom-1.6.0.tgz#5918eccd07ff506a3a258fa0a7339bd7434bcf0a"
   integrity sha512-2r9SGHv13MS488ZwYXd2W123bXn/ZjWo5/pO4s9FOZmpEYv8ALWRc4VazmiFNl+3n4Cdu0uvCwju4V6ivgZKXA==
 
-"@webcomponents/webcomponentsjs@2.2.8":
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/@webcomponents/webcomponentsjs/-/webcomponentsjs-2.2.8.tgz#3769d4cac6f3eaf6ed3704e25522b748353edbdd"
-  integrity sha512-ffLNjJ7LVceAkjtDr26t4wQ7EvRfPQ+Jqzs0dgKOwrcgFLJYAMHfJecjYAK0A4ePJPeF60wmddAl1BAtWMLgdw==
+"@webcomponents/webcomponentsjs@2.2.9":
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/@webcomponents/webcomponentsjs/-/webcomponentsjs-2.2.9.tgz#c315b75d6f58a55f506e82dafe45b06f299cdbe8"
+  integrity sha512-cYXFHTqwMOJUk2iUcMmNP/nM7kjQn0jHVcMYXzqecqmsb7XcGlOvHbV0GSVFsGqrH68DuikkJBdEUHCV5ZiKAw==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"

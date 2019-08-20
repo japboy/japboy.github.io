@@ -12,24 +12,32 @@
     "unpublishSafe": true,
     "packageRules": [
       {
-        "updateTypes": [
-          "minor",
-          "patch"
-        ],
-        "excludePackageNames": ["typescript"],
-        "minor": {
-          "groupName": "all NPM minor dependencies",
-          "groupSlug": "all-npm-minor"
-        },
         "patch": {
           "groupName": "all NPM patch dependencies",
-          "groupSlug": "all-npm-patch"
+          "groupSlug": "all-npm-patch",
+          "automerge": true
         },
-        "automerge": true
+        "minor": {
+          "groupName": "all NPM minor dev dependencies",
+          "groupSlug": "all-npm-minor-dev",
+          "depTypeList": ["devDependencies"],
+          "automerge": true
+        },
+        "packagePatterns": ["*"],
+        "excludePackageNames": [
+          "ts-loader",
+          "typescript"
+        ]
       },
       {
-        "packageNames": ["typescript"],
-        "automerge": false
+        "groupName": "typescript packages",
+        "packageNames": [
+          "ts-loader",
+          "typescript"
+        ],
+        "separateMajorMinor": false,
+        "separateMinorPatch": false,
+        "automerge": true
       }
     ]
   }

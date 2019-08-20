@@ -31,8 +31,8 @@
     "html-loader": "0.5.5",
     "html-webpack-plugin": "3.2.0",
     "script-ext-html-webpack-plugin": "2.1.4",
-    "ts-loader": "5.4.5",
-    "typescript": "3.3.3",
+    "ts-loader": "6.0.4",
+    "typescript": "3.5.3",
     "webpack": "4.39.2",
     "webpack-cli": "3.3.7",
     "webpack-dev-server": "3.8.0"

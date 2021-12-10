@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    @apply font-sans;
+    line-height: 1.6;
+  }
+
+  @screen lg {
+    html,
+    body {
+      font-size: 16px;
+    }
+  }
+
+  @screen sm {
+    html,
+    body {
+      /*
+       * iPhone 6/7/8 ポートレイト画面幅 375px の 16px 相当
+       */
+      font-size: calc(16 * (100 / 375) * 1vmin);
+    }
+  }
+}

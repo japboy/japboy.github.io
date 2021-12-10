@@ -1,0 +1,44 @@
+{
+  "name": "japboy.github.io",
+  "version": "2021.0.0",
+  "description": "Portfolio about Yu Inao",
+  "main": "",
+  "scripts": {
+    "start": "NODE_ENV=development npx rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --watch",
+    "test": "echo \"No tests for now...\"",
+    "build": "NODE_ENV=production npx rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/japboy/japboy.git"
+  },
+  "author": "Yu Inao",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": "^16.13.0",
+    "npm": "^8.1.0"
+  },
+  "dependencies": {
+    "classnames": "2.3.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "tslib": "2.3.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "21.0.1",
+    "@rollup/plugin-html": "0.2.4",
+    "@rollup/plugin-node-resolve": "13.0.6",
+    "@rollup/plugin-replace": "3.0.0",
+    "@rollup/plugin-typescript": "8.3.0",
+    "@types/react": "17.0.37",
+    "@types/react-dom": "17.0.11",
+    "autoprefixer": "10.4.0",
+    "postcss": "8.4.4",
+    "rollup": "2.61.0",
+    "rollup-plugin-esbuild": "4.7.2",
+    "rollup-plugin-postcss": "4.0.2",
+    "tailwindcss": "3.0.0",
+    "typescript": "4.5.3"
+  }
+}

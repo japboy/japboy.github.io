@@ -14,7 +14,7 @@ const defaultTemplate = ({
   const scripts = (files.js || [])
     .map(({ fileName }) => {
       const attrs = makeHtmlAttributes(attributes.script);
-      return `<script src="${publicPath}${fileName}"${attrs} defer></script>`;
+      return `<script src="${publicPath}${fileName}"${attrs} async></script>`;
     })
     .join("\n");
 
@@ -32,18 +32,18 @@ const defaultTemplate = ({
     })
     .join("\n");
 
-  return `
-<!doctype html>
+  return `<!doctype html>
 <html${makeHtmlAttributes(attributes.html)}>
-  <head>
-    ${metas}
-    <title>${title}</title>
-    ${links}
-    <script src="https://kit.fontawesome.com/1afa8c3d69.js" crossorigin="anonymous" async></script>
-    ${scripts}
-  </head>
-  <body>
-  </body>
+<head>
+${metas}
+<title>${title}</title>
+${links}
+<script src="https://kit.fontawesome.com/1afa8c3d69.js" crossorigin="anonymous" async></script>
+${scripts}
+</head>
+<body>
+<noscript>JavaScript richness has took over the world wide web. Isn't that right.</noscript>
+</body>
 </html>`;
 };
 

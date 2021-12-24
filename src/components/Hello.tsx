@@ -13,10 +13,10 @@ const Hello: FunctionComponent<Props> = () => {
   const [greeted, setGreeted] = useState(false);
   const toggleGreeted = () => setGreeted(!greeted);
 
-  const linkedinAttr = !initiated || greeted
-    ? {}
-    : { href: "https://www.linkedin.com/in/yuinao" };
-  const githubAttr = !initiated || greeted ? {} : { href: "https://github.com/japboy" };
+  const linkedinAttr =
+    !initiated || greeted ? {} : { href: "https://www.linkedin.com/in/yuinao" };
+  const githubAttr =
+    !initiated || greeted ? {} : { href: "https://github.com/japboy" };
 
   useEffect(() => {
     setTimeout(() => {
@@ -46,14 +46,17 @@ const Hello: FunctionComponent<Props> = () => {
         <div
           className={classnames(
             "flex duration-200 items-center mt-4 transition-opacity",
-            { "opacity-0": !initiated || greeted, "opacity-100": initiated && !greeted }
+            {
+              "opacity-0": !initiated || greeted,
+              "opacity-100": initiated && !greeted,
+            }
           )}
         >
-          <a className="block group mx-1" {...linkedinAttr}>
-            <i className="duration-200 fab fa-linkedin text-2xl transition-colors group-hover:text-gray-400 dark:group-hover:text-gray-600" />
+          <a className="group block mx-1" {...linkedinAttr}>
+            <i className="fab fa-linkedin group-hover:text-gray-400 dark:group-hover:text-gray-600 text-2xl transition-colors duration-200" />
           </a>
-          <a className="block group mx-1" {...githubAttr}>
-            <i className="duration-200 fab fa-github text-2xl transition-colors group-hover:text-gray-400 dark:group-hover:text-gray-600" />
+          <a className="group block mx-1" {...githubAttr}>
+            <i className="fab fa-github group-hover:text-gray-400 dark:group-hover:text-gray-600 text-2xl transition-colors duration-200" />
           </a>
         </div>
       </div>

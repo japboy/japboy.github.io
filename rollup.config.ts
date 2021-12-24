@@ -20,7 +20,7 @@ export default {
     generatedCode: "es2015",
     manualChunks(id: string) {
       if (id.includes("node_modules")) {
-        return "vendor"
+        return "vendor";
       }
     },
   },

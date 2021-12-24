@@ -56,7 +56,7 @@ export default {
   meta: [
     { charset: "utf-8" },
     {
-      name: 'viewport',
+      name: "viewport",
       content:
         "width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes",
     },

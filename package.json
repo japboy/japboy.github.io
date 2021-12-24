@@ -4,9 +4,14 @@
   "description": "Portfolio about Yu Inao",
   "main": "",
   "scripts": {
+    "build": "NODE_ENV=production npx rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
+    "lint": "npm-run-all --continue-on-error --parallel lint:*",
+    "lint:prettier": "prettier --check .",
+    "lintfix": "npm-run-all --continue-on-error lintfix:*",
+    "lintfix:prettier": "prettier --write .",
+    "prepare": "husky install",
     "start": "NODE_ENV=development npx rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript --watch",
-    "test": "echo \"No tests for now...\"",
-    "build": "NODE_ENV=production npx rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript"
+    "test": "echo \"No tests for now...\""
   },
   "repository": {
     "type": "git",
@@ -34,11 +39,19 @@
     "@types/react": "17.0.37",
     "@types/react-dom": "17.0.11",
     "autoprefixer": "10.4.0",
+    "husky": "7.0.4",
+    "lint-staged": "12.1.3",
+    "npm-run-all": "4.1.5",
     "postcss": "8.4.4",
+    "prettier": "2.5.1",
+    "prettier-plugin-tailwind-css": "1.5.0",
     "rollup": "2.61.0",
     "rollup-plugin-esbuild": "4.7.2",
     "rollup-plugin-postcss": "4.0.2",
     "tailwindcss": "3.0.0",
     "typescript": "4.5.3"
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
   }
 }

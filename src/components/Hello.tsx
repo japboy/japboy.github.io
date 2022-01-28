@@ -26,15 +26,15 @@ const Hello: FunctionComponent<Props> = () => {
   }, []);
 
   return (
-    <main className="bg-white dark:bg-gray-800 flex flex-col-reverse items-center justify-center min-h-screen pt-[100px] text-gray-800 dark:text-gray-100">
-      <div className="flex flex-col items-center mt-8">
+    <main className="flex min-h-screen flex-col-reverse items-center justify-center bg-white pt-[100px] text-gray-800 dark:bg-gray-800 dark:text-gray-100">
+      <div className="mt-8 flex flex-col items-center">
         <button
-          className="h-[100px] rounded-full w-[100px]"
+          className="h-[100px] w-[100px] rounded-full"
           onClick={toggleGreeted}
         >
           <img
             className={classnames(
-              "bg-gray-100 dark:bg-gray-700 duration-200 origin-center rounded-full transition-transform",
+              "origin-center rounded-full bg-gray-100 transition-transform duration-200 dark:bg-gray-700",
               { "rotate-[10deg]": greeted, "rotate-0": !greeted }
             )}
             height="100"
@@ -45,28 +45,28 @@ const Hello: FunctionComponent<Props> = () => {
 
         <div
           className={classnames(
-            "flex duration-200 items-center mt-4 transition-opacity",
+            "mt-4 flex items-center transition-opacity duration-200",
             {
               "opacity-0": !initiated || greeted,
               "opacity-100": initiated && !greeted,
             }
           )}
         >
-          <a className="group block mx-1" {...linkedinAttr}>
-            <i className="fab fa-linkedin group-hover:text-gray-400 dark:group-hover:text-gray-600 text-2xl transition-colors duration-200" />
+          <a className="group mx-1 block" {...linkedinAttr}>
+            <i className="fab fa-linkedin text-2xl transition-colors duration-200 group-hover:text-gray-400 dark:group-hover:text-gray-600" />
           </a>
-          <a className="group block mx-1" {...githubAttr}>
-            <i className="fab fa-github group-hover:text-gray-400 dark:group-hover:text-gray-600 text-2xl transition-colors duration-200" />
+          <a className="group mx-1 block" {...githubAttr}>
+            <i className="fab fa-github text-2xl transition-colors duration-200 group-hover:text-gray-400 dark:group-hover:text-gray-600" />
           </a>
         </div>
       </div>
 
       <Balloon
         className={classnames(
-          "duration-200 transition-all lg:max-w-[280px] sm:w-11/12",
+          "transition-all duration-200 sm:w-11/12 lg:max-w-[280px]",
           {
-            "opacity-100 translate-y-0": greeted,
-            "opacity-0 pointer-events-none translate-y-1": !greeted,
+            "translate-y-0 opacity-100": greeted,
+            "pointer-events-none translate-y-1 opacity-0": !greeted,
           }
         )}
       >

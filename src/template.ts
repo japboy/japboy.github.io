@@ -42,7 +42,7 @@ ${links}
 ${scripts}
 </head>
 <body>
-<noscript>JavaScript richness has took over the world wide web. Isn't that right.</noscript>
+<noscript>JavaScript richness has taken over the world wide web. Isn't that right.</noscript>
 </body>
 </html>`;
 };

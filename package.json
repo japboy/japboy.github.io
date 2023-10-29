@@ -21,8 +21,8 @@
   "license": "UNLICENSED",
   "private": true,
   "engines": {
-    "node": "^16.13.0",
-    "npm": "^8.1.0"
+    "node": "^18.18.0",
+    "npm": "^9.8.1"
   },
   "dependencies": {
     "classnames": "2.3.1",

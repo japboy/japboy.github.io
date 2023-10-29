@@ -32,6 +32,8 @@ jobs:
       - name: Build
         run: npm run build
 
+      - run: cp ./googlebb9f4b71b8c2fdc2.html ./dist/
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/v2021' }}

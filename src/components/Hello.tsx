@@ -35,7 +35,7 @@ const Hello: FunctionComponent<Props> = () => {
           <img
             className={classnames(
               "origin-center rounded-full bg-gray-100 transition-transform duration-200 dark:bg-gray-700",
-              { "rotate-[10deg]": greeted, "rotate-0": !greeted }
+              { "rotate-[10deg]": greeted, "rotate-0": !greeted },
             )}
             height="100"
             src={`https://www.gravatar.com/avatar/${gravatarHash}?s=200`}
@@ -49,7 +49,7 @@ const Hello: FunctionComponent<Props> = () => {
             {
               "opacity-0": !initiated || greeted,
               "opacity-100": initiated && !greeted,
-            }
+            },
           )}
         >
           <a className="group mx-1 block" {...linkedinAttr}>
@@ -67,7 +67,7 @@ const Hello: FunctionComponent<Props> = () => {
           {
             "translate-y-0 opacity-100": greeted,
             "pointer-events-none translate-y-1 opacity-0": !greeted,
-          }
+          },
         )}
       >
         <p>

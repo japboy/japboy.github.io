@@ -1,0 +1,8 @@
+pre-commit:
+  jobs:
+    - name: format staged files
+      glob: "*.{css,html,js,json,jsonc,md,ts,yaml,yml}"
+      run: pnpm exec oxfmt --write {staged_files}
+      stage_fixed: true
+    - name: test
+      run: pnpm test

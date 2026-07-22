@@ -1,0 +1,31 @@
+# Supply-chain policy for this single-package repository. No workspace package
+# globs are declared intentionally.
+
+# Only packages mature for at least three days are eligible for resolution.
+# Missing registry timestamps fail closed rather than bypassing this policy.
+minimumReleaseAge: 4320
+minimumReleaseAgeStrict: true
+minimumReleaseAgeIgnoreMissingTime: false
+
+# Reject a package release whose publisher trust evidence is weaker than an
+# earlier release, and re-verify these checks for every lockfile entry.
+trustPolicy: no-downgrade
+trustLockfile: false
+
+# Transitive Git and tarball dependencies are not allowed. Dependencies that
+# execute lifecycle build scripts must be reviewed explicitly below.
+blockExoticSubdeps: true
+strictDepBuilds: true
+allowBuilds:
+  "@parcel/watcher": false
+  esbuild: true
+  lefthook: true
+
+# Fail on undeclared or incompatible peer dependencies, stale installations,
+# and dependencies incompatible with the pinned Node.js runtime.
+strictPeerDependencies: true
+verifyDepsBeforeRun: error
+engineStrict: true
+
+# New direct dependencies are recorded as exact versions by default.
+savePrefix: ""

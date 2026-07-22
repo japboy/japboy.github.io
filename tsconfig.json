@@ -1,0 +1,21 @@
+{
+  // @see https://www.typescriptlang.org/tsconfig/
+  "compilerOptions": {
+    // Type Checking
+    "strict": true,
+    // Modules
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    // Emit
+    "noEmit": true,
+    // Interop Constraints
+    "esModuleInterop": true,
+    // Language and Environment
+    "experimentalDecorators": true,
+    "lib": ["DOM", "ESNext"],
+    "target": "ESNext",
+    "types": ["node", "vite/client"],
+    "useDefineForClassFields": false
+  },
+  "include": ["./*.config.ts", "./bin/**/*.ts", "./src/**/*.ts", "./test/**/*.ts"]
+}

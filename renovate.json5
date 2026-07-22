@@ -1,0 +1,68 @@
+{
+    $schema: "https://docs.renovatebot.com/renovate-schema.json",
+
+    // Start from Renovate's maintained defaults, preserve immutable GitHub
+    // Action references, and retain the repository's three-day npm quarantine.
+    extends: [
+        "config:recommended",
+        ":enableVulnerabilityAlerts",
+        "helpers:pinGitHubActionDigests",
+        "security:minimumReleaseAgeNpm",
+    ],
+
+    // These managers cover package manifests and lockfiles, runtime versions in
+    // .tool-versions, GitHub Actions, action inputs, and hosted runner images.
+    enabledManagers: ["npm", "asdf", "github-actions"],
+
+    // Create normal update PRs once per week at a deterministic local time.
+    // Vulnerability remediation is not delayed by this schedule.
+    timezone: "Asia/Tokyo",
+    schedule: ["* 0-5 * * 1"],
+    prCreation: "not-pending",
+
+    // Keep manifest declarations deterministic and merge only after Renovate
+    // observes successful status checks. This does not depend on GitHub's
+    // repository-level auto-merge setting.
+    rangeStrategy: "pin",
+    platformAutomerge: false,
+    automergeType: "pr",
+    automergeStrategy: "squash",
+    labels: ["dependencies"],
+
+    // Treat patch and minor releases as one non-major update class.
+    separateMinorPatch: false,
+
+    // Periodically regenerate pnpm-lock.yaml without changing package.json, so
+    // transitive versions advance within the declared constraints. The pnpm
+    // policy independently enforces the three-day release age.
+    lockFileMaintenance: {
+        enabled: true,
+        schedule: ["* 0-5 * * 1"],
+    },
+
+    // Keep visibility of pending, deferred, and vulnerable dependencies.
+    dependencyDashboard: true,
+    osvVulnerabilityAlerts: true,
+
+    packageRules: [
+        {
+            description: "Group and automerge all SemVer non-major updates",
+            matchUpdateTypes: ["minor", "patch"],
+            groupName: "all non-major dependencies",
+            groupSlug: "all-non-major-dependencies",
+            automerge: true,
+        },
+        {
+            description: "Group all SemVer major updates for manual review",
+            matchUpdateTypes: ["major"],
+            groupName: "all major dependencies",
+            groupSlug: "all-major-dependencies",
+            automerge: false,
+        },
+        {
+            description: "Automerge non-SemVer dependency maintenance",
+            matchUpdateTypes: ["digest", "pin", "pinDigest", "lockFileMaintenance"],
+            automerge: true,
+        },
+    ],
+}

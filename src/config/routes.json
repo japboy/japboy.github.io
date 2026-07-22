@@ -1,0 +1,7 @@
+{
+  "home": {
+    "url": "/",
+    "html": "index.html",
+    "render": "home"
+  }
+}

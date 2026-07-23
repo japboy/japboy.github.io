@@ -29,3 +29,6 @@ engineStrict: true
 
 # New direct dependencies are recorded as exact versions by default.
 savePrefix: ""
+minimumReleaseAgeExclude:
+  # Renovate security update: yaml@2.8.3
+  - yaml@2.8.3

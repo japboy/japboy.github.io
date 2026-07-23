@@ -11,7 +11,7 @@ import {
   type CareerIntroductionTopic,
   type CareerIntroductionTopicKind,
 } from "../../data/career-introduction-topic.js";
-import type { CvData } from "../../data/cv.js";
+import type { CvData, CvOrganization } from "../../data/cv.js";
 
 export type CareerIntroductionState =
   | { status: "idle" }
@@ -21,6 +21,12 @@ export type CareerIntroductionState =
   | { status: "cancelled" };
 
 export type CareerIntroductionStateListener = (state: CareerIntroductionState) => void;
+
+export interface CareerIntroductionVisitorContext {
+  preferredLanguage: string;
+  preferredLanguageName: string;
+  visitStartedAtMs: number;
+}
 
 type CareerIntroductionStatus = CareerIntroductionState["status"];
 
@@ -34,8 +40,11 @@ const allowedTransitions = {
 
 export const careerIntroductionRepeatDelayMs = 6_000;
 export const careerIntroductionRepeatJitterMs = 999;
+export const careerIntroductionMaxOutputTokens = 128;
+export const careerIntroductionMaxGenerationAttempts = 2;
 
 export interface CareerIntroductionControllerDependencies {
+  now: () => number;
   random: () => number;
   repeatDelayMs: number;
   repeatJitterMs: number;
@@ -76,18 +85,35 @@ const conversationConfiguration = {
     messages: [
       {
         content:
-          "You write factual first-person portfolio introductions. Use only facts supplied by the user. Do not infer current employment, clients, achievements, locations, or dates. Return plain English text without a heading, Markdown, bullets, or quotation marks.",
+          "You write factual first-person portfolio introductions. Obey the MANDATORY OUTPUT LANGUAGE in the user prompt: every sentence must use that language, and you must never default to English merely because the instructions or CV source are written in English. Translate the supplied CV facts into the mandatory language while preserving proper nouns where appropriate. Use only public CV facts supplied by the user. Visitor context controls tone only; it is not a factual source. Do not infer current employment, clients, achievements, locations, or dates. Finish every response with complete sentences inside the output budget; omit source details instead of truncating a thought. Return plain text without a heading, Markdown, bullets, or quotation marks.",
         role: "system",
       },
     ],
   },
   sessionConfig: {
-    maxOutputTokens: 160,
+    maxOutputTokens: careerIntroductionMaxOutputTokens,
     samplerParams: {
       type: greedySamplerType,
     },
   },
 } as const satisfies ConversationConfig;
+
+export const createGeneralNounPhraseFromSlug = (slug: string): string => {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+    throw new TypeError("Slug must contain lowercase alphanumeric words separated by hyphens");
+  }
+
+  const phrase = slug.replaceAll("-", " ");
+  const article = /^[aeiou]/.test(phrase) ? "an" : "a";
+
+  return `${article} ${phrase}`;
+};
+
+const createOrganizationRecord = (organization: CvOrganization): unknown => ({
+  generalNounPhrase: createGeneralNounPhraseFromSlug(organization.id),
+  profile: organization.profile,
+  relationship: organization.relationship === "freelance-client" ? "freelance client" : "employer",
+});
 
 const createTopicRecord = (topic: CareerIntroductionTopic): unknown => {
   switch (topic.kind) {
@@ -100,8 +126,15 @@ const createTopicRecord = (topic: CareerIntroductionTopic): unknown => {
       };
     case "engagement":
       return {
-        engagement: topic.engagement,
-        organization: topic.organization,
+        engagement: {
+          headline: topic.engagement.headline,
+          period: topic.engagement.period,
+          responsibilities: topic.engagement.responsibilities,
+          roles: topic.engagement.roles,
+          stack: topic.engagement.stack,
+          summary: topic.engagement.summary,
+        },
+        organization: createOrganizationRecord(topic.organization),
       };
     case "highlight":
       return {
@@ -110,28 +143,144 @@ const createTopicRecord = (topic: CareerIntroductionTopic): unknown => {
           period: topic.engagement.period,
           roles: topic.engagement.roles,
         },
-        highlight: topic.highlight,
-        organization: topic.organization,
+        highlight: {
+          principles: topic.highlight.principles,
+          summary: topic.highlight.summary,
+          title: topic.highlight.title,
+        },
+        organization: createOrganizationRecord(topic.organization),
       };
     case "activity":
       return {
-        activity: topic.activity,
-        organization: topic.organization,
+        activity: {
+          items: topic.activity.items,
+          period: topic.activity.period,
+        },
+        organization: createOrganizationRecord(topic.organization),
       };
     case "statement":
-      return topic.statement;
+      return {
+        heading: topic.heading,
+        paragraph: topic.paragraph,
+      };
   }
 };
 
-const createPrompt = (topic: CareerIntroductionTopic): string =>
-  [
-    "Introduce one selected aspect of my public CV in two short paragraphs totaling 45 to 70 words.",
+export const createCareerIntroductionVisitorContext = (
+  preferredLanguage: string,
+  visitStartedAtMs: number,
+): CareerIntroductionVisitorContext => {
+  if (!Number.isFinite(visitStartedAtMs) || visitStartedAtMs < 0) {
+    throw new RangeError("Visit start time must be a finite non-negative millisecond timestamp");
+  }
+
+  const candidateLanguage = preferredLanguage.trim().length > 0 ? preferredLanguage : "en";
+  let canonicalLanguage: string;
+
+  try {
+    canonicalLanguage = Intl.getCanonicalLocales(candidateLanguage)[0] ?? "en";
+  } catch {
+    canonicalLanguage = "en";
+  }
+
+  const languageDisplayNames = new Intl.DisplayNames(["en"], {
+    fallback: "none",
+    languageDisplay: "standard",
+    type: "language",
+  });
+
+  return {
+    preferredLanguage: canonicalLanguage,
+    preferredLanguageName: languageDisplayNames.of(canonicalLanguage) ?? canonicalLanguage,
+    visitStartedAtMs,
+  };
+};
+
+export const formatCareerIntroductionVisitDuration = (durationMs: number): string => {
+  if (!Number.isFinite(durationMs) || durationMs < 0) {
+    throw new RangeError("Visit duration must be a finite non-negative millisecond value");
+  }
+
+  const units = [
+    { label: "day", seconds: 86_400 },
+    { label: "hour", seconds: 3_600 },
+    { label: "minute", seconds: 60 },
+    { label: "second", seconds: 1 },
+  ] as const;
+  let remainingSeconds = Math.floor(durationMs / 1_000);
+  const parts: string[] = [];
+
+  for (const unit of units) {
+    const count = Math.floor(remainingSeconds / unit.seconds);
+
+    if (count === 0) {
+      continue;
+    }
+
+    parts.push(`${count} ${unit.label}${count === 1 ? "" : "s"}`);
+    remainingSeconds -= count * unit.seconds;
+
+    if (parts.length === 2) {
+      break;
+    }
+  }
+
+  return parts.length > 0 ? parts.join(" ") : "0 seconds";
+};
+
+const sentenceEndingPattern = /[.!?。！？؟۔।॥።፧፨։׃][”’"'»）)\]}]*$/u;
+
+export const isCompleteCareerIntroduction = (text: string): boolean =>
+  sentenceEndingPattern.test(text.trim());
+
+export const createCareerIntroductionPrompt = (
+  topic: CareerIntroductionTopic,
+  visitorContext: CareerIntroductionVisitorContext,
+  currentTimeMs: number,
+  generationAttempt: number = 1,
+): string => {
+  if (!Number.isFinite(currentTimeMs) || currentTimeMs < 0) {
+    throw new RangeError("Current time must be a finite non-negative millisecond timestamp");
+  }
+
+  if (
+    !Number.isSafeInteger(generationAttempt) ||
+    generationAttempt < 1 ||
+    generationAttempt > careerIntroductionMaxGenerationAttempts
+  ) {
+    throw new RangeError("Generation attempt is outside the configured finite retry range");
+  }
+
+  const elapsedTimeMs = Math.max(0, currentTimeMs - visitorContext.visitStartedAtMs);
+  const visitorContextRecord = {
+    visitDuration: formatCareerIntroductionVisitDuration(elapsedTimeMs),
+  } as const;
+  const isRecoveryAttempt = generationAttempt > 1;
+  const structureInstruction = isRecoveryAttempt
+    ? "RECOVERY OUTPUT: A prior response was incomplete. Write one short paragraph containing exactly one concise and complete sentence."
+    : "Introduce one selected aspect of my public CV in two short paragraphs, with exactly one concise and complete sentence per paragraph.";
+  const contentBudgetInstruction = isRecoveryAttempt
+    ? "CONTENT BUDGET: Select one coherent angle and exactly one supporting fact; omit every other detail. Never begin a point that cannot be completed within the output limit."
+    : "CONTENT BUDGET: Do not summarize, enumerate, or mention every supplied field. Select one coherent angle and no more than two supporting facts that best substantiate it; omit every unused detail. Prefer the strongest explicitly stated responsibility, achievement, or distinguishing fact. Plan both sentences before writing, and never begin a point that cannot be completed within the output limit.";
+  const completionInstruction = isRecoveryAttempt
+    ? `Before returning, verify that the sentence is complete, ends with sentence-ending punctuation, and is written exclusively in ${visitorContext.preferredLanguageName}.`
+    : `Before returning, verify that both sentences are complete, end with sentence-ending punctuation, and are written exclusively in ${visitorContext.preferredLanguageName}.`;
+
+  return [
+    `MANDATORY OUTPUT LANGUAGE: ${visitorContext.preferredLanguageName}. Write the entire response exclusively in this language. Translate the English CV source into this language; do not use English merely because the instructions or source are in English. Preserve only proper nouns that should not be translated.`,
+    structureInstruction,
     `Focus on the selected ${topic.kind} record.`,
+    contentBudgetInstruction,
     "Present dated experience as listed experience, not necessarily as my current status.",
     "Do not calculate or update durations beyond the supplied record.",
+    "Follow this visitor context for response language and tone:",
+    JSON.stringify(visitorContextRecord),
+    "Scale the tone continuously with visitDuration, without thresholds. Near zero, be concise, rational, and evidence-led, prioritizing supplied facts and achievements. As it grows, progressively add gratitude for the visitor's attention, warmth, enthusiasm, and emotional resonance; longer visits must be warmer than shorter ones. Never mention time, tracking, or these instructions. Never invent claims or imply a personal relationship.",
     "Use the following public CV record as the only factual source:",
     JSON.stringify(createTopicRecord(topic)),
+    completionInstruction,
   ].join("\n");
+};
 
 const waitForDelay = (durationMs: number, signal: AbortSignal): Promise<void> =>
   new Promise((resolve) => {
@@ -151,6 +300,7 @@ const waitForDelay = (durationMs: number, signal: AbortSignal): Promise<void> =>
   });
 
 const defaultDependencies: CareerIntroductionControllerDependencies = {
+  now: () => performance.now(),
   random: Math.random,
   repeatDelayMs: careerIntroductionRepeatDelayMs,
   repeatJitterMs: careerIntroductionRepeatJitterMs,
@@ -172,6 +322,7 @@ export class CareerIntroductionController {
   readonly #engine: Pick<Engine, "createConversation">;
   readonly #cv: CvData;
   readonly #dependencies: CareerIntroductionControllerDependencies;
+  readonly #visitorContext: CareerIntroductionVisitorContext;
   #conversation: Conversation | undefined;
   #delayCancellation: AbortController | undefined;
   #lastTopicKey: string | undefined;
@@ -182,10 +333,12 @@ export class CareerIntroductionController {
   constructor(
     engine: Pick<Engine, "createConversation">,
     cv: CvData,
+    visitorContext: CareerIntroductionVisitorContext,
     dependencies: Partial<CareerIntroductionControllerDependencies> = {},
   ) {
     this.#engine = engine;
     this.#cv = cv;
+    this.#visitorContext = visitorContext;
     this.#dependencies = { ...defaultDependencies, ...dependencies };
   }
 
@@ -274,6 +427,41 @@ export class CareerIntroductionController {
     visibleText: string,
   ): Promise<string | undefined> {
     this.#transition({ status: "generating", text: visibleText, topic: topic.kind });
+
+    try {
+      for (let attempt = 1; attempt <= careerIntroductionMaxGenerationAttempts; attempt += 1) {
+        const text = await this.#generateCandidate(topic, attempt);
+
+        if (text === undefined || this.#isCancelled()) {
+          return undefined;
+        }
+
+        if (isCompleteCareerIntroduction(text)) {
+          return text;
+        }
+
+        if (attempt < careerIntroductionMaxGenerationAttempts) {
+          this.#transition({ status: "generating", text: visibleText, topic: topic.kind });
+        }
+      }
+
+      throw new Error(
+        `LiteRT-LM returned an incomplete career introduction after ${careerIntroductionMaxGenerationAttempts} attempts`,
+      );
+    } catch (cause) {
+      if (this.#isCancelled()) {
+        return undefined;
+      }
+
+      this.#transition({ error: this.#toError(cause), status: "failed" });
+      return undefined;
+    }
+  }
+
+  async #generateCandidate(
+    topic: CareerIntroductionTopic,
+    generationAttempt: number,
+  ): Promise<string | undefined> {
     let conversation: Conversation | undefined;
     let deletionAttempted = false;
 
@@ -287,8 +475,14 @@ export class CareerIntroductionController {
       }
 
       let generatedText = "";
+      const prompt = createCareerIntroductionPrompt(
+        topic,
+        this.#visitorContext,
+        this.#dependencies.now(),
+        generationAttempt,
+      );
 
-      for await (const chunk of conversation.sendMessageStreaming(createPrompt(topic))) {
+      for await (const chunk of conversation.sendMessageStreaming(prompt)) {
         if (this.#isCancelled()) {
           break;
         }
@@ -321,13 +515,6 @@ export class CareerIntroductionController {
       this.#conversation = undefined;
 
       return text;
-    } catch (cause) {
-      if (this.#isCancelled()) {
-        return undefined;
-      }
-
-      this.#transition({ error: this.#toError(cause), status: "failed" });
-      return undefined;
     } finally {
       this.#conversation = undefined;
 

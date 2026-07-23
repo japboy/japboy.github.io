@@ -1,12 +1,20 @@
 export { liteRtLmConfiguration } from "./config.js";
 export {
   CareerIntroductionController,
+  careerIntroductionMaxGenerationAttempts,
+  careerIntroductionMaxOutputTokens,
   careerIntroductionRepeatDelayMs,
   careerIntroductionRepeatJitterMs,
+  createCareerIntroductionPrompt,
+  createCareerIntroductionVisitorContext,
+  createGeneralNounPhraseFromSlug,
   createRandomizedCareerIntroductionDelayMs,
+  formatCareerIntroductionVisitDuration,
+  isCompleteCareerIntroduction,
   type CareerIntroductionControllerDependencies,
   type CareerIntroductionState,
   type CareerIntroductionStateListener,
+  type CareerIntroductionVisitorContext,
 } from "./career-introduction.js";
 export {
   LiteRtLmController,

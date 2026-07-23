@@ -44,6 +44,7 @@ flowchart LR
   runtime --> model["Gemma model on Hugging Face"]
   model --> engine["On-device WebGPU engine"]
   grounding --> engine
+  browserContext["Primary language and visit clock"] --> engine
   engine --> introduction["Streamed career introduction"]
   introduction --> island
 ```
@@ -75,8 +76,9 @@ and optional SSR renderers. Vite uses the same manifest in development and produ
 
 - **Name:** On-device language-model foundation
 - **Responsibility:** Detect actual runtime capability, dynamically load LiteRT-LM and Gemma only in
-  supported environments, then stream a fact-grounded introduction of the latest public CV
-  engagement into the home-page balloon.
+  supported environments, then stream a fact-grounded introduction of the public CV into the
+  home-page balloon, using ephemeral visit duration and browser language preference to select the
+  prompt's tone and response language.
 - **Technologies:** LiteRT-LM, WebAssembly, WebGPU, and Gemma.
 - **Deployment:** The controller ships in the client entry; the runtime and model remain external
   resources and load asynchronously.
@@ -92,8 +94,8 @@ resources, security constraints, and official sources are maintained in the
 - **Name:** Schema-validated CV content
 - **Responsibility:** Define the public career history once, anonymize identifying organization and
   product details, validate the complete structure, and normalize profile, skill, engagement,
-  highlight, activity, and statement records as factual grounding topics for the home-page career
-  introduction.
+  highlight, activity, and paragraph-level statement records as factual grounding topics for the
+  home-page career introduction.
 - **Technologies:** YAML, JSON Schema 2020-12, Ajv, and TypeScript.
 - **Deployment:** Repository verification checks the data contract. Supported browsers load and
   validate the data on demand when the on-device model becomes ready.
@@ -109,8 +111,9 @@ persistent browser store. The public CV is a repository-local YAML asset and is 
 runtime; its JSON Schema is a build-time validation contract rather than a deployed data service.
 
 The Gemma model and LiteRT-LM engine reside in browser-managed network caches and process memory as
-determined by the browser and upstream libraries. The application does not currently implement a
-Cache API, IndexedDB, or local-storage policy for them.
+determined by the browser and upstream libraries. The career introduction's visit timestamp,
+preferred-language snapshot, and generated output are ephemeral in-memory state. The application
+does not currently implement a Cache API, IndexedDB, or local-storage policy for them.
 
 ## 5. External Integrations / APIs
 

@@ -13,15 +13,24 @@ import {
 import type { CvData } from "../src/data/cv.js";
 import {
   CareerIntroductionController,
+  careerIntroductionMaxGenerationAttempts,
+  careerIntroductionMaxOutputTokens,
   careerIntroductionRepeatDelayMs,
   careerIntroductionRepeatJitterMs,
+  createCareerIntroductionPrompt,
+  createCareerIntroductionVisitorContext,
+  createGeneralNounPhraseFromSlug,
   createRandomizedCareerIntroductionDelayMs,
+  formatCareerIntroductionVisitDuration,
+  isCompleteCareerIntroduction,
 } from "../src/features/litert-lm/career-introduction.js";
 
 const projectRoot = new URL("../", import.meta.url);
 
 const readCv = async (): Promise<CvData> =>
   parse(await readFile(new URL("src/data/cv.yaml", projectRoot), "utf8")) as CvData;
+
+const englishVisitorContext = createCareerIntroductionVisitorContext("en-US", 0);
 
 interface ConversationDouble {
   conversation: Conversation;
@@ -86,6 +95,10 @@ test("career introduction topics exhaustively cover the public CV content sectio
     groups.map(([topic]) => topic?.kind),
     ["profile", "skill", "engagement", "highlight", "activity", "statement"],
   );
+  assert.deepEqual(
+    groups.at(-1)?.map(({ key }) => key),
+    ["statement:0", "statement:1", "statement:2"],
+  );
 
   const kinds = [0, 1, 2, 3, 4, 5].map(
     (groupIndex) =>
@@ -101,6 +114,14 @@ test("career introduction topics exhaustively cover the public CV content sectio
 
   assert.equal(profile.kind, "profile");
   assert.equal(nextTopic.kind, "skill");
+
+  const firstStatement = groups.at(-1)?.[0];
+  assert.notEqual(firstStatement, undefined);
+  const statementPrompt = createCareerIntroductionPrompt(firstStatement!, englishVisitorContext, 0);
+
+  assert.match(statementPrompt, /I became interested in web standards/);
+  assert.doesNotMatch(statementPrompt, /I have contributed where I could/);
+  assert.doesNotMatch(statementPrompt, /Today I focus on systems/);
 });
 
 test("the repeat delay has a six-second center and less than one second of jitter", () => {
@@ -118,6 +139,110 @@ test("the repeat delay has a six-second center and less than one second of jitte
   );
   assert.equal(careerIntroductionRepeatDelayMs, 6_000);
   assert.equal(careerIntroductionRepeatJitterMs, 999);
+});
+
+test("visitor context uses the user agent's single preferred language deterministically", () => {
+  assert.deepEqual(createCareerIntroductionVisitorContext("ja-JP", 12.5), {
+    preferredLanguage: "ja-JP",
+    preferredLanguageName: "Japanese (Japan)",
+    visitStartedAtMs: 12.5,
+  });
+  assert.deepEqual(createCareerIntroductionVisitorContext("", 0), {
+    preferredLanguage: "en",
+    preferredLanguageName: "English",
+    visitStartedAtMs: 0,
+  });
+  assert.deepEqual(createCareerIntroductionVisitorContext("not_a_language", 0), {
+    preferredLanguage: "en",
+    preferredLanguageName: "English",
+    visitStartedAtMs: 0,
+  });
+  assert.throws(
+    () => createCareerIntroductionVisitorContext("ja-JP", Number.NaN),
+    /finite non-negative/,
+  );
+});
+
+test("visit duration uses at most two human-friendly units", () => {
+  assert.equal(formatCareerIntroductionVisitDuration(999), "0 seconds");
+  assert.equal(formatCareerIntroductionVisitDuration(1_000), "1 second");
+  assert.equal(formatCareerIntroductionVisitDuration(59_999), "59 seconds");
+  assert.equal(formatCareerIntroductionVisitDuration(60_000), "1 minute");
+  assert.equal(formatCareerIntroductionVisitDuration(65_000), "1 minute 5 seconds");
+  assert.equal(formatCareerIntroductionVisitDuration(3_900_000), "1 hour 5 minutes");
+  assert.equal(formatCareerIntroductionVisitDuration(93_600_000), "1 day 2 hours");
+  assert.throws(() => formatCareerIntroductionVisitDuration(Number.NaN), /finite non-negative/);
+});
+
+test("completion validation accepts supported sentence endings and rejects truncation", () => {
+  assert.equal(isCompleteCareerIntroduction("A complete sentence."), true);
+  assert.equal(isCompleteCareerIntroduction("完全な文です。"), true);
+  assert.equal(
+    isCompleteCareerIntroduction("A complete sentence.\n\nAnother complete sentence!"),
+    true,
+  );
+  assert.equal(isCompleteCareerIntroduction("A quoted sentence.”"), true);
+  assert.equal(isCompleteCareerIntroduction("一貫性と"), false);
+  assert.equal(isCompleteCareerIntroduction(""), false);
+});
+
+test("internal slugs become general noun phrases and never enter the model prompt", async () => {
+  const cv = await readCv();
+  const topic = createCareerIntroductionTopicGroups(cv)
+    .flat()
+    .find(
+      (candidate) =>
+        candidate.kind === "engagement" &&
+        candidate.organization.id === "travel-booking-product-company",
+    );
+
+  assert.equal(
+    createGeneralNounPhraseFromSlug("travel-booking-product-company"),
+    "a travel booking product company",
+  );
+  assert.equal(
+    createGeneralNounPhraseFromSlug("enterprise-systems-integrator"),
+    "an enterprise systems integrator",
+  );
+  assert.throws(() => createGeneralNounPhraseFromSlug("Not a slug"), /Slug must contain/);
+  assert.notEqual(topic, undefined);
+
+  const prompt = createCareerIntroductionPrompt(topic!, englishVisitorContext, 0);
+
+  assert.match(prompt, /"generalNounPhrase":"a travel booking product company"/);
+  assert.match(
+    prompt,
+    /"profile":"Product company developing consumer travel and restaurant booking services in-house"/,
+  );
+  assert.doesNotMatch(prompt, /travel-booking-product-company/);
+  assert.doesNotMatch(prompt, /"(?:id|organization_id|engagement_id)":/);
+});
+
+test("the prompt exposes continuously increasing visit duration without tone categories", async () => {
+  const cv = await readCv();
+  const topic = selectRandomCareerIntroductionTopic(cv, () => 0);
+  const japaneseVisitor = createCareerIntroductionVisitorContext("ja-JP", 5_000);
+  const earlierPrompt = createCareerIntroductionPrompt(topic, japaneseVisitor, 64_999);
+  const laterPrompt = createCareerIntroductionPrompt(topic, japaneseVisitor, 65_000);
+
+  assert.match(
+    earlierPrompt,
+    /^MANDATORY OUTPUT LANGUAGE: Japanese \(Japan\)\. Write the entire response exclusively in this language\./,
+  );
+  assert.match(earlierPrompt, /"visitDuration":"59 seconds"/);
+  assert.match(laterPrompt, /"visitDuration":"1 minute"/);
+  assert.notEqual(earlierPrompt, laterPrompt);
+  assert.match(laterPrompt, /Scale the tone continuously with visitDuration, without thresholds/);
+  assert.doesNotMatch(laterPrompt, /elapsedSeconds/);
+  assert.match(laterPrompt, /progressively add gratitude/);
+  assert.match(laterPrompt, /longer visits must be warmer than shorter ones/);
+  assert.doesNotMatch(laterPrompt, /preferredResponseLanguageCode|preferredResponseLanguageName/);
+  assert.doesNotMatch(laterPrompt, /"responseLanguage"/);
+  assert.doesNotMatch(laterPrompt, /visitCategory/);
+  assert.match(
+    laterPrompt,
+    /Before returning, verify that both sentences are complete, end with sentence-ending punctuation, and are written exclusively in Japanese \(Japan\)\./,
+  );
 });
 
 test("career introduction loops through non-repeating random CV topics after a randomized wait", async () => {
@@ -139,7 +264,8 @@ test("career introduction loops through non-repeating random CV topics after a r
       return double!.conversation;
     },
   } as Pick<Engine, "createConversation">;
-  const controller = new CareerIntroductionController(engine, cv, {
+  const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+    now: createRandomSource([15_000, 75_000]),
     random: createRandomSource([0, 0, 0.5, 0, 0]),
     wait: async (durationMs) => {
       delays.push(durationMs);
@@ -165,12 +291,106 @@ test("career introduction loops through non-repeating random CV topics after a r
   assert.equal(createCount, 2);
   assert.deepEqual(observedWaitingTopics, ["profile", "skill"]);
   assert.deepEqual(delays, [careerIntroductionRepeatDelayMs]);
-  assert.equal(configuration?.sessionConfig?.maxOutputTokens, 160);
+  assert.equal(careerIntroductionMaxOutputTokens, 128);
+  assert.equal(configuration?.sessionConfig?.maxOutputTokens, careerIntroductionMaxOutputTokens);
+  assert.match(
+    doubles[0].getPrompt() ?? "",
+    /exactly one concise and complete sentence per paragraph/,
+  );
+  assert.match(
+    doubles[0].getPrompt() ?? "",
+    /Do not summarize, enumerate, or mention every supplied field/,
+  );
+  assert.match(doubles[0].getPrompt() ?? "", /no more than two supporting facts/);
+  assert.match(doubles[0].getPrompt() ?? "", /omit every unused detail/);
+  assert.match(
+    doubles[0].getPrompt() ?? "",
+    /never begin a point that cannot be completed within the output limit/,
+  );
   assert.equal(configuration?.sessionConfig?.samplerParams?.type, 3);
+  assert.match(
+    String(configuration?.preface?.messages?.[0]?.content),
+    /Obey the MANDATORY OUTPUT LANGUAGE/,
+  );
+  assert.match(
+    String(configuration?.preface?.messages?.[0]?.content),
+    /never default to English merely because the instructions or CV source are written in English/,
+  );
+  assert.match(
+    String(configuration?.preface?.messages?.[0]?.content),
+    /omit source details instead of truncating a thought/,
+  );
   assert.match(doubles[0].getPrompt() ?? "", /Web Frontend Architect \/ Designer/);
+  assert.match(doubles[0].getPrompt() ?? "", /"visitDuration":"15 seconds"/);
   assert.match(doubles[1].getPrompt() ?? "", /Semantic and SEO-aware implementation/);
+  assert.match(doubles[1].getPrompt() ?? "", /"visitDuration":"1 minute 15 seconds"/);
   assert.equal(doubles[0].getDeleteCount(), 1);
   assert.equal(doubles[1].getDeleteCount(), 1);
+});
+
+test("an incomplete response retries once with a smaller deterministic content budget", async () => {
+  const cv = await readCv();
+  const doubles = [
+    createConversationDouble(["This response ends mid-thought"]),
+    createConversationDouble(["This response is complete."]),
+  ];
+  let createCount = 0;
+  let completedText: string | undefined;
+  const engine = {
+    createConversation: async () => {
+      const double = doubles[createCount];
+      createCount += 1;
+      assert.notEqual(double, undefined);
+      return double!.conversation;
+    },
+  } as Pick<Engine, "createConversation">;
+  const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+    now: () => 0,
+    random: createRandomSource([0, 0]),
+  });
+
+  controller.subscribe((state) => {
+    if (state.status === "waiting") {
+      completedText = state.text;
+      controller.cancel();
+    }
+  });
+
+  assert.deepEqual(await controller.start(), { status: "cancelled" });
+  assert.equal(careerIntroductionMaxGenerationAttempts, 2);
+  assert.equal(createCount, careerIntroductionMaxGenerationAttempts);
+  assert.equal(completedText, "This response is complete.");
+  assert.doesNotMatch(doubles[0].getPrompt() ?? "", /RECOVERY OUTPUT/);
+  assert.match(doubles[1].getPrompt() ?? "", /RECOVERY OUTPUT/);
+  assert.match(doubles[1].getPrompt() ?? "", /exactly one supporting fact/);
+  assert.equal(doubles[0].getDeleteCount(), 1);
+  assert.equal(doubles[1].getDeleteCount(), 1);
+});
+
+test("repeated incomplete responses fail after the finite retry limit", async () => {
+  const cv = await readCv();
+  const doubles = Array.from({ length: careerIntroductionMaxGenerationAttempts }, () =>
+    createConversationDouble(["Still incomplete"]),
+  );
+  let createCount = 0;
+  const engine = {
+    createConversation: async () => {
+      const double = doubles[createCount];
+      createCount += 1;
+      assert.notEqual(double, undefined);
+      return double!.conversation;
+    },
+  } as Pick<Engine, "createConversation">;
+  const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+    now: () => 0,
+    random: createRandomSource([0, 0]),
+  });
+  const result = await controller.start();
+
+  assert.equal(result.status, "failed");
+  assert.match(result.status === "failed" ? result.error.message : "", /incomplete.*2 attempts/);
+  assert.equal(createCount, careerIntroductionMaxGenerationAttempts);
+  assert.ok(doubles.every((double) => double.getDeleteCount() === 1));
 });
 
 test("empty model output fails explicitly and keeps cleanup deterministic", async () => {
@@ -179,7 +399,8 @@ test("empty model output fails explicitly and keeps cleanup deterministic", asyn
   const engine = {
     createConversation: async () => double.conversation,
   } as Pick<Engine, "createConversation">;
-  const controller = new CareerIntroductionController(engine, cv, {
+  const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+    now: () => 0,
     random: createRandomSource([0, 0]),
   });
   const result = await controller.start();
@@ -195,7 +416,8 @@ test("career introduction generation can be cancelled after a streamed chunk", a
   const engine = {
     createConversation: async () => double.conversation,
   } as Pick<Engine, "createConversation">;
-  const controller = new CareerIntroductionController(engine, cv, {
+  const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+    now: () => 0,
     random: createRandomSource([0, 0]),
   });
 
@@ -216,7 +438,8 @@ test("the randomized wait is abortable without leaving a live timer", async () =
   const engine = {
     createConversation: async () => double.conversation,
   } as Pick<Engine, "createConversation">;
-  const controller = new CareerIntroductionController(engine, cv, {
+  const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+    now: () => 0,
     random: createRandomSource([0, 0, 0.5]),
   });
 
@@ -232,10 +455,15 @@ test("the randomized wait is abortable without leaving a live timer", async () =
 });
 
 test("the home fallback is server-rendered before streamed generation begins", async () => {
-  const renderedHome = await renderHome();
+  const [helloSource, renderedHome] = await Promise.all([
+    readFile(new URL("src/components/hello.ts", projectRoot), "utf8"),
+    renderHome(),
+  ]);
 
   assert.match(renderedHome, /aria-busy="false"/);
   assert.match(renderedHome, /aria-live="polite"/);
   assert.match(renderedHome, /Currently working as a senior web frontend developer in Tokyo/);
   assert.doesNotMatch(renderedHome, /class="career-introduction"/);
+  assert.match(helloSource, /class="career-introduction" lang="\$\{generatedLanguage\}"/);
+  assert.doesNotMatch(helloSource, /Career introduction updated/);
 });

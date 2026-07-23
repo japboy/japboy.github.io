@@ -8,8 +8,8 @@ type GreetingState = "pending" | "greeted" | "revealed";
 
 export type CareerIntroductionPresentationState =
   | { status: "fallback" }
-  | { status: "generating"; text: string }
-  | { status: "waiting"; text: string };
+  | { language: string; status: "generating"; text: string }
+  | { language: string; status: "waiting"; text: string };
 
 @customElement("x-hello")
 export default class XHello extends LitElement {
@@ -87,12 +87,12 @@ export default class XHello extends LitElement {
     const greeted = this.greetingState === "greeted";
     const generatedText =
       this.careerIntroduction.status === "fallback" ? "" : this.careerIntroduction.text;
+    const generatedLanguage =
+      this.careerIntroduction.status === "fallback" ? undefined : this.careerIntroduction.language;
     const hasGeneratedText = generatedText.length > 0;
     const isGenerating = this.careerIntroduction.status === "generating";
     const completedAnnouncement =
-      this.careerIntroduction.status === "waiting"
-        ? `Career introduction updated. ${this.careerIntroduction.text}`
-        : undefined;
+      this.careerIntroduction.status === "waiting" ? this.careerIntroduction.text : undefined;
 
     return html`
       <div class="viewport">
@@ -111,7 +111,7 @@ export default class XHello extends LitElement {
           data-state="${greeted ? "visible" : "hidden"}"
         >
           ${hasGeneratedText
-            ? html`<p class="career-introduction">${generatedText}</p>`
+            ? html`<p class="career-introduction" lang="${generatedLanguage}">${generatedText}</p>`
             : html`
                 <p>
                   Hi, I'm Yu Inao.
@@ -124,7 +124,12 @@ export default class XHello extends LitElement {
                 </p>
               `}
         </x-balloon>
-        <p aria-atomic="true" aria-live="polite" class="visually-hidden">
+        <p
+          aria-atomic="true"
+          aria-live="polite"
+          class="visually-hidden"
+          lang="${generatedLanguage ?? nothing}"
+        >
           ${completedAnnouncement ?? nothing}
         </p>
       </div>

@@ -25,7 +25,12 @@ export type CareerIntroductionTopic =
       organization: CvOrganization;
     }
   | { activity: CvActivity; key: string; kind: "activity"; organization: CvOrganization }
-  | { key: "statement"; kind: "statement"; statement: CvData["statement"] };
+  | {
+      heading: string;
+      key: string;
+      kind: "statement";
+      paragraph: string;
+    };
 
 export type CareerIntroductionTopicKind = CareerIntroductionTopic["kind"];
 
@@ -86,11 +91,14 @@ export const createCareerIntroductionTopicGroups = (
     kind: "activity",
     organization: findOrganization(cv, activity.organization_id),
   }));
-  const statement: CareerIntroductionTopic[] = [
-    { key: "statement", kind: "statement", statement: cv.statement },
-  ];
+  const statements: CareerIntroductionTopic[] = cv.statement.paragraphs.map((paragraph, index) => ({
+    heading: cv.statement.heading,
+    key: `statement:${index}`,
+    kind: "statement",
+    paragraph,
+  }));
 
-  return [profile, skills, engagements, highlights, activities, statement].filter(
+  return [profile, skills, engagements, highlights, activities, statements].filter(
     (group) => group.length > 0,
   );
 };

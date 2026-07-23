@@ -5,17 +5,21 @@ import type { CareerIntroductionPresentationState } from "../components/hello.js
 import type {
   CareerIntroductionController,
   CareerIntroductionState,
+  CareerIntroductionVisitorContext,
 } from "../features/litert-lm/career-introduction.js";
 
 let activeCareerIntroduction: CareerIntroductionController | undefined;
+const visitStartedAtMs = performance.now();
+const preferredLanguage = navigator.languages[0] ?? navigator.language;
 
 const toPresentationState = (
   state: CareerIntroductionState,
+  language: string,
 ): CareerIntroductionPresentationState => {
   switch (state.status) {
     case "generating":
     case "waiting":
-      return { status: state.status, text: state.text };
+      return { language, status: state.status, text: state.text };
     case "cancelled":
     case "failed":
     case "idle":
@@ -27,12 +31,13 @@ const generateCareerIntroduction = async (
   engine: Engine,
   hello: XHello,
   Controller: typeof CareerIntroductionController,
+  visitorContext: CareerIntroductionVisitorContext,
 ): Promise<void> => {
   const { cvData } = await import("../data/load-cv.js");
-  const controller = new Controller(engine, cvData);
+  const controller = new Controller(engine, cvData, visitorContext);
   activeCareerIntroduction = controller;
   const unsubscribe = controller.subscribe((state) => {
-    hello.careerIntroduction = toPresentationState(state);
+    hello.careerIntroduction = toPresentationState(state, visitorContext.preferredLanguage);
   });
 
   try {
@@ -45,10 +50,19 @@ const generateCareerIntroduction = async (
 const initializeHome = async (): Promise<void> => {
   await import("@lit-labs/ssr-client/lit-element-hydrate-support.js");
 
-  const [{ default: XHello }, { CareerIntroductionController, liteRtLmController }] =
-    await Promise.all([import("../components/hello.js"), import("../features/litert-lm/index.js")]);
+  const [
+    { default: XHello },
+    { CareerIntroductionController, createCareerIntroductionVisitorContext, liteRtLmController },
+  ] = await Promise.all([
+    import("../components/hello.js"),
+    import("../features/litert-lm/index.js"),
+  ]);
   const hello = document.querySelector("x-hello");
   let careerIntroductionGeneration: Promise<void> | undefined;
+  const visitorContext = createCareerIntroductionVisitorContext(
+    preferredLanguage,
+    visitStartedAtMs,
+  );
 
   if (hello instanceof XHello) {
     liteRtLmController.subscribe((state) => {
@@ -65,6 +79,7 @@ const initializeHome = async (): Promise<void> => {
           engine,
           hello,
           CareerIntroductionController,
+          visitorContext,
         );
         void careerIntroductionGeneration.catch(() => {
           hello.careerIntroduction = { status: "fallback" };

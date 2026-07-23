@@ -18,12 +18,8 @@ export default class XPortrait extends LitElement {
   static styles = [
     css`
       :host {
-        display: block;
-        animation: portrait-enter 300ms ease-out 200ms 1 both;
-      }
-
-      .portrait {
         align-items: center;
+        animation: portrait-enter 300ms ease-out 200ms 1 both;
         display: flex;
         flex-direction: column;
       }
@@ -38,9 +34,50 @@ export default class XPortrait extends LitElement {
         cursor: pointer;
         font: inherit;
         inline-size: 100px;
+        isolation: isolate;
         letter-spacing: inherit;
         margin: 0;
         padding: 0;
+        position: relative;
+      }
+
+      .portrait-trigger::before,
+      .portrait-trigger::after {
+        background: conic-gradient(
+          from 0deg,
+          var(--color-model-loading-start),
+          var(--color-model-loading-middle),
+          var(--color-model-loading-end),
+          var(--color-model-loading-start)
+        );
+        content: "";
+        inset: -0.5rem;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        scale: 0.92;
+        transition:
+          opacity var(--duration-model-loading-fade) var(--easing-interaction),
+          scale var(--duration-interaction) var(--easing-interaction);
+        z-index: -1;
+      }
+
+      .portrait-trigger::before {
+        border-radius: 45% 55% 47% 53% / 54% 44% 56% 46%;
+        filter: blur(0.45rem);
+        inset: -0.75rem;
+      }
+
+      .portrait-trigger::after {
+        border-radius: 56% 44% 54% 46% / 45% 57% 43% 55%;
+        filter: blur(0.22rem);
+        inset: -0.55rem;
+      }
+
+      .portrait-trigger[data-model-loading="true"]::before,
+      .portrait-trigger[data-model-loading="true"]::after {
+        opacity: 0.78;
+        scale: 1;
       }
 
       .portrait-image {
@@ -117,6 +154,69 @@ export default class XPortrait extends LitElement {
         }
       }
 
+      @keyframes model-loading-wave-clockwise {
+        from {
+          border-radius: 45% 55% 47% 53% / 54% 44% 56% 46%;
+          rotate: 0deg;
+          scale: 0.92;
+        }
+
+        25% {
+          border-radius: 58% 42% 54% 46% / 43% 57% 45% 55%;
+          scale: 1.1;
+        }
+
+        50% {
+          border-radius: 48% 52% 42% 58% / 59% 46% 54% 41%;
+          scale: 0.94;
+        }
+
+        75% {
+          border-radius: 54% 46% 59% 41% / 47% 58% 42% 53%;
+          scale: 1.08;
+        }
+
+        to {
+          border-radius: 45% 55% 47% 53% / 54% 44% 56% 46%;
+          rotate: 360deg;
+          scale: 0.92;
+        }
+      }
+
+      @keyframes model-loading-wave-counterclockwise {
+        from {
+          border-radius: 56% 44% 54% 46% / 45% 57% 43% 55%;
+          rotate: 360deg;
+          scale: 1.08;
+        }
+
+        33% {
+          border-radius: 43% 57% 46% 54% / 56% 44% 58% 42%;
+          scale: 0.93;
+        }
+
+        66% {
+          border-radius: 53% 47% 58% 42% / 44% 56% 46% 54%;
+          scale: 1.07;
+        }
+
+        to {
+          border-radius: 56% 44% 54% 46% / 45% 57% 43% 55%;
+          rotate: 0deg;
+          scale: 1.08;
+        }
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .portrait-trigger[data-model-loading="true"]::before {
+          animation: model-loading-wave-clockwise 3.2s ease-in-out infinite;
+        }
+
+        .portrait-trigger[data-model-loading="true"]::after {
+          animation: model-loading-wave-counterclockwise 2.4s ease-in-out infinite;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         :host {
           animation: none;
@@ -134,6 +234,9 @@ export default class XPortrait extends LitElement {
   @property({ type: Boolean })
   initiated: boolean = false;
 
+  @property({ attribute: "model-loading", type: Boolean })
+  modelLoading: boolean = false;
+
   firstUpdated(): void {
     const [entryAnimation] = this.getAnimations();
 
@@ -150,38 +253,37 @@ export default class XPortrait extends LitElement {
 
   render() {
     return html`
-      <div class="portrait">
-        <button
-          aria-controls="social-links"
-          aria-expanded="${this.socialLinksVisible}"
-          aria-label="${this.portraitActionLabel}"
-          class="portrait-trigger"
-          type="button"
-          @click="${this.toggle}"
-        >
-          <img
-            alt="Yu Inao"
-            class="portrait-image"
-            data-state="${this.greeted ? "greeted" : "resting"}"
-            height="100"
-            src="${this.gravatarUrl}"
-            width="100"
-          />
-        </button>
+      <button
+        aria-controls="social-links"
+        aria-expanded="${this.socialLinksVisible}"
+        aria-label="${this.portraitActionLabel}"
+        class="portrait-trigger"
+        data-model-loading="${this.modelLoading}"
+        type="button"
+        @click="${this.toggle}"
+      >
+        <img
+          alt="Yu Inao"
+          class="portrait-image"
+          data-state="${this.greeted ? "greeted" : "resting"}"
+          height="100"
+          src="${this.gravatarUrl}"
+          width="100"
+        />
+      </button>
 
-        <div
-          aria-hidden="${this.socialLinksVisible ? nothing : "true"}"
-          class="social-links"
-          data-state="${this.socialLinksVisible ? "visible" : "hidden"}"
-          id="social-links"
-        >
-          <a aria-label="LinkedIn" class="social-link" href="${this.linkedin}">
-            ${renderBrandIcon(faLinkedin)}
-          </a>
-          <a aria-label="GitHub" class="social-link" href="${this.github}">
-            ${renderBrandIcon(faGithub)}
-          </a>
-        </div>
+      <div
+        aria-hidden="${this.socialLinksVisible ? nothing : "true"}"
+        class="social-links"
+        data-state="${this.socialLinksVisible ? "visible" : "hidden"}"
+        id="social-links"
+      >
+        <a aria-label="LinkedIn" class="social-link" href="${this.linkedin}">
+          ${renderBrandIcon(faLinkedin)}
+        </a>
+        <a aria-label="GitHub" class="social-link" href="${this.github}">
+          ${renderBrandIcon(faGithub)}
+        </a>
       </div>
     `;
   }

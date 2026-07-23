@@ -1,0 +1,472 @@
+# yaml-language-server: $schema=./cv.schema.json
+schema_version: 1
+source:
+  title: Curriculum Vitae
+  issued_on: 2025-02-17
+  coverage:
+    start: 2008-05
+    end: 2025-03
+  note: Public structured data derived from the supplied curriculum vitae PDF
+anonymization:
+  mode: organization-and-product
+  policy: Company names, client names, proprietary service names, and URLs that could directly identify an organization are replaced with generic public descriptions
+  identifiers_published: false
+profile:
+  name: Yu Inao
+  title: Web Frontend Architect / Designer
+  summary: I specialize in web frontend architecture and development, component-based UI design, web performance, and web standards.
+skills:
+  - id: coding
+    label: Markup & Styling
+    items:
+      - name: HTML
+        years: 8
+        level: 3
+        description: Semantic and SEO-aware implementation, including experience with Pug, Jinja2, and other template systems.
+      - name: CSS
+        years: 8
+        level: 3
+        description: Architecture and implementation with PostCSS, CSS preprocessors, ECSS, BEM, and ITCSS.
+  - id: programming
+    label: Programming
+    items:
+      - name: JavaScript
+        years: 8
+        level: 3
+        description: Professional experience with ESNext, major frontend frameworks, Node.js, and build pipelines.
+      - name: TypeScript
+        years: 5
+        level: 3
+        description: Primary programming language for work that would otherwise be implemented in JavaScript.
+      - name: Python
+        years: 5
+        level: 2
+        description: Backend development with Flask, cloud environments, and internal automation.
+      - name: Go
+        years: 1
+        level: 1
+        description: Experience adding GraphQL fields and extending DataLoader implementations.
+      - name: Bash
+        years: 6
+        level: 2
+        description: Daily macOS use, dotfiles management, and operational automation scripts.
+      - name: PHP
+        years: 4
+        level: 2
+        description: Experience with CakePHP, legacy environments, and source builds.
+  - id: data
+    label: Data & Query Languages
+    items:
+      - name: GraphQL
+        years: 1
+        level: 2
+        description: Fragment colocation, Apollo Client, custom directives, and client-side schema extensions.
+      - name: BigQuery
+        years: 4
+        level: 1
+        description: Analytics and A/B testing data aggregation.
+      - name: SQL Server
+        years: 4
+        level: 1
+        description: Experience in enterprise application development.
+      - name: MySQL
+        years: 4
+        level: 2
+        description: Environment setup, table design, index optimization, and basic operations.
+  - id: platforms
+    label: Operating Systems & Cloud
+    items:
+      - name: Linux
+        years: 4
+        level: 3
+        description: Experience with CentOS, Ubuntu, Amazon Linux, and other distributions.
+      - name: macOS
+        years: 8
+        level: 3
+        description: Long-term use as my primary development environment.
+      - name: Windows
+        years: 5
+        level: 2
+        description: Experience with WSL and PowerShell, with working knowledge of .NET and WPF.
+      - name: AWS
+        years: 5
+        level: 2
+        description: Experience with EKS, Elastic Beanstalk, EC2, and serverless architectures.
+      - name: Google Cloud Platform
+        years: 2
+        level: 2
+        description: Professional and personal use centered on GAE and Python.
+      - name: Docker
+        years: 3
+        level: 2
+        description: Development environment setup for client and personal projects.
+organizations:
+  - id: b2b-saas-provider
+    relationship: freelance-client
+    profile: Product company providing B2B SaaS and a cloud device-management platform
+  - id: commerce-platform-provider
+    relationship: freelance-client
+    profile: Product company operating a direct-to-consumer commerce platform
+  - id: consumer-web-service-provider
+    relationship: freelance-client
+    profile: Product company operating a consumer web service
+  - id: fintech-platform-provider
+    relationship: freelance-client
+    profile: Product company operating a FinTech platform
+  - id: web-development-consultancy
+    relationship: freelance-client
+    profile: Web development consultancy
+  - id: waste-management-product-company
+    relationship: freelance-client
+    profile: Product company serving the industrial waste-management sector
+  - id: beauty-product-company
+    relationship: freelance-client
+    profile: Product company serving the beauty industry
+  - id: local-marketing-platform-provider
+    relationship: freelance-client
+    profile: Product company providing a local-marketing platform
+  - id: travel-booking-product-company
+    relationship: employer
+    profile: Product company developing consumer travel and restaurant booking services in-house
+  - id: digital-product-agency
+    relationship: employer
+    profile: Digital product design and development agency
+  - id: enterprise-systems-integrator
+    relationship: employer
+    profile: Systems integrator developing enterprise applications
+engagements:
+  - id: freelance-saas
+    organization_id: b2b-saas-provider
+    period: { start: 2022-09, end: 2025-03 }
+    headline: Maintenance and Evolution of SaaS, Panorama Authoring, and Device-Management Products
+    roles: [Web Frontend Architect, Web Frontend Engineer, Backend Engineer]
+    summary: Worked across multiple cloud products, covering architecture reviews, release management, and feature delivery.
+    responsibilities:
+      - Reviewed web frontend and backend architectures
+      - Delivered features and improvements including custom domains for B2B customers
+      - Integrated shared platform capabilities into web applications
+    stack:
+      [
+        Next.js,
+        AWS Amplify,
+        Apollo Client,
+        Marzipano,
+        MUI,
+        styled-components,
+        Tailwind CSS,
+        Storybook,
+        Figma,
+        AWS,
+        DynamoDB,
+        AppSync,
+        Serverless Framework,
+        Stripe,
+        Vercel,
+      ]
+  - id: freelance-commerce-architecture
+    organization_id: commerce-platform-provider
+    period: { start: 2022-08, end: 2023-04 }
+    headline: Commerce Frontend Architecture Migration
+    roles: [Web Frontend Advisor]
+    summary: Proposed a transition from a monolith to a modular monolith and prototyped the next frontend architecture.
+    responsibilities:
+      [Supported the migration from Nuxt 2 to Nuxt 3, Prototyped the target architecture]
+    stack: [Nuxt 2, Nuxt 3, Storybook, Figma, Miro]
+  - id: freelance-platform-renewal
+    organization_id: consumer-web-service-provider
+    period: { start: 2022-06, end: 2022-07 }
+    headline: Web Service Frontend Platform Renewal
+    roles: [Web Frontend Engineer]
+    summary: Migrated a vanilla JavaScript implementation to a new Nuxt.js platform.
+    responsibilities:
+      [
+        Migrated existing functionality to the new platform,
+        Rebuilt UI elements as Vue.js components,
+      ]
+    stack: [JavaScript, Vue.js, Nuxt 2, Nuxt 3]
+  - id: freelance-fintech-migration
+    organization_id: fintech-platform-provider
+    period: { start: 2022-06, end: 2022-08 }
+    headline: FinTech Framework Migration and UI Maintenance
+    roles: [Web Frontend Engineer]
+    summary: Migrated implementation from Nuxt.js to Next.js and rebuilt a landing page.
+    responsibilities: [Framework migration, UI feature delivery, Landing-page implementation]
+    stack: [Next.js, Nuxt.js, Tailwind CSS, Ant Design, OpenAPI, Figma]
+  - id: freelance-qa-automation
+    organization_id: web-development-consultancy
+    period: { start: 2022-04, end: 2022-05 }
+    headline: Integration-Test Automation for a Streaming Service
+    roles: [Web Test Engineer]
+    summary: Introduced Cypress as part of quality assurance and documented test cases and operational handoff.
+    responsibilities:
+      [
+        Introduced Cypress,
+        Created baseline test cases,
+        Handed the test environment over to the engineering team,
+      ]
+    stack: [React, Cypress, Docker, AWS CLI]
+  - id: freelance-industry-product
+    organization_id: waste-management-product-company
+    period: { start: 2022-04, end: 2022-07 }
+    headline: Maintenance of an Industry-Focused Web Product
+    roles: [Web Frontend Engineer]
+    summary: Delivered features and maintained the UI of a Nuxt.js product.
+    responsibilities: [Frontend maintenance, Feature delivery with a GraphQL API]
+    stack: [Nuxt.js, Vuetify, GraphQL, Figma]
+  - id: freelance-design-advisory
+    organization_id: beauty-product-company
+    period: { start: 2022-03, end: 2022-06 }
+    headline: Frontend Architecture Advisory for a New Web Product
+    roles: [Web Frontend Advisor, Web Frontend Engineer]
+    summary: Advised on technology selection and architecture while improving CI and automated code maintenance.
+    responsibilities:
+      [
+        Architecture consultation and reviews,
+        Technology selection,
+        CI and automated code-maintenance setup,
+      ]
+    stack: [Nuxt.js, Vuetify, OpenAPI, CircleCI]
+  - id: freelance-product-design
+    organization_id: local-marketing-platform-provider
+    period: { start: 2021-12, end: 2022-05 }
+    headline: Product UI Design and Frontend Implementation
+    roles: [Web Designer, Web Frontend Engineer]
+    summary: Worked end to end from wireframes and visual design through UI implementation and architecture improvements.
+    responsibilities:
+      [
+        Designed UI in Figma,
+        Implemented UI with Next.js,
+        Migrated APIs to GraphQL,
+        Improved frontend architecture,
+      ]
+    stack:
+      [
+        Next.js,
+        React,
+        GraphQL,
+        Apollo Client,
+        OpenAPI,
+        Go,
+        Jest,
+        Cypress,
+        Storybook,
+        Tailwind CSS,
+        MUI,
+        Figma,
+        AWS Amplify,
+        AWS CDK,
+      ]
+  - id: product-unified-frontend
+    organization_id: travel-booking-product-company
+    period: { start: 2021-04, end: 2021-10 }
+    headline: Unified Frontend Architecture for Two Group Brands
+    roles: [Frontend Engineer, Tech Lead]
+    summary: Led a transparent frontend architecture that delivered two brands from one technical platform.
+    responsibilities:
+      [
+        Designed visual design tokens,
+        Built a brand-transparent CSS architecture,
+        Migrated primary journeys to the new platform,
+      ]
+    stack: [Tailwind CSS, Nuxt.js, Apollo Client, GraphQL, Go]
+  - id: product-bff-lead
+    organization_id: travel-booking-product-company
+    period: { start: 2020-11, end: 2021-03 }
+    headline: Technical Leadership for a BFF Platform
+    roles: [Frontend Engineer, Tech Lead]
+    summary: Built a Node.js BFF environment and led migration of search experiences to the new platform.
+    responsibilities:
+      [Built the BFF environment, Advanced component-based architecture, Migrated search pages]
+    stack: [Nuxt.js, Apollo Client, GraphQL, Go]
+  - id: product-growth
+    organization_id: travel-booking-product-company
+    period: { start: 2019-02, end: 2021-03 }
+    headline: Product Initiatives and Frontend Architecture for a Restaurant-Booking Business
+    roles: [Frontend Engineer, Tech Lead]
+    summary: Continued to lead frontend architecture while delivering business initiatives and a large-scale campaign.
+    responsibilities:
+      [Product initiative delivery, Large-scale campaign development, Architecture reviews]
+    stack: [Nuxt.js, Python]
+  - id: product-spa-modernization
+    organization_id: travel-booking-product-company
+    period: { start: 2018-01, end: 2019-01 }
+    headline: Migration from a Legacy Platform to a BFF / SPA Architecture
+    roles: [Frontend Engineer, Tech Lead]
+    summary: Led an SPA migration that improved content discovery while retaining SEO requirements, architecture governance, and team review.
+    responsibilities:
+      [Built a Node.js BFF, Migrated primary journeys, Led team reviews and designer collaboration]
+    stack: [Nuxt.js, Python]
+  - id: product-performance
+    organization_id: travel-booking-product-company
+    period: { start: 2016-12, end: 2017-12 }
+    headline: SEO and Web Performance Improvement
+    roles: [Frontend Engineer]
+    summary: Advanced asset-delivery optimization, Service Worker adoption, performance measurement, and AMP implementation.
+    responsibilities:
+      [
+        Built internal awareness,
+        Optimized asset delivery,
+        Introduced Service Worker,
+        Established performance measurement,
+      ]
+    stack: [webpack, Vue.js, AMP, Service Worker]
+  - id: product-css-education
+    organization_id: travel-booking-product-company
+    period: { start: 2016-11, end: 2016-12 }
+    headline: Internal Adoption of Modern CSS and CSS Methodologies
+    roles: [Frontend Engineer]
+    summary: Improved the development environment and delivered workshops for designers.
+    responsibilities:
+      [Introduced CSS preprocessing, Trained designers, Advanced CSS methodology adoption]
+    stack: [PostCSS, cssnext, ECSS, BEM]
+  - id: product-ci
+    organization_id: travel-booking-product-company
+    period: { start: 2016-11, end: 2016-12 }
+    headline: Frontend CI Integration and Deployment Automation
+    roles: [Frontend Engineer]
+    summary: Connected build and deployment workflows to CI and introduced the process to the team.
+    responsibilities: [Built the deployment environment, Integrated CI, Trained the team]
+    stack: [Jenkins, PowerShell, webpack]
+  - id: product-build-pipeline
+    organization_id: travel-booking-product-company
+    period: { start: 2016-10, end: 2016-11 }
+    headline: Modern Build Pipeline for a Legacy Development Environment
+    roles: [Frontend Engineer]
+    summary: Introduced webpack, ESNext, and cssnext to establish a foundation for continuous improvement.
+    responsibilities: [Introduced webpack, Built an ESNext and cssnext development environment]
+    stack: [webpack, JavaScript, PostCSS, cssnext]
+  - id: agency-interactive-prototype
+    organization_id: digital-product-agency
+    period: { start: 2015-12, end: 2016-03 }
+    headline: Interactive Data-Visualization Prototype for a Public Institution
+    roles: [Backend Programmer]
+    summary: Prototyped a web infographic connected to a trend-data API.
+    responsibilities: [Prototyping, API design, Development environment setup]
+    stack: [Google Cloud Platform, GAE, Python, Git]
+  - id: agency-campaign-platform
+    organization_id: digital-product-agency
+    period: { start: 2015-11, end: 2016-01 }
+    headline: Shared Platform for a Campaign-Site Series
+    roles: [Technical Director, Backend Programmer]
+    summary: Designed and implemented a shared frontend API and backend platform for a series of campaign sites.
+    responsibilities:
+      [
+        Requirements definition,
+        API design,
+        Shared library implementation,
+        Backend implementation,
+        Integration testing,
+      ]
+    stack: [PHP, Oracle Database, MySQL, JavaScript, Docker, Git]
+  - id: agency-mobile-renewal
+    organization_id: digital-product-agency
+    period: { start: 2015-10, end: 2016-03 }
+    headline: Mobile Web Service Renewal Including Legacy Devices
+    roles: [Technical Director, Programmer]
+    summary: Delivered a single-source responsive implementation that supported devices more than a decade old.
+    responsibilities:
+      [
+        Detailed design,
+        Frontend implementation,
+        Unit and integration testing,
+        Development environment setup,
+      ]
+    stack: [JavaScript, jQuery, CoffeeScript, Gulp, Browserify, PHP, Git]
+  - id: agency-map-search
+    organization_id: digital-product-agency
+    period: { start: 2015-06, end: 2015-09 }
+    headline: New Map-Based Property Search Service
+    roles: [Frontend Programmer]
+    summary: Implemented a search UI and development environment using a mapping API.
+    responsibilities: [Development environment setup, Map-search implementation]
+    stack: [Google Maps API, JavaScript, Vue.js, ES6, Gulp, Browserify, Git]
+  - id: agency-web-game
+    organization_id: digital-product-agency
+    period: { start: 2014-05, end: 2014-05 }
+    headline: Web Game for Desktop and Mobile
+    roles: [Coder, Programmer]
+    summary: Implemented the mobile edition of a branded web-game campaign.
+    responsibilities: [Mobile frontend implementation, Development environment setup]
+    stack: [JavaScript, Pixi.js, CoffeeScript, Gulp, Git]
+  - id: agency-recruitment
+    organization_id: digital-product-agency
+    period: { start: 2012-10, end: 2012-12 }
+    headline: Gamified Graduate Recruitment Site
+    roles: [Programmer]
+    summary: Led frontend delivery while contributing to API design and backend implementation.
+    responsibilities:
+      [
+        Detailed design,
+        API design,
+        Frontend implementation,
+        Backend implementation support,
+        Development environment setup,
+      ]
+    stack: [JavaScript, Backbone.js, CoffeeScript, Brunch, PHP, CakePHP, MySQL, Git]
+  - id: si-enterprise-maintenance
+    organization_id: enterprise-systems-integrator
+    period: { start: 2008-08, end: 2009-09 }
+    headline: Maintenance and Enhancement of a Large Enterprise System
+    roles: [Systems Engineer, Programmer]
+    summary: Delivered feature enhancements, analyzed business logic, managed delivery workflows, and automated documentation.
+    responsibilities:
+      [
+        High-level and detailed design,
+        Implementation,
+        Integration and system testing,
+        Approval workflow management,
+        VBA documentation automation,
+      ]
+    stack: [SAP E/3, ABAP, SQL, Excel, VBA]
+  - id: si-manufacturing-system
+    organization_id: enterprise-systems-integrator
+    period: { start: 2008-05, end: 2008-07 }
+    headline: New Enterprise System for a Manufacturer
+    roles: [Programmer]
+    summary: Worked from detailed design through implementation and integration testing.
+    responsibilities: [Detailed design, Programming, Integration testing]
+    stack: [Microsoft Access, Excel, VBA, Oracle Database]
+highlights:
+  - id: transparent-brand-architecture
+    engagement_id: product-unified-frontend
+    title: Transparent Frontend Architecture Across Two Brands
+    summary: To deliver two travel brands from one technical platform, I isolated brand differences in design tokens and maximized shared feature implementation.
+    principles:
+      - Expressed brand color, typography, and CTA decisions as design tokens
+      - Built CSS architecture that applied transparently to both brands through token switching
+      - Used component-based layered design organized around functional cohesion
+      - Localized implementation differences across desktop, mobile, and brands
+  - id: bff-spa-modernization
+    engagement_id: product-spa-modernization
+    title: Incremental Migration from a Legacy Platform to BFF / SPA
+    summary: To improve content discovery, I migrated a monolithic legacy platform to a Nuxt.js BFF / SPA architecture while preserving SEO.
+    principles:
+      - Combined SSR and SPA behavior to balance SEO with client-side experience
+      - Replaced the platform incrementally, beginning with primary user journeys
+      - Led architecture decisions, code reviews, and designer collaboration
+activities:
+  - organization_id: travel-booking-product-company
+    period: 2017-2019
+    items:
+      [
+        External technical talks,
+        Engineering blog articles,
+        Company technical-event talks,
+        Interview contribution on component-based development,
+      ]
+  - organization_id: digital-product-agency
+    period: 2011-2014
+    items:
+      [
+        Introduced an internal wiki and Git,
+        Built a lightweight CI environment with Git and frontend build tools,
+        Migrated the wiki and Git services to AWS,
+        Organized internal Git and frontend-build workshops,
+        Documented development-environment operations,
+      ]
+statement:
+  heading: The Open Web and Repeatable Design
+  paragraphs:
+    - I became interested in web standards through the principle that HTML describes information and structure while CSS describes presentation. That led to a lasting respect for the Web as an open platform where information can be accessed equally.
+    - I have contributed where I could, including translating official Git documentation, localizing open-source software, and testing macOS builds for an open-source editor.
+    - Today I focus on systems that let organizations reproduce coherent UI and UX. By articulating the non-verbal parts of design and connecting component architecture, software design, and domain modeling, I aim to improve both consistency and development productivity.

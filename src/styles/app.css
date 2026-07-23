@@ -7,9 +7,13 @@
   --color-balloon-background: #1f2937;
   --color-balloon-text: #f3f4f6;
   --color-portrait-background: #f3f4f6;
+  --color-model-loading-start: #06b6d4;
+  --color-model-loading-middle: #8b5cf6;
+  --color-model-loading-end: #ec4899;
   --color-social-hover: #9ca3af;
   --radius-balloon: 0.25rem;
   --duration-interaction: 200ms;
+  --duration-model-loading-fade: 600ms;
   --easing-interaction: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -20,6 +24,9 @@
     --color-balloon-background: #ffffff;
     --color-balloon-text: #1f2937;
     --color-portrait-background: #374151;
+    --color-model-loading-start: #22d3ee;
+    --color-model-loading-middle: #a78bfa;
+    --color-model-loading-end: #f472b6;
     --color-social-hover: #4b5563;
   }
 }

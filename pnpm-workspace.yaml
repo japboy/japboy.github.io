@@ -29,3 +29,6 @@ engineStrict: true
 
 # New direct dependencies are recorded as exact versions by default.
 savePrefix: ""
+minimumReleaseAgeExclude:
+  # Renovate security update: ajv@8.18.0
+  - ajv@8.18.0

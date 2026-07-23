@@ -59,6 +59,9 @@ export default defineConfig({
   root: pagesRoot,
   appType: "mpa",
   publicDir: resolve(sourceRoot, "static"),
+  server: {
+    host: true,
+  },
   resolve: {
     alias: {
       "/@source": sourceRoot,

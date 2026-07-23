@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readdir, readFile } from "node:fs/promises";
+import { access, readdir, readFile } from "node:fs/promises";
 import test from "node:test";
 
 interface RouteDefinition {
@@ -43,14 +43,14 @@ test("the route manifest exhaustively describes the HTML page tree", async () =>
     .sort();
 
   assert.deepEqual(pageFiles, manifestFiles);
-  assert.ok(pageFiles.every((path) => path === "index.html" || path.endsWith("/index.html")));
+  assert.ok(pageFiles.every((path) => path.endsWith(".html")));
 });
 
 test("route URLs, output paths, and SSR outlets are deterministic", async () => {
   const routes = await readRoutes();
 
   for (const [routeId, route] of Object.entries(routes)) {
-    const expectedHtml = route.url === "/" ? "index.html" : `${route.url.slice(1)}index.html`;
+    const expectedHtml = route.url === "/" ? "index.html" : `${route.url.slice(1)}/index.html`;
     assert.equal(route.html, expectedHtml, `route ${routeId} must mirror its public URL`);
 
     const documentHtml = await readFile(new URL(route.html, pagesRoot), "utf8");
@@ -61,4 +61,48 @@ test("route URLs, output paths, and SSR outlets are deterministic", async () => 
       `route ${routeId} has invalid outlets`,
     );
   }
+});
+
+test("architecture and user documentation have explicit recursive boundaries", async () => {
+  const [architecture, featureArchitecture, readme] = await Promise.all([
+    readFile(new URL("ARCHITECTURE.md", projectRoot), "utf8"),
+    readFile(new URL("src/features/litert-lm/ARCHITECTURE.md", projectRoot), "utf8"),
+    readFile(new URL("README.md", projectRoot), "utf8"),
+  ]);
+  const requiredArchitectureSections = [
+    "## 1. Project Structure",
+    "## 2. High-Level System Diagram",
+    "## 3. Core Components",
+    "## 4. Data Stores",
+    "## 5. External Integrations / APIs",
+    "## 6. Deployment & Infrastructure",
+    "## 7. Security Considerations",
+    "## 8. Development & Testing Environment",
+    "## 9. Future Considerations / Roadmap",
+    "## 10. Project Identification",
+    "## 11. Glossary / Acronyms",
+  ];
+
+  await assert.rejects(access(new URL("docs/", projectRoot)), { code: "ENOENT" });
+
+  for (const section of requiredArchitectureSections) {
+    const sectionPattern = new RegExp(`^${section.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`, "m");
+
+    assert.match(architecture, sectionPattern);
+    assert.match(featureArchitecture, sectionPattern);
+  }
+
+  assert.match(
+    architecture,
+    /\[feature architecture\]\(src\/features\/litert-lm\/ARCHITECTURE\.md\)/,
+  );
+  assert.doesNotMatch(architecture, /2,008,432,640|Permitted next state/);
+  assert.match(featureArchitecture, /2,008,432,640/);
+  assert.match(featureArchitecture, /Permitted next state/);
+
+  assert.match(readme, /^## Requirements$/m);
+  assert.match(readme, /^## Local development$/m);
+  assert.match(readme, /^## Verification$/m);
+  assert.match(readme, /^## Production site$/m);
+  assert.doesNotMatch(readme, /ARCHITECTURE|architecture|docs\//i);
 });

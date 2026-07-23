@@ -1,10 +1,15 @@
-import { LitElement, css, html } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { LitElement, css, html, nothing } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
 import "./balloon.js";
 import "./portrait.js";
 
 type GreetingState = "pending" | "greeted" | "revealed";
+
+export type CareerIntroductionPresentationState =
+  | { status: "fallback" }
+  | { status: "generating"; text: string }
+  | { status: "waiting"; text: string };
 
 @customElement("x-hello")
 export default class XHello extends LitElement {
@@ -52,40 +57,76 @@ export default class XHello extends LitElement {
       p {
         margin: 0;
       }
+
+      .career-introduction {
+        white-space: pre-line;
+      }
+
+      .visually-hidden {
+        block-size: 1px;
+        clip-path: inset(50%);
+        inline-size: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+      }
     `,
   ];
 
   @state()
   private greetingState: GreetingState = "pending";
 
+  @property({ attribute: false, type: Boolean })
+  modelLoading: boolean = false;
+
+  @property({ attribute: false })
+  careerIntroduction: CareerIntroductionPresentationState = { status: "fallback" };
+
   render() {
     const initiated = this.greetingState !== "pending";
     const greeted = this.greetingState === "greeted";
+    const generatedText =
+      this.careerIntroduction.status === "fallback" ? "" : this.careerIntroduction.text;
+    const hasGeneratedText = generatedText.length > 0;
+    const isGenerating = this.careerIntroduction.status === "generating";
+    const completedAnnouncement =
+      this.careerIntroduction.status === "waiting"
+        ? `Career introduction updated. ${this.careerIntroduction.text}`
+        : undefined;
 
     return html`
       <div class="viewport">
         <x-portrait
           ?greeted="${greeted}"
           ?initiated="${initiated}"
+          ?model-loading="${this.modelLoading}"
           @greeting-change="${this.changeGreeting}"
           @portrait-entry-complete="${this.completeGreeting}"
         ></x-portrait>
 
         <x-balloon
+          aria-busy="${isGenerating}"
           aria-hidden="${!greeted}"
           class="greeting"
           data-state="${greeted ? "visible" : "hidden"}"
         >
-          <p>
-            Hi, I'm Yu Inao.
-            <br />
-            Currently working as a senior web frontend developer in Tokyo.
-          </p>
-          <p>
-            My passions focus on web UI development, component-based UI design, performant web, web
-            apps, &amp; web standards.
-          </p>
+          ${hasGeneratedText
+            ? html`<p class="career-introduction">${generatedText}</p>`
+            : html`
+                <p>
+                  Hi, I'm Yu Inao.
+                  <br />
+                  Currently working as a senior web frontend developer in Tokyo.
+                </p>
+                <p>
+                  My passions focus on web UI development, component-based UI design, performant
+                  web, web apps, &amp; web standards.
+                </p>
+              `}
         </x-balloon>
+        <p aria-atomic="true" aria-live="polite" class="visually-hidden">
+          ${completedAnnouncement ?? nothing}
+        </p>
       </div>
     `;
   }

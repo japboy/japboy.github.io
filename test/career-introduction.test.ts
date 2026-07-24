@@ -596,6 +596,10 @@ test("the home fallback is server-rendered before streamed generation begins", a
   assert.match(renderedHome, /aria-live="polite"/);
   assert.match(renderedHome, /Currently working as a senior web frontend developer in Tokyo/);
   assert.doesNotMatch(renderedHome, /class="career-introduction"/);
-  assert.match(helloSource, /class="career-introduction" lang="\$\{generatedLanguage\}"/);
+  assert.match(helloSource, /class="career-introduction" dir="auto" lang="\$\{lang\}"/);
+  assert.match(
+    helloSource,
+    /aria-live="polite"\s+class="visually-hidden"\s+dir="auto"\s+lang="\$\{lang \?\? nothing\}"/,
+  );
   assert.doesNotMatch(helloSource, /Career introduction updated/);
 });

@@ -102,7 +102,7 @@ export default class XHello extends LitElement {
     const greeted = this.greetingVisible;
     const generatedText =
       this.careerIntroduction.status === "fallback" ? "" : this.careerIntroduction.text;
-    const generatedLanguage =
+    const lang =
       this.careerIntroduction.status === "fallback" ? undefined : this.careerIntroduction.language;
     const hasGeneratedText = generatedText.length > 0;
     const isGenerating = this.careerIntroduction.status === "generating";
@@ -126,7 +126,7 @@ export default class XHello extends LitElement {
           data-state="${greeted ? "visible" : "hidden"}"
         >
           ${hasGeneratedText
-            ? html`<p class="career-introduction" lang="${generatedLanguage}">${generatedText}</p>`
+            ? html`<p class="career-introduction" dir="auto" lang="${lang}">${generatedText}</p>`
             : html`
                 <p>
                   Hi, I'm Yu Inao.
@@ -143,7 +143,8 @@ export default class XHello extends LitElement {
           aria-atomic="true"
           aria-live="polite"
           class="visually-hidden"
-          lang="${generatedLanguage ?? nothing}"
+          dir="auto"
+          lang="${lang ?? nothing}"
         >
           ${completedAnnouncement ?? nothing}
         </p>

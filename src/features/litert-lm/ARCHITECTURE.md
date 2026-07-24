@@ -183,10 +183,11 @@ after completion, failure, or cancellation.
 fallback until the first non-empty chunk and keeps the previous introduction visible while the next
 one is generated or its repeat timer is paused. Model text is rendered as escaped plain text, and
 generation is exposed through `aria-busy`. Generated and announced text carries the selected BCP 47
-`lang` value. The visible stream is not a live region; a separate live region is updated with only
-the generated text when the controller enters `waiting` so assistive technology is not interrupted
-for every token, re-announced merely because a timer paused, or forced through an English-only
-announcement prefix.
+`lang` value and declares `dir="auto"`, allowing the user agent to derive left-to-right or
+right-to-left direction from the generated content. The visible stream is not a live region; a
+separate live region is updated with only the generated text when the controller enters `waiting`
+so assistive technology is not interrupted for every token, re-announced merely because a timer
+paused, or forced through an English-only announcement prefix.
 
 While loading, `x-hello` passes the boolean state to `x-portrait`. Two presentation-only pseudo
 elements render counter-rotating, irregular conic gradients behind the circular portrait. They do
@@ -353,7 +354,7 @@ browser environment.
 - **Owning path:** `src/features/litert-lm/`
 - **Parent architecture:** `../../../ARCHITECTURE.md`
 - **Primary contact:** Yu Inao
-- **Last updated:** 2026-07-23
+- **Last updated:** 2026-07-24
 
 ## 11. Glossary / Acronyms
 

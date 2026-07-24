@@ -13,6 +13,7 @@ import {
 import type { CvData } from "../src/data/cv.js";
 import {
   CareerIntroductionController,
+  type CareerIntroductionState,
   careerIntroductionMaxGenerationAttempts,
   careerIntroductionMaxOutputTokens,
   careerIntroductionRepeatDelayMs,
@@ -265,7 +266,7 @@ test("career introduction loops through non-repeating random CV topics after a r
     },
   } as Pick<Engine, "createConversation">;
   const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
-    now: createRandomSource([15_000, 75_000]),
+    now: createRandomSource([15_000, 15_000, 75_000]),
     random: createRandomSource([0, 0, 0.5, 0, 0]),
     wait: async (durationMs) => {
       delays.push(durationMs);
@@ -326,6 +327,137 @@ test("career introduction loops through non-repeating random CV topics after a r
   assert.match(doubles[1].getPrompt() ?? "", /"visitDuration":"1 minute 15 seconds"/);
   assert.equal(doubles[0].getDeleteCount(), 1);
   assert.equal(doubles[1].getDeleteCount(), 1);
+});
+
+test("career introduction waits for visibility before the initial generation", async () => {
+  const cv = await readCv();
+  const double = createConversationDouble(["Completed introduction."]);
+  let createCount = 0;
+  const engine = {
+    createConversation: async () => {
+      createCount += 1;
+      return double.conversation;
+    },
+  } as Pick<Engine, "createConversation">;
+  const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+    now: () => 0,
+    random: createRandomSource([0, 0, 0.5]),
+  });
+
+  controller.pause();
+  const run = controller.start();
+  await Promise.resolve();
+
+  assert.deepEqual(controller.state, {
+    phase: "before-generation",
+    status: "paused",
+    text: "",
+  });
+  assert.equal(createCount, 0);
+
+  controller.subscribe((state) => {
+    if (state.status === "waiting") {
+      controller.cancel();
+    }
+  });
+  controller.resume();
+
+  assert.deepEqual(await run, { status: "cancelled" });
+  assert.equal(createCount, 1);
+  assert.equal(double.getCancelCount(), 0);
+  assert.equal(double.getDeleteCount(), 1);
+});
+
+test("hiding during generation preserves the result and pauses before the repeat timer", async () => {
+  const cv = await readCv();
+  const double = createConversationDouble(["First chunk", " completes the introduction."]);
+  const engine = {
+    createConversation: async () => double.conversation,
+  } as Pick<Engine, "createConversation">;
+  const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+    now: () => 0,
+    random: createRandomSource([0, 0, 0.5]),
+  });
+  let observedPausedState: CareerIntroductionState | undefined;
+
+  controller.subscribe((state) => {
+    if (state.status === "generating" && state.text === "First chunk") {
+      controller.pause();
+    }
+
+    if (state.status === "paused" && state.phase === "waiting") {
+      observedPausedState = state;
+      controller.resume();
+    }
+
+    if (state.status === "waiting") {
+      controller.cancel();
+    }
+  });
+
+  assert.deepEqual(await controller.start(), { status: "cancelled" });
+  assert.deepEqual(observedPausedState, {
+    phase: "waiting",
+    remainingDelayMs: careerIntroductionRepeatDelayMs,
+    status: "paused",
+    text: "First chunk completes the introduction.",
+    topic: "profile",
+  });
+  assert.equal(double.getCancelCount(), 0);
+  assert.equal(double.getDeleteCount(), 1);
+});
+
+test("a paused repeat timer resumes from its remaining duration", async () => {
+  const cv = await readCv();
+  const double = createConversationDouble(["Completed introduction."]);
+  const delays: number[] = [];
+  let notifyFirstWaitStarted: (() => void) | undefined;
+  const firstWaitStarted = new Promise<void>((resolve) => {
+    notifyFirstWaitStarted = resolve;
+  });
+  const engine = {
+    createConversation: async () => double.conversation,
+  } as Pick<Engine, "createConversation">;
+  const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+    now: createRandomSource([0, 1_000, 2_500, 2_500]),
+    random: createRandomSource([0, 0, 0]),
+    repeatJitterMs: 0,
+    wait: (durationMs, signal) => {
+      delays.push(durationMs);
+
+      return new Promise<void>((resolve) => {
+        signal.addEventListener("abort", () => resolve(), { once: true });
+
+        if (delays.length === 1) {
+          notifyFirstWaitStarted?.();
+        } else {
+          queueMicrotask(() => controller.cancel());
+        }
+      });
+    },
+  });
+  let notifyPaused: (() => void) | undefined;
+  const paused = new Promise<void>((resolve) => {
+    notifyPaused = resolve;
+  });
+
+  controller.subscribe((state) => {
+    if (state.status === "paused" && state.phase === "waiting") {
+      assert.equal(state.remainingDelayMs, 4_500);
+      notifyPaused?.();
+    }
+  });
+
+  const run = controller.start();
+  await firstWaitStarted;
+  controller.pause();
+  await paused;
+  controller.resume();
+
+  assert.deepEqual(await run, { status: "cancelled" });
+  assert.deepEqual(delays, [careerIntroductionRepeatDelayMs, 4_500]);
+  assert.equal(double.getCancelCount(), 0);
+  assert.equal(double.getDeleteCount(), 1);
 });
 
 test("an incomplete response retries once with a smaller deterministic content budget", async () => {

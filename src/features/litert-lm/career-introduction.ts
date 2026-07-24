@@ -17,6 +17,14 @@ export type CareerIntroductionState =
   | { status: "idle" }
   | { status: "generating"; text: string; topic: CareerIntroductionTopicKind }
   | { status: "waiting"; text: string; topic: CareerIntroductionTopicKind }
+  | { phase: "before-generation"; status: "paused"; text: string }
+  | {
+      phase: "waiting";
+      remainingDelayMs: number;
+      status: "paused";
+      text: string;
+      topic: CareerIntroductionTopicKind;
+    }
   | { error: Error; status: "failed" }
   | { status: "cancelled" };
 
@@ -33,9 +41,10 @@ type CareerIntroductionStatus = CareerIntroductionState["status"];
 const allowedTransitions = {
   cancelled: [],
   failed: [],
-  generating: ["cancelled", "failed", "generating", "waiting"],
-  idle: ["cancelled", "failed", "generating"],
-  waiting: ["cancelled", "failed", "generating"],
+  generating: ["cancelled", "failed", "generating", "paused", "waiting"],
+  idle: ["cancelled", "failed", "generating", "paused"],
+  paused: ["cancelled", "failed", "generating", "waiting"],
+  waiting: ["cancelled", "failed", "generating", "paused"],
 } as const satisfies Record<CareerIntroductionStatus, readonly CareerIntroductionStatus[]>;
 
 export const careerIntroductionRepeatDelayMs = 6_000;
@@ -327,6 +336,8 @@ export class CareerIntroductionController {
   #delayCancellation: AbortController | undefined;
   #lastTopicKey: string | undefined;
   #listeners = new Set<CareerIntroductionStateListener>();
+  #pauseRequested = false;
+  #resumePaused: (() => void) | undefined;
   #runPromise: Promise<CareerIntroductionState> | undefined;
   #state: CareerIntroductionState = { status: "idle" };
 
@@ -358,6 +369,32 @@ export class CareerIntroductionController {
     return () => this.#listeners.delete(listener);
   }
 
+  pause(): void {
+    if (
+      this.#pauseRequested ||
+      this.#state.status === "cancelled" ||
+      this.#state.status === "failed"
+    ) {
+      return;
+    }
+
+    this.#pauseRequested = true;
+    this.#delayCancellation?.abort();
+  }
+
+  resume(): void {
+    if (
+      !this.#pauseRequested ||
+      this.#state.status === "cancelled" ||
+      this.#state.status === "failed"
+    ) {
+      return;
+    }
+
+    this.#pauseRequested = false;
+    this.#resumePaused?.();
+  }
+
   cancel(): void {
     if (this.#state.status === "cancelled" || this.#state.status === "failed") {
       return;
@@ -365,6 +402,7 @@ export class CareerIntroductionController {
 
     this.#conversation?.cancel();
     this.#delayCancellation?.abort();
+    this.#resumePaused?.();
     this.#transition({ status: "cancelled" });
   }
 
@@ -372,6 +410,16 @@ export class CareerIntroductionController {
     let visibleText = "";
 
     while (!this.#isCancelled()) {
+      await this.#waitUntilResumed({
+        phase: "before-generation",
+        status: "paused",
+        text: visibleText,
+      });
+
+      if (this.#isCancelled()) {
+        return this.#state;
+      }
+
       let topic: CareerIntroductionTopic;
 
       try {
@@ -393,12 +441,13 @@ export class CareerIntroductionController {
       }
 
       visibleText = text;
-      const delayCancellation = new AbortController();
-      this.#delayCancellation = delayCancellation;
-      this.#transition({ status: "waiting", text, topic: topic.kind });
 
-      if (this.#isCancelled()) {
-        return this.#state;
+      if (!this.#pauseRequested) {
+        this.#transition({ status: "waiting", text, topic: topic.kind });
+
+        if (this.#isCancelled()) {
+          return this.#state;
+        }
       }
 
       try {
@@ -407,19 +456,100 @@ export class CareerIntroductionController {
           this.#dependencies.repeatDelayMs,
           this.#dependencies.repeatJitterMs,
         );
-        await this.#dependencies.wait(randomizedDelayMs, delayCancellation.signal);
+        await this.#waitForNextGeneration(randomizedDelayMs, text, topic.kind);
       } catch (cause) {
         if (!this.#isCancelled()) {
           this.#transition({ error: this.#toError(cause), status: "failed" });
         }
-
         return this.#state;
-      } finally {
-        this.#delayCancellation = undefined;
       }
     }
 
     return this.#state;
+  }
+
+  async #waitForNextGeneration(
+    durationMs: number,
+    text: string,
+    topic: CareerIntroductionTopicKind,
+  ): Promise<void> {
+    let remainingDelayMs = durationMs;
+
+    while (remainingDelayMs > 0 && !this.#isCancelled()) {
+      if (this.#pauseRequested) {
+        await this.#waitUntilResumed({
+          phase: "waiting",
+          remainingDelayMs,
+          status: "paused",
+          text,
+          topic,
+        });
+
+        if (this.#isCancelled()) {
+          return;
+        }
+      }
+
+      const delayCancellation = new AbortController();
+      const delayStartedAtMs = this.#dependencies.now();
+      this.#delayCancellation = delayCancellation;
+
+      if (this.#state.status !== "waiting") {
+        this.#transition({ status: "waiting", text, topic });
+      }
+
+      if (this.#isCancelled()) {
+        this.#delayCancellation = undefined;
+        return;
+      }
+
+      try {
+        await this.#dependencies.wait(remainingDelayMs, delayCancellation.signal);
+      } finally {
+        this.#delayCancellation = undefined;
+      }
+
+      if (!delayCancellation.signal.aborted) {
+        return;
+      }
+
+      const elapsedDelayMs = Math.max(0, Math.floor(this.#dependencies.now() - delayStartedAtMs));
+      remainingDelayMs = Math.max(0, remainingDelayMs - elapsedDelayMs);
+    }
+
+    if (this.#pauseRequested && !this.#isCancelled()) {
+      await this.#waitUntilResumed({
+        phase: "before-generation",
+        status: "paused",
+        text,
+      });
+    }
+  }
+
+  async #waitUntilResumed(
+    state: Extract<CareerIntroductionState, { status: "paused" }>,
+  ): Promise<void> {
+    if (!this.#pauseRequested || this.#isCancelled()) {
+      return;
+    }
+
+    this.#transition(state);
+
+    await new Promise<void>((resolve) => {
+      const resume = (): void => {
+        if (this.#resumePaused === resume) {
+          this.#resumePaused = undefined;
+        }
+
+        resolve();
+      };
+
+      this.#resumePaused = resume;
+
+      if (!this.#pauseRequested || this.#isCancelled()) {
+        resume();
+      }
+    });
   }
 
   async #generate(

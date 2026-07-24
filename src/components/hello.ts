@@ -9,7 +9,18 @@ type GreetingState = "pending" | "greeted" | "revealed";
 export type CareerIntroductionPresentationState =
   | { status: "fallback" }
   | { language: string; status: "generating"; text: string }
+  | { language: string; status: "paused"; text: string }
   | { language: string; status: "waiting"; text: string };
+
+export interface GreetingVisibilityChangeDetail {
+  visible: boolean;
+}
+
+declare global {
+  interface HTMLElementEventMap {
+    "greeting-visibility-change": CustomEvent<GreetingVisibilityChangeDetail>;
+  }
+}
 
 @customElement("x-hello")
 export default class XHello extends LitElement {
@@ -82,9 +93,13 @@ export default class XHello extends LitElement {
   @property({ attribute: false })
   careerIntroduction: CareerIntroductionPresentationState = { status: "fallback" };
 
+  get greetingVisible(): boolean {
+    return this.greetingState === "greeted";
+  }
+
   render() {
     const initiated = this.greetingState !== "pending";
-    const greeted = this.greetingState === "greeted";
+    const greeted = this.greetingVisible;
     const generatedText =
       this.careerIntroduction.status === "fallback" ? "" : this.careerIntroduction.text;
     const generatedLanguage =
@@ -137,12 +152,29 @@ export default class XHello extends LitElement {
   }
 
   private changeGreeting(event: CustomEvent<{ greeted: boolean }>): void {
-    this.greetingState = event.detail.greeted ? "greeted" : "revealed";
+    this.updateGreetingState(event.detail.greeted ? "greeted" : "revealed");
   }
 
   private completeGreeting(): void {
     if (this.greetingState === "pending") {
-      this.greetingState = "greeted";
+      this.updateGreetingState("greeted");
     }
+  }
+
+  private updateGreetingState(state: GreetingState): void {
+    const wasVisible = this.greetingVisible;
+    this.greetingState = state;
+
+    if (this.greetingVisible === wasVisible) {
+      return;
+    }
+
+    this.dispatchEvent(
+      new CustomEvent<GreetingVisibilityChangeDetail>("greeting-visibility-change", {
+        bubbles: true,
+        composed: true,
+        detail: { visible: this.greetingVisible },
+      }),
+    );
   }
 }

@@ -1,7 +1,10 @@
 import type { Engine } from "@litert-lm/core";
 
 import type XHello from "../components/hello.js";
-import type { CareerIntroductionPresentationState } from "../components/hello.js";
+import type {
+  CareerIntroductionPresentationState,
+  GreetingVisibilityChangeDetail,
+} from "../components/hello.js";
 import type {
   CareerIntroductionController,
   CareerIntroductionState,
@@ -18,6 +21,7 @@ const toPresentationState = (
 ): CareerIntroductionPresentationState => {
   switch (state.status) {
     case "generating":
+    case "paused":
     case "waiting":
       return { language, status: state.status, text: state.text };
     case "cancelled":
@@ -36,6 +40,20 @@ const generateCareerIntroduction = async (
   const { cvData } = await import("../data/load-cv.js");
   const controller = new Controller(engine, cvData, visitorContext);
   activeCareerIntroduction = controller;
+  const synchronizeVisibility = ({ detail }: CustomEvent<GreetingVisibilityChangeDetail>): void => {
+    if (detail.visible) {
+      controller.resume();
+    } else {
+      controller.pause();
+    }
+  };
+
+  hello.addEventListener("greeting-visibility-change", synchronizeVisibility);
+
+  if (!hello.greetingVisible) {
+    controller.pause();
+  }
+
   const unsubscribe = controller.subscribe((state) => {
     hello.careerIntroduction = toPresentationState(state, visitorContext.preferredLanguage);
   });
@@ -43,6 +61,7 @@ const generateCareerIntroduction = async (
   try {
     await controller.start();
   } finally {
+    hello.removeEventListener("greeting-visibility-change", synchronizeVisibility);
     unsubscribe();
   }
 };

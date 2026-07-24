@@ -42,15 +42,21 @@ The base page remains complete in every state. Career-introduction generation st
 ```mermaid
 stateDiagram-v2
   [*] --> idle
-  idle --> generating
+  idle --> generating: introduction visible
+  idle --> paused: introduction hidden
+  paused --> generating: shown before generation
   generating --> generating: text chunk
   generating --> generating: incomplete output, bounded recovery
   generating --> waiting: stream closed with text
+  generating --> paused: stream closed while hidden
   generating --> failed: creation, stream, empty-output, retry exhaustion, or cleanup error
   generating --> cancelled: page exit
   waiting --> generating: randomized delay elapsed
+  waiting --> paused: hidden, remaining delay retained
   waiting --> failed: delay failure
   waiting --> cancelled: page exit
+  paused --> waiting: shown, remaining delay resumed
+  paused --> cancelled: page exit
   failed --> [*]
   cancelled --> [*]
 ```
@@ -107,7 +113,10 @@ The transition table in source enforces the graph instead of relying on conventi
 controller. `home.client.ts` initializes immediately, invokes the model controller's `initialize()`
 without awaiting it, subscribes to controller state, and maps only `loading` to the `modelLoading`
 presentation property on `x-hello`. On `ready`, it obtains the engine, loads the validated CV data,
-and starts exactly one `CareerIntroductionController`.
+and creates exactly one `CareerIntroductionController`. `x-hello` exposes its greeting visibility as
+explicit component state and emits `greeting-visibility-change` whenever that state changes. The
+browser entry pauses the career controller before `start()` when the greeting is initially hidden
+and synchronizes subsequent visibility changes through the same `pause()` and `resume()` commands.
 
 The career controller draws from six explicit topic groups normalized from the public CV: profile,
 skills, engagements, highlights, activities, and statement. Selection first draws a non-empty group
@@ -158,20 +167,26 @@ validates that final text ends in recognized sentence-ending punctuation. An inc
 candidate restores the previously completed visible text and uses a distinct recovery prompt with
 one paragraph, one sentence, and one supporting fact. The retry count is explicitly capped at two
 total attempts. A second incomplete candidate enters `failed` and is never accepted as completed
-output. After a validated response the controller enters `waiting`, retains the visible response for
-a randomized
+output. After a validated response the controller retains the visible response for a randomized
 5,001-to-6,999-millisecond delay centered on 6,000 milliseconds, and then selects another topic.
-Empty output and all failures restore the server-rendered greeting; leaving the page aborts either
-the active conversation or delay. Every conversation is deleted after completion, failure, or
-cancellation.
+Generation does not begin while the greeting is hidden. If it becomes hidden during generation,
+the active conversation completes normally and is deleted before the controller enters `paused`;
+the conversation is not cancelled. If it becomes hidden during the repeat delay, only the abortable
+timer is stopped, its remaining whole-millisecond duration is retained explicitly, and that same
+duration resumes when the greeting is shown. `paused` distinguishes the finite
+`before-generation` and `waiting` phases, so no hidden timer or generation progression depends on
+implicit presentation state. Empty output and all failures restore the server-rendered greeting;
+leaving the page aborts either the active conversation or delay. Every conversation is deleted
+after completion, failure, or cancellation.
 
-`x-hello` receives only `fallback`, `generating`, or `waiting` presentation state. It keeps the
+`x-hello` receives `fallback`, `generating`, `paused`, or `waiting` presentation state. It keeps the
 fallback until the first non-empty chunk and keeps the previous introduction visible while the next
-one is generated. Model text is rendered as escaped plain text, and generation is exposed through
-`aria-busy`. Generated and announced text carries the selected BCP 47 `lang` value. The visible
-stream is not a live region; a separate live region is updated with only the generated text when the
-controller enters `waiting` so assistive technology is not interrupted for every token or forced
-through an English-only announcement prefix.
+one is generated or its repeat timer is paused. Model text is rendered as escaped plain text, and
+generation is exposed through `aria-busy`. Generated and announced text carries the selected BCP 47
+`lang` value. The visible stream is not a live region; a separate live region is updated with only
+the generated text when the controller enters `waiting` so assistive technology is not interrupted
+for every token, re-announced merely because a timer paused, or forced through an English-only
+announcement prefix.
 
 While loading, `x-hello` passes the boolean state to `x-portrait`. Two presentation-only pseudo
 elements render counter-rotating, irregular conic gradients behind the circular portrait. They do

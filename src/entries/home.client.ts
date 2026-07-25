@@ -7,6 +7,7 @@ import type {
 } from "../components/hello.js";
 import type {
   CareerIntroductionController,
+  CareerIntroductionOutputMode,
   CareerIntroductionState,
   CareerIntroductionVisitorContext,
 } from "../features/litert-lm/career-introduction.js";
@@ -14,6 +15,7 @@ import type {
 let activeCareerIntroduction: CareerIntroductionController | undefined;
 const visitStartedAtMs = performance.now();
 const preferredLanguage = navigator.languages[0] ?? navigator.language;
+const reducedMotionMediaQuery = "(prefers-reduced-motion: reduce)";
 
 const toPresentationState = (
   state: CareerIntroductionState,
@@ -31,11 +33,16 @@ const toPresentationState = (
   }
 };
 
+const toCareerIntroductionOutputMode = (
+  prefersReducedMotion: boolean,
+): CareerIntroductionOutputMode => (prefersReducedMotion ? "complete" : "streaming");
+
 const generateCareerIntroduction = async (
   engine: Engine,
   hello: XHello,
   Controller: typeof CareerIntroductionController,
   visitorContext: CareerIntroductionVisitorContext,
+  reducedMotion: MediaQueryList,
 ): Promise<void> => {
   const { cvData } = await import("../data/load-cv.js");
   const controller = new Controller(engine, cvData, visitorContext);
@@ -54,6 +61,12 @@ const generateCareerIntroduction = async (
     controller.pause();
   }
 
+  const synchronizeMotionPreference = ({ matches }: Pick<MediaQueryList, "matches">): void => {
+    controller.setOutputMode(toCareerIntroductionOutputMode(matches));
+  };
+
+  synchronizeMotionPreference(reducedMotion);
+  reducedMotion.addEventListener("change", synchronizeMotionPreference);
   const unsubscribe = controller.subscribe((state) => {
     hello.careerIntroduction = toPresentationState(state, visitorContext.preferredLanguage);
   });
@@ -62,6 +75,7 @@ const generateCareerIntroduction = async (
     await controller.start();
   } finally {
     hello.removeEventListener("greeting-visibility-change", synchronizeVisibility);
+    reducedMotion.removeEventListener("change", synchronizeMotionPreference);
     unsubscribe();
   }
 };
@@ -82,6 +96,7 @@ const initializeHome = async (): Promise<void> => {
     preferredLanguage,
     visitStartedAtMs,
   );
+  const reducedMotion = matchMedia(reducedMotionMediaQuery);
 
   if (hello instanceof XHello) {
     liteRtLmController.subscribe((state) => {
@@ -99,6 +114,7 @@ const initializeHome = async (): Promise<void> => {
           hello,
           CareerIntroductionController,
           visitorContext,
+          reducedMotion,
         );
         void careerIntroductionGeneration.catch(() => {
           hello.careerIntroduction = { status: "fallback" };

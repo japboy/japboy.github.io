@@ -19,7 +19,6 @@ export default class XPortrait extends LitElement {
     css`
       :host {
         align-items: center;
-        animation: portrait-enter 300ms ease-out 200ms 1 both;
         display: flex;
         flex-direction: column;
       }
@@ -55,27 +54,20 @@ export default class XPortrait extends LitElement {
         opacity: 0;
         pointer-events: none;
         position: absolute;
-        scale: 0.92;
-        transition:
-          opacity var(--duration-model-loading-fade) var(--easing-interaction),
-          scale var(--duration-interaction) var(--easing-interaction);
         z-index: -1;
       }
 
       .portrait-trigger::before {
-        border-radius: 45% 55% 47% 53% / 54% 44% 56% 46%;
-        filter: blur(0.45rem);
-        inset: -0.75rem;
+        border-radius: 9999px;
+        inset: -0.25rem;
       }
 
       .portrait-trigger::after {
-        border-radius: 56% 44% 54% 46% / 45% 57% 43% 55%;
-        filter: blur(0.22rem);
-        inset: -0.55rem;
+        display: none;
       }
 
-      .portrait-trigger[data-model-loading="true"]::before,
-      .portrait-trigger[data-model-loading="true"]::after {
+      :host([aria-busy="true"]) .portrait-trigger::before,
+      :host([aria-busy="true"]) .portrait-trigger::after {
         opacity: 0.78;
         scale: 1;
       }
@@ -87,9 +79,6 @@ export default class XPortrait extends LitElement {
         display: block;
         max-inline-size: 100%;
         transform-origin: center;
-        transition-duration: var(--duration-interaction);
-        transition-property: transform, translate, scale, rotate;
-        transition-timing-function: var(--easing-interaction);
         vertical-align: middle;
       }
 
@@ -105,9 +94,6 @@ export default class XPortrait extends LitElement {
         align-items: center;
         display: flex;
         margin-block-start: 1rem;
-        transition-duration: var(--duration-interaction);
-        transition-property: opacity;
-        transition-timing-function: var(--easing-interaction);
       }
 
       .social-links[data-state="hidden"] {
@@ -132,7 +118,6 @@ export default class XPortrait extends LitElement {
         font-size: 1.5rem;
         inline-size: 1em;
         line-height: calc(2 / 1.5);
-        transition: color var(--duration-interaction) var(--easing-interaction);
         vertical-align: middle;
       }
 
@@ -154,72 +139,259 @@ export default class XPortrait extends LitElement {
         }
       }
 
-      @keyframes model-loading-wave-clockwise {
+      @keyframes model-loading-wave-soft-shape {
         from {
-          border-radius: 45% 55% 47% 53% / 54% 44% 56% 46%;
-          rotate: 0deg;
-          scale: 0.92;
+          border-radius: 58% 52% 61% 49% / 54% 63% 47% 56%;
         }
 
-        25% {
-          border-radius: 58% 42% 54% 46% / 43% 57% 45% 55%;
-          scale: 1.1;
+        14% {
+          border-radius: 49% 63% 52% 58% / 62% 48% 64% 51%;
         }
 
-        50% {
-          border-radius: 48% 52% 42% 58% / 59% 46% 54% 41%;
-          scale: 0.94;
+        29% {
+          border-radius: 65% 46% 57% 53% / 47% 66% 49% 61%;
         }
 
-        75% {
-          border-radius: 54% 46% 59% 41% / 47% 58% 42% 53%;
-          scale: 1.08;
+        43% {
+          border-radius: 52% 59% 48% 63% / 64% 51% 62% 46%;
+        }
+
+        58% {
+          border-radius: 61% 50% 64% 47% / 53% 65% 45% 59%;
+        }
+
+        72% {
+          border-radius: 48% 64% 51% 60% / 67% 46% 63% 49%;
+        }
+
+        86% {
+          border-radius: 63% 47% 59% 52% / 49% 64% 48% 62%;
         }
 
         to {
-          border-radius: 45% 55% 47% 53% / 54% 44% 56% 46%;
-          rotate: 360deg;
-          scale: 0.92;
+          border-radius: 58% 52% 61% 49% / 54% 63% 47% 56%;
         }
       }
 
-      @keyframes model-loading-wave-counterclockwise {
+      @keyframes model-loading-wave-soft-rotation {
         from {
-          border-radius: 56% 44% 54% 46% / 45% 57% 43% 55%;
-          rotate: 360deg;
-          scale: 1.08;
-        }
-
-        33% {
-          border-radius: 43% 57% 46% 54% / 56% 44% 58% 42%;
-          scale: 0.93;
-        }
-
-        66% {
-          border-radius: 53% 47% 58% 42% / 44% 56% 46% 54%;
-          scale: 1.07;
+          rotate: 0deg;
         }
 
         to {
-          border-radius: 56% 44% 54% 46% / 45% 57% 43% 55%;
-          rotate: 0deg;
+          rotate: 360deg;
+        }
+      }
+
+      @keyframes model-loading-wave-soft-envelope {
+        from {
+          scale: 0.94;
+        }
+
+        6% {
+          scale: 1.06;
+        }
+
+        13% {
+          scale: 0.93;
+        }
+
+        20% {
+          scale: 1.1;
+        }
+
+        28% {
+          scale: 0.96;
+        }
+
+        35% {
+          scale: 1.04;
+        }
+
+        41% {
+          scale: 0.92;
+        }
+
+        50% {
           scale: 1.08;
+        }
+
+        57% {
+          scale: 0.95;
+        }
+
+        65% {
+          scale: 1.03;
+        }
+
+        71% {
+          scale: 0.94;
+        }
+
+        80% {
+          scale: 1.09;
+        }
+
+        88% {
+          scale: 0.93;
+        }
+
+        94% {
+          scale: 1.05;
+        }
+
+        to {
+          scale: 0.94;
+        }
+      }
+
+      @keyframes model-loading-wave-detail-shape {
+        from {
+          border-radius: 53% 47% 52% 48% / 47.5% 53.5% 46.5% 52.5%;
+          rotate: 360deg;
+        }
+
+        17% {
+          border-radius: 48% 52% 46% 54% / 52% 48% 53% 47%;
+        }
+
+        35% {
+          border-radius: 54% 46% 51% 49% / 49% 52% 48% 51%;
+        }
+
+        52% {
+          border-radius: 47% 53% 52% 48% / 53% 47% 49% 51%;
+        }
+
+        69% {
+          border-radius: 52% 48% 46% 54% / 48% 53% 47% 52%;
+        }
+
+        86% {
+          border-radius: 49% 51% 54% 46% / 52% 48% 51% 49%;
+        }
+
+        to {
+          border-radius: 53% 47% 52% 48% / 47.5% 53.5% 46.5% 52.5%;
+          rotate: 0deg;
+        }
+      }
+
+      @keyframes model-loading-wave-detail-envelope {
+        from {
+          scale: 0.943;
+        }
+
+        6% {
+          scale: 0.997;
+        }
+
+        13% {
+          scale: 0.939;
+        }
+
+        20% {
+          scale: 1.015;
+        }
+
+        28% {
+          scale: 0.952;
+        }
+
+        35% {
+          scale: 0.988;
+        }
+
+        41% {
+          scale: 0.934;
+        }
+
+        50% {
+          scale: 1.006;
+        }
+
+        57% {
+          scale: 0.948;
+        }
+
+        65% {
+          scale: 0.984;
+        }
+
+        71% {
+          scale: 0.943;
+        }
+
+        80% {
+          scale: 1.011;
+        }
+
+        88% {
+          scale: 0.939;
+        }
+
+        94% {
+          scale: 0.993;
+        }
+
+        to {
+          scale: 0.943;
         }
       }
 
       @media (prefers-reduced-motion: no-preference) {
-        .portrait-trigger[data-model-loading="true"]::before {
-          animation: model-loading-wave-clockwise 3.2s ease-in-out infinite;
-        }
-
-        .portrait-trigger[data-model-loading="true"]::after {
-          animation: model-loading-wave-counterclockwise 2.4s ease-in-out infinite;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
         :host {
-          animation: none;
+          animation: portrait-enter 300ms ease-out 200ms 1 both;
+        }
+
+        .portrait-trigger::before,
+        .portrait-trigger::after {
+          scale: 0.92;
+          transition:
+            opacity var(--duration-model-loading-fade) var(--easing-interaction),
+            scale var(--duration-interaction) var(--easing-interaction);
+        }
+
+        .portrait-trigger::before {
+          border-radius: 58% 52% 61% 49% / 54% 63% 47% 56%;
+          filter: blur(0.225rem);
+          inset: -0.375rem;
+        }
+
+        .portrait-trigger::after {
+          border-radius: 53% 47% 52% 48% / 47.5% 53.5% 46.5% 52.5%;
+          display: block;
+          filter: blur(0.11rem);
+          inset: -0.275rem;
+        }
+
+        .portrait-image {
+          transition-duration: var(--duration-interaction);
+          transition-property: rotate;
+          transition-timing-function: var(--easing-interaction);
+        }
+
+        .social-links {
+          transition-duration: var(--duration-interaction);
+          transition-property: opacity;
+          transition-timing-function: var(--easing-interaction);
+        }
+
+        .brand-icon {
+          transition: color var(--duration-interaction) var(--easing-interaction);
+        }
+
+        :host([aria-busy="true"]) .portrait-trigger::before {
+          animation:
+            model-loading-wave-soft-shape 4.7s ease-in-out infinite,
+            model-loading-wave-soft-rotation 8.3s linear infinite,
+            model-loading-wave-soft-envelope 13.7s ease-in-out infinite;
+        }
+
+        :host([aria-busy="true"]) .portrait-trigger::after {
+          animation:
+            model-loading-wave-detail-shape 2.9s ease-in-out infinite,
+            model-loading-wave-detail-envelope 13.7s ease-in-out infinite;
         }
       }
     `,
@@ -233,9 +405,6 @@ export default class XPortrait extends LitElement {
 
   @property({ type: Boolean })
   initiated: boolean = false;
-
-  @property({ attribute: "model-loading", type: Boolean })
-  modelLoading: boolean = false;
 
   firstUpdated(): void {
     const [entryAnimation] = this.getAnimations();
@@ -258,7 +427,6 @@ export default class XPortrait extends LitElement {
         aria-expanded="${this.socialLinksVisible}"
         aria-label="${this.portraitActionLabel}"
         class="portrait-trigger"
-        data-model-loading="${this.modelLoading}"
         type="button"
         @click="${this.toggle}"
       >

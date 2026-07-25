@@ -36,12 +36,14 @@ interface ConversationDouble {
   conversation: Conversation;
   getCancelCount: () => number;
   getDeleteCount: () => number;
+  getOutputModes: () => readonly ("complete" | "streaming")[];
   getPrompt: () => string | undefined;
 }
 
 const createConversationDouble = (chunks: string[]): ConversationDouble => {
   let cancelCount = 0;
   let deleteCount = 0;
+  const outputModes: ("complete" | "streaming")[] = [];
   let prompt: string | undefined;
 
   const conversation = {
@@ -51,8 +53,18 @@ const createConversationDouble = (chunks: string[]): ConversationDouble => {
     async delete() {
       deleteCount += 1;
     },
+    async sendMessage(message: string) {
+      prompt = message;
+      outputModes.push("complete");
+
+      return {
+        content: [{ text: chunks.join(""), type: "text" }],
+        role: "assistant",
+      } satisfies Message;
+    },
     sendMessageStreaming(message: string) {
       prompt = message;
+      outputModes.push("streaming");
 
       return new ReadableStream<Message>({
         start(controller) {
@@ -67,12 +79,16 @@ const createConversationDouble = (chunks: string[]): ConversationDouble => {
         },
       });
     },
-  } as Pick<Conversation, "cancel" | "delete" | "sendMessageStreaming"> as Conversation;
+  } as Pick<
+    Conversation,
+    "cancel" | "delete" | "sendMessage" | "sendMessageStreaming"
+  > as Conversation;
 
   return {
     conversation,
     getCancelCount: () => cancelCount,
     getDeleteCount: () => deleteCount,
+    getOutputModes: () => outputModes,
     getPrompt: () => prompt,
   };
 };
@@ -272,6 +288,10 @@ describe("career introduction", () => {
       /never begin a point that cannot be completed within the output limit/,
     );
     assert.equal(configuration?.sessionConfig?.samplerParams?.type, 3);
+    assert.deepEqual(
+      doubles.flatMap((double) => double.getOutputModes()),
+      ["streaming", "streaming"],
+    );
     assert.match(
       String(configuration?.preface?.messages?.[0]?.content),
       /Obey the MANDATORY OUTPUT LANGUAGE/,
@@ -328,6 +348,39 @@ describe("career introduction", () => {
     assert.deepEqual(await run, { status: "cancelled" });
     assert.equal(createCount, 1);
     assert.equal(double.getCancelCount(), 0);
+    assert.equal(double.getDeleteCount(), 1);
+  });
+
+  it("uses LiteRT-LM's complete response API without publishing partial text", async () => {
+    const cv = await readCv();
+    const double = createConversationDouble(["Complete ", "introduction."]);
+    const engine = {
+      createConversation: async () => double.conversation,
+    } as Pick<Engine, "createConversation">;
+    const controller = new CareerIntroductionController(engine, cv, englishVisitorContext, {
+      now: () => 0,
+      random: createRandomSource([0, 0, 0.5]),
+    });
+    const generatingTexts: string[] = [];
+    let completedText: string | undefined;
+
+    controller.setOutputMode("complete");
+    controller.subscribe((state) => {
+      if (state.status === "generating") {
+        generatingTexts.push(state.text);
+      }
+
+      if (state.status === "waiting") {
+        completedText = state.text;
+        controller.cancel();
+      }
+    });
+
+    assert.deepEqual(await controller.start(), { status: "cancelled" });
+    assert.equal(controller.outputMode, "complete");
+    assert.deepEqual(double.getOutputModes(), ["complete"]);
+    assert.deepEqual(generatingTexts, [""]);
+    assert.equal(completedText, "Complete introduction.");
     assert.equal(double.getDeleteCount(), 1);
   });
 

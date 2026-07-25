@@ -49,9 +49,6 @@ export default class XHello extends LitElement {
       .greeting {
         inline-size: 100%;
         max-inline-size: var(--readable-line-length);
-        transition-duration: var(--duration-interaction);
-        transition-property: all;
-        transition-timing-function: var(--easing-interaction);
       }
 
       .greeting[data-state="visible"] {
@@ -80,6 +77,14 @@ export default class XHello extends LitElement {
         overflow: hidden;
         position: absolute;
         white-space: nowrap;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .greeting {
+          transition-duration: var(--duration-interaction);
+          transition-property: opacity, translate;
+          transition-timing-function: var(--easing-interaction);
+        }
       }
     `,
   ];
@@ -112,9 +117,9 @@ export default class XHello extends LitElement {
     return html`
       <div class="viewport">
         <x-portrait
+          aria-busy="${this.modelLoading}"
           ?greeted="${greeted}"
           ?initiated="${initiated}"
-          ?model-loading="${this.modelLoading}"
           @greeting-change="${this.changeGreeting}"
           @portrait-entry-complete="${this.completeGreeting}"
         ></x-portrait>

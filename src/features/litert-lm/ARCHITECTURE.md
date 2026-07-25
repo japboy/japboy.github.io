@@ -180,21 +180,40 @@ implicit presentation state. Empty output and all failures restore the server-re
 leaving the page aborts either the active conversation or delay. Every conversation is deleted
 after completion, failure, or cancellation.
 
-`x-hello` receives `fallback`, `generating`, `paused`, or `waiting` presentation state. It keeps the
-fallback until the first non-empty chunk and keeps the previous introduction visible while the next
-one is generated or its repeat timer is paused. Model text is rendered as escaped plain text, and
-generation is exposed through `aria-busy`. Generated and announced text carries the selected BCP 47
-`lang` value and declares `dir="auto"`, allowing the user agent to derive left-to-right or
-right-to-left direction from the generated content. The visible stream is not a live region; a
-separate live region is updated with only the generated text when the controller enters `waiting`
-so assistive technology is not interrupted for every token, re-announced merely because a timer
-paused, or forced through an English-only announcement prefix.
+`x-hello` receives `fallback`, `generating`, `paused`, or `waiting` presentation state. The career
+introduction controller selects LiteRT-LM's `sendMessageStreaming()` in its default `streaming`
+output mode and its non-streaming `sendMessage()` in `complete` mode. The client selects `complete`
+when `(prefers-reduced-motion: reduce)` matches and updates the controller's explicit mode when that
+media query changes. Each generation attempt snapshots the mode before invoking LiteRT-LM, so an
+operating-system preference change never changes an in-flight API call and applies from the next
+attempt. Streaming mode keeps the fallback until the first non-empty chunk and then displays
+subsequent chunks. Complete mode keeps the fallback during the first generation and the previous
+introduction during later generations, then exposes the replacement in one state transition after
+LiteRT-LM resolves the complete `Message`.
 
-While loading, `x-hello` passes the boolean state to `x-portrait`. Two presentation-only pseudo
-elements render counter-rotating, irregular conic gradients behind the circular portrait. They do
-not change button semantics, hit area, or accessible name. Animation is enabled only under
-`prefers-reduced-motion: no-preference`; reduced-motion environments receive the same loading cue as
-a static gradient.
+Model text is rendered as escaped plain text, and generation is exposed through `aria-busy`.
+Generated and announced text carries the selected BCP 47 `lang` value and declares `dir="auto"`,
+allowing the user agent to derive left-to-right or right-to-left direction from the generated
+content. The visible stream is not a live region; a separate live region is updated with only the
+generated text when the controller enters `waiting` so assistive technology is not interrupted for
+every token, re-announced merely because a timer paused, or forced through an English-only
+announcement prefix.
+
+While loading, `x-hello` exposes the explicit `true` or `false` state on `x-portrait` through the
+global `aria-busy` state. The component uses that same host attribute to drive two presentation-only
+pseudo-elements that render counter-rotating, irregular conic gradients behind the circular
+portrait. They do not change button semantics, hit area, or accessible name. The reduced-motion
+presentation is the static baseline: loading uses one circular, unblurred gradient ring, while the
+portrait, balloon, social links, and brand icons change state without animation or transition.
+`prefers-reduced-motion: no-preference` progressively adds the two blurred loading layers and all
+non-essential motion. The more strongly blurred outer layer owns the full wave amplitude. Its shape
+morphing, rotation, and scale envelope run as separate finite animations with different
+deterministic periods. The scale envelope is a longer finite sequence whose successive peaks,
+troughs, and intervals vary, so each expansion has a different amplitude and samples a different
+asymmetric contour without runtime randomness. The sharper detail layer keeps its independent
+counter-rotation, but uses restrained shape variation and a scale envelope synchronized with the
+outer layer. Its rendered bounds remain inside the blurred layer throughout the animation,
+preventing it from intermittently becoming a hard outer border.
 
 ### 3.5. Architectural Decision
 
@@ -231,6 +250,16 @@ For output completion:
   validate every final candidate before accepting it, and use one finite recovery attempt with a
   smaller content budget. This resolves the root cause because oversized source scope is removed and
   incomplete output cannot transition to the completed `waiting` state.
+
+For reduced-motion output presentation:
+
+- **Local, symptomatic alternative:** Remove only the balloon transition or suppress streamed
+  chunks in the presentation adapter. This still requests streaming generation and merely conceals
+  its intermediate states after they cross the controller boundary.
+- **Fundamental solution:** Give the generation controller an explicit finite output mode and select
+  LiteRT-LM's official `sendMessage()` or `sendMessageStreaming()` API before each attempt. This
+  resolves the root cause because reduced-motion operation does not create partial output states,
+  while completion validation, pause, retry, cancellation, and cleanup remain shared and testable.
 
 For internal CV identifiers:
 

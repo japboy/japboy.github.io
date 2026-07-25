@@ -30,6 +30,8 @@ export type CareerIntroductionState =
 
 export type CareerIntroductionStateListener = (state: CareerIntroductionState) => void;
 
+export type CareerIntroductionOutputMode = "complete" | "streaming";
+
 export interface CareerIntroductionVisitorContext {
   preferredLanguage: string;
   preferredLanguageName: string;
@@ -336,6 +338,7 @@ export class CareerIntroductionController {
   #delayCancellation: AbortController | undefined;
   #lastTopicKey: string | undefined;
   #listeners = new Set<CareerIntroductionStateListener>();
+  #outputMode: CareerIntroductionOutputMode = "streaming";
   #pauseRequested = false;
   #resumePaused: (() => void) | undefined;
   #runPromise: Promise<CareerIntroductionState> | undefined;
@@ -355,6 +358,14 @@ export class CareerIntroductionController {
 
   get state(): CareerIntroductionState {
     return this.#state;
+  }
+
+  get outputMode(): CareerIntroductionOutputMode {
+    return this.#outputMode;
+  }
+
+  setOutputMode(mode: CareerIntroductionOutputMode): void {
+    this.#outputMode = mode;
   }
 
   start(): Promise<CareerIntroductionState> {
@@ -612,21 +623,30 @@ export class CareerIntroductionController {
         generationAttempt,
       );
 
-      for await (const chunk of conversation.sendMessageStreaming(prompt)) {
-        if (this.#isCancelled()) {
+      const outputMode = this.#outputMode;
+
+      switch (outputMode) {
+        case "complete":
+          generatedText = getText(await conversation.sendMessage(prompt));
           break;
-        }
+        case "streaming":
+          for await (const chunk of conversation.sendMessageStreaming(prompt)) {
+            if (this.#isCancelled()) {
+              break;
+            }
 
-        const appendedText = getText(chunk);
+            const appendedText = getText(chunk);
 
-        if (appendedText.length > 0) {
-          generatedText += appendedText;
-          const visibleText = generatedText.trimStart();
+            if (appendedText.length > 0) {
+              generatedText += appendedText;
+              const visibleText = generatedText.trimStart();
 
-          if (visibleText.length > 0) {
-            this.#transition({ status: "generating", text: visibleText, topic: topic.kind });
+              if (visibleText.length > 0) {
+                this.#transition({ status: "generating", text: visibleText, topic: topic.kind });
+              }
+            }
           }
-        }
+          break;
       }
 
       if (this.#isCancelled()) {

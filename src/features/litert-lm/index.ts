@@ -12,6 +12,7 @@ export {
   formatCareerIntroductionVisitDuration,
   isCompleteCareerIntroduction,
   type CareerIntroductionControllerDependencies,
+  type CareerIntroductionOutputMode,
   type CareerIntroductionState,
   type CareerIntroductionStateListener,
   type CareerIntroductionVisitorContext,

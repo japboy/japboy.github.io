@@ -2,7 +2,10 @@ pre-commit:
   jobs:
     - name: format staged files
       glob: "*.{css,html,js,json,jsonc,md,ts,yaml,yml}"
-      run: pnpm exec oxfmt --write {staged_files}
+      run: pnpm run format:fix -- {staged_files}
       stage_fixed: true
+    - name: lint staged files
+      glob: "*.{cjs,cts,js,jsx,mjs,mts,ts,tsx}"
+      run: pnpm exec oxlint {staged_files}
     - name: test
       run: pnpm test

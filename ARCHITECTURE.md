@@ -10,7 +10,7 @@ This living document describes the boundaries, data flow, and operational constr
 ├── .github/workflows/       # GitHub Pages build, verification, and deployment
 ├── bin/                     # Directly executable build tooling
 ├── src/
-│   ├── components/          # Lit custom elements and their scoped styles
+│   ├── components/          # Lit custom elements, scoped styles, and adjacent module specs
 │   ├── config/              # Exhaustive public route manifest
 │   ├── data/                # Schema-validated, anonymized public content assets
 │   ├── entries/             # Browser entry points
@@ -19,7 +19,7 @@ This living document describes the boundaries, data flow, and operational constr
 │   ├── pages/               # Static HTML document sources
 │   ├── server/              # Build-time Lit SSR entry and renderers
 │   └── styles/              # Document-level standard CSS
-├── test/                    # Node test-runner architecture and behavior checks
+├── test/                    # Cross-module BDD contract specs without a single module owner
 ├── ARCHITECTURE.md          # This document
 ├── README.md                # User setup and command reference
 ├── package.json             # Pinned runtime and development dependencies
@@ -163,9 +163,15 @@ does not currently implement a Cache API, IndexedDB, or local-storage policy for
 
 - **Runtime:** Node.js and pnpm versions are pinned in repository configuration.
 - **Local setup:** Follow `README.md`.
-- **Unit and architecture tests:** Node's test runner through `tsx --test`.
+- **Test runner:** Vitest in deterministic run mode, sharing Vite's module transformation while
+  using the repository as its explicit test root.
+- **Module specs:** BDD-style `*.spec.ts` files live beside the module that owns the behavior. Each
+  spec uses one top-level `describe`, `it` cases, and at most two nested `describe` levels.
+- **Cross-module contract specs:** `test/**/*.spec.ts` is reserved for scenarios without a single
+  owning module, such as browser support, styling architecture, and site structure contracts.
 - **Type checking:** TypeScript in strict, no-emit mode.
-- **Formatting:** `oxfmt`.
+- **Linting:** Oxlint checks correctness, suspicious code, and the Vitest BDD structure.
+- **Formatting:** `pnpm format` checks with Oxfmt; `pnpm format:fix` writes fixes.
 - **Browser targets:** The explicit Baseline 2024 contract in `.browserslistrc`.
 - **Full verification:** `pnpm check` runs formatting, type checking, tests, and the production build.
 
@@ -183,7 +189,7 @@ Feature-specific test strategies are documented by their recursive architecture 
 - **Project name:** `japboy.github.io`
 - **Repository:** <https://github.com/japboy/japboy.github.io>
 - **Primary contact:** Yu Inao
-- **Last updated:** 2026-07-23
+- **Last updated:** 2026-07-25
 
 ## 11. Glossary / Acronyms
 

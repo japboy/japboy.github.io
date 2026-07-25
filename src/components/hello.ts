@@ -162,9 +162,9 @@ export default class XHello extends LitElement {
     }
   }
 
-  private updateGreetingState(state: GreetingState): void {
+  private updateGreetingState(nextState: GreetingState): void {
     const wasVisible = this.greetingVisible;
-    this.greetingState = state;
+    this.greetingState = nextState;
 
     if (this.greetingVisible === wasVisible) {
       return;

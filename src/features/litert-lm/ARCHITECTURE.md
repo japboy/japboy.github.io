@@ -17,8 +17,9 @@ src/features/litert-lm/
 
 The browser entry at `src/entries/home.client.ts` hydrates the home component, starts LiteRT-LM
 without awaiting it, captures the visit start time and the user agent's primary language, and grounds
-generated introductions in validated CV data. Tests live in `test/litert-lm.test.ts` and
-`test/career-introduction.test.ts`.
+generated introductions in validated CV data. BDD module specs live beside their owning
+implementation, including configuration, capability detection, initialization control, career
+topic selection, and career introduction generation.
 
 ## 2. High-Level System Diagram
 

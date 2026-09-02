@@ -36,7 +36,7 @@
     "@lit-labs/ssr": "4.1.0",
     "@types/node": "24.13.3",
     "ajv": "8.18.0",
-    "browserslist": "4.28.6",
+    "browserslist": "4.28.7",
     "browserslist-to-esbuild": "2.1.1",
     "lefthook": "2.1.10",
     "oxfmt": "0.59.0",

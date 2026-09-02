@@ -29,3 +29,6 @@ engineStrict: true
 
 # New direct dependencies are recorded as exact versions by default.
 savePrefix: ""
+minimumReleaseAgeExclude:
+  # Renovate security update: browserslist@4.28.7
+  - browserslist@4.28.7

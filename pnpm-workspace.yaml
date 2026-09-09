@@ -32,3 +32,5 @@ savePrefix: ""
 minimumReleaseAgeExclude:
   # Renovate security update: browserslist@4.28.7
   - browserslist@4.28.7
+  # Renovate security update: vitest@4.1.11
+  - vitest@4.1.11

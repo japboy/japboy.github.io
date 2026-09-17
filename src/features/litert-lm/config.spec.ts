@@ -15,7 +15,8 @@ describe("liteRtLmConfiguration", () => {
       dependencies: Record<string, string>;
     };
 
-    assert.equal(packageJson.dependencies["@litert-lm/core"], "0.14.0");
+    const runtimeVersion = packageJson.dependencies["@litert-lm/core"];
+    assert.match(runtimeVersion, /^\d+\.\d+\.\d+$/);
     assert.deepEqual(liteRtLmConfiguration, {
       model: {
         name: "Gemma 4 E2B IT",
@@ -24,7 +25,7 @@ describe("liteRtLmConfiguration", () => {
       },
       runtime: {
         maxNumTokens: 4_096,
-        wasmUrl: "https://cdn.jsdelivr.net/npm/@litert-lm/core@0.14.0/wasm/",
+        wasmUrl: `https://cdn.jsdelivr.net/npm/@litert-lm/core@${runtimeVersion}/wasm/`,
       },
     });
   });

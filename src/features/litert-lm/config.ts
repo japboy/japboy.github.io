@@ -1,3 +1,5 @@
+import { dependencies } from "../../../package.json";
+
 export const liteRtLmConfiguration = {
   model: {
     name: "Gemma 4 E2B IT",
@@ -6,6 +8,6 @@ export const liteRtLmConfiguration = {
   },
   runtime: {
     maxNumTokens: 4_096,
-    wasmUrl: "https://cdn.jsdelivr.net/npm/@litert-lm/core@0.14.0/wasm/",
+    wasmUrl: `https://cdn.jsdelivr.net/npm/@litert-lm/core@${dependencies["@litert-lm/core"]}/wasm/`,
   },
 } as const;

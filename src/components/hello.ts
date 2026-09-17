@@ -130,19 +130,21 @@ export default class XHello extends LitElement {
           class="greeting"
           data-state="${greeted ? "visible" : "hidden"}"
         >
-          ${hasGeneratedText
-            ? html`<p class="career-introduction" dir="auto" lang="${lang}">${generatedText}</p>`
-            : html`
-                <p>
-                  Hi, I'm Yu Inao.
-                  <br />
-                  Currently working as a senior web frontend developer in Tokyo.
-                </p>
-                <p>
-                  My passions focus on web UI development, component-based UI design, performant
-                  web, web apps, &amp; web standards.
-                </p>
-              `}
+          ${
+            hasGeneratedText
+              ? html`<p class="career-introduction" dir="auto" lang="${lang}">${generatedText}</p>`
+              : html`
+                  <p>
+                    Hi, I'm Yu Inao.
+                    <br />
+                    Currently working as a senior web frontend developer in Tokyo.
+                  </p>
+                  <p>
+                    My passions focus on web UI development, component-based UI design, performant
+                    web, web apps, &amp; web standards.
+                  </p>
+                `
+          }
         </x-balloon>
         <p
           aria-atomic="true"

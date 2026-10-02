@@ -12,6 +12,7 @@ src/features/litert-lm/
 ├── config.ts              # Versioned runtime and model configuration
 ├── controller.ts          # Engine loading and finite lifecycle
 ├── feature-detection.ts   # Secure-context and WebGPU capability checks
+├── page-lifecycle.ts      # Serialized page suspension, restoration, and disposal
 └── index.ts               # Public feature API
 ```
 
@@ -33,7 +34,13 @@ stateDiagram-v2
   loading --> ready: engine created
   loading --> failed: runtime or model failure
   unsupported --> [*]
-  ready --> [*]
+  ready --> disposed: page discarded
+  idle --> disposed: page discarded
+  detecting --> disposed: page discarded
+  loading --> disposed: late engine deleted
+  unsupported --> disposed: page discarded
+  failed --> disposed: page discarded
+  disposed --> [*]
   failed --> [*]
 ```
 
@@ -72,7 +79,8 @@ name, and maximum token allocation:
 - Model: `gemma-4-E2B-it-web.litertlm`
 - Model download size: 2,008,432,640 bytes
 - Model source: `litert-community/gemma-4-E2B-it-litert-lm`
-- Runtime: `@litert-lm/core@0.14.0`
+- Model revision: `b3ca0d2f076785a8f4b2219ddbd2bdb99954eae1`
+- Runtime: `@litert-lm/core@0.17.1` (the WASM URL derives from the exact package dependency)
 - Maximum context allocation: 4,096 tokens
 
 The official Web API currently describes its JavaScript API as an Early Preview for WebGPU text
@@ -97,27 +105,42 @@ explicitly. The runtime module is not imported until detection succeeds.
 promise, so concurrent callers cannot trigger duplicate model loads. Subscribers receive the
 current state immediately and every subsequent transition.
 
-| State         | Meaning                                    | Permitted next state               |
-| ------------- | ------------------------------------------ | ---------------------------------- |
-| `idle`        | Initialization has not started             | `detecting`                        |
-| `detecting`   | WebGPU support is being verified           | `unsupported`, `loading`, `failed` |
-| `unsupported` | A named capability requirement was not met | terminal                           |
-| `loading`     | The runtime and Gemma model are loading    | `ready`, `failed`                  |
-| `ready`       | `controller.engine` is available           | terminal                           |
-| `failed`      | Detection or initialization failed         | terminal                           |
+| State         | Meaning                                    | Permitted next state                           |
+| ------------- | ------------------------------------------ | ---------------------------------------------- |
+| `idle`        | Initialization has not started             | `detecting`, `disposed`                        |
+| `detecting`   | WebGPU support is being verified           | `unsupported`, `loading`, `failed`, `disposed` |
+| `unsupported` | A named capability requirement was not met | `disposed`                                     |
+| `loading`     | The runtime and Gemma model are loading    | `ready`, `failed`, `disposed`                  |
+| `ready`       | `controller.engine` is available           | `disposed`                                     |
+| `failed`      | Detection or initialization failed         | `disposed`                                     |
+| `disposed`    | Disposal requested; engine access cleared  | terminal                                       |
 
-The transition table in source enforces the graph instead of relying on convention.
+The transition table in source enforces the graph instead of relying on convention. Disposal is
+idempotent, clears engine access immediately, skips loading after pending detection, and deletes an
+engine returned by an already running load without publishing `ready`. The disposed state is
+published synchronously; the shared `dispose()` promise resolves after asynchronous cleanup.
+
+`page-lifecycle.ts` owns the independent page states `active`, `suspended`, `failed`, and `disposed`.
+A persisted `pagehide` cancels the career session and waits for conversation deletion and listener
+removal while retaining the engine. `pageshow` creates a fresh career controller after that cleanup.
+Serialized reconciliation and checks after asynchronous preparation prevent overlapping sessions,
+including rapid or repeated hide/show events. A non-persisted `pagehide` is terminal: pending
+initialization is invalidated, or active conversation cleanup finishes before engine deletion.
 
 ### 3.4. Public API and Client Integration
 
 `index.ts` exports configuration, detection types, both controller classes, and the singleton engine
-controller. `home.client.ts` initializes immediately, invokes the model controller's `initialize()`
-without awaiting it, subscribes to controller state, and maps only `loading` to the `modelLoading`
-presentation property on `x-hello`. On `ready`, it obtains the engine, loads the validated CV data,
-and creates exactly one `CareerIntroductionController`. `x-hello` exposes its greeting visibility as
-explicit component state and emits `greeting-visibility-change` whenever that state changes. The
-browser entry pauses the career controller before `start()` when the greeting is initially hidden
-and synchronizes subsequent visibility changes through the same `pause()` and `resume()` commands.
+controller. `home.client.ts` registers page events before asynchronous hydration, captures page
+presence while imports are pending, subscribes to runtime state, and maps only `loading` to the
+`modelLoading` presentation property on `x-hello`. Its page lifecycle obtains the ready engine,
+loads validated CV data, and binds one career session at a time. Each session removes its visibility,
+motion, and state listeners on completion or cancellation.
+
+`x-hello` exposes its greeting visibility as explicit component state and emits
+`greeting-visibility-change` whenever that state changes. The browser entry pauses the career
+controller before `start()` when the greeting is initially hidden and synchronizes subsequent
+visibility changes through `pause()` and `resume()`. This component pause is separate from page
+suspension, which cancels the session so no inference continues while the page is cached.
 
 The career controller draws from six explicit topic groups normalized from the public CV: profile,
 skills, engagements, highlights, activities, and statement. Selection first draws a non-empty group
@@ -353,6 +376,9 @@ model. They verify:
 - idempotent single initialization;
 - the complete ready-state progression;
 - failure-state observability;
+- terminal engine disposal during detection or loading and exactly-once deletion;
+- repeated bfcache restoration, rapid hide/show serialization, and conversation-before-engine cleanup;
+- suspension during asynchronous session preparation and no generation after page disposal;
 - exact runtime and model configuration;
 - exhaustive topic coverage, section-balanced random selection, and consecutive-topic exclusion;
 - paragraph-level statement topics, completion validation, bounded recovery, and terminal failure;
@@ -371,8 +397,6 @@ browser environment.
 
 - Treat opt-in, progress, and data-saving behavior as explicit product decisions; the current
   requirement starts the model download automatically in supported environments.
-- Decide whether the long-lived singleton engine should be deleted on non-persisted page exit; each
-  short-lived career conversation is already deleted deterministically.
 - Revalidate model and runtime support against official documentation before upgrades while the Web
   API remains an Early Preview.
 - Add real-browser loading coverage outside routine CI when infrastructure can accommodate the
@@ -384,7 +408,7 @@ browser environment.
 - **Owning path:** `src/features/litert-lm/`
 - **Parent architecture:** `../../../ARCHITECTURE.md`
 - **Primary contact:** Yu Inao
-- **Last updated:** 2026-07-24
+- **Last updated:** 2026-10-02
 
 ## 11. Glossary / Acronyms
 

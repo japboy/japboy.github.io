@@ -73,4 +73,74 @@ describe("LiteRtLmController", () => {
     assert.deepEqual(await controller.initialize(), { error, status: "failed" });
     assert.equal(controller.engine, undefined);
   });
+
+  it("invalidates pending detection without loading and cannot reinitialize", async () => {
+    let detect!: (value: { supported: true }) => void;
+    let loads = 0;
+    const controller = new LiteRtLmController({
+      detectSupport: () =>
+        new Promise((resolve) => {
+          detect = resolve;
+        }),
+      loadEngine: async () => {
+        loads += 1;
+        return {} as Engine;
+      },
+    });
+    const initialization = controller.initialize();
+    await Promise.resolve();
+    const disposal = controller.dispose();
+    detect({ supported: true });
+    await Promise.all([initialization, disposal]);
+    assert.deepEqual(await controller.initialize(), { status: "disposed" });
+    assert.equal(loads, 0);
+  });
+
+  it("releases an initialized engine exactly once", async () => {
+    let deletes = 0;
+    const controller = new LiteRtLmController({
+      detectSupport: async () => ({ supported: true }),
+      loadEngine: async () =>
+        ({
+          delete: async () => {
+            deletes += 1;
+          },
+        }) as unknown as Engine,
+    });
+    await controller.initialize();
+    await Promise.all([controller.dispose(), controller.dispose()]);
+    assert.equal(controller.engine, undefined);
+    assert.equal(deletes, 1);
+  });
+
+  it("publishes disposal with no engine and shares cleanup with reentrant observers", async () => {
+    let release!: () => void;
+    let observerDisposal: Promise<void> | undefined;
+    const controller = new LiteRtLmController({
+      detectSupport: async () => ({ supported: true }),
+      loadEngine: async () =>
+        ({
+          delete: () =>
+            new Promise<void>((resolve) => {
+              release = resolve;
+            }),
+        }) as unknown as Engine,
+    });
+    await controller.initialize();
+    controller.subscribe((state) => {
+      if (state.status !== "disposed") return;
+      assert.equal(controller.engine, undefined);
+      observerDisposal = controller.dispose();
+    });
+    const disposal = controller.dispose();
+    assert.equal(observerDisposal, disposal);
+    let completed = false;
+    void disposal.then(() => {
+      completed = true;
+    });
+    await Promise.resolve();
+    assert.equal(completed, false);
+    release();
+    await disposal;
+  });
 });

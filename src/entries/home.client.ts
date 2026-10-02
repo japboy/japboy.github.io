@@ -12,7 +12,23 @@ import type {
   CareerIntroductionVisitorContext,
 } from "../features/litert-lm/career-introduction.js";
 
-let activeCareerIntroduction: CareerIntroductionController | undefined;
+import {
+  LiteRtLmPageLifecycle,
+  type LiteRtLmPageSession,
+} from "../features/litert-lm/page-lifecycle.js";
+
+let pagePresence: "active" | "suspended" | "disposed" = "active";
+let pageLifecycle: LiteRtLmPageLifecycle | undefined;
+
+addEventListener("pagehide", ({ persisted }: PageTransitionEvent) => {
+  pagePresence = persisted ? "suspended" : "disposed";
+  void pageLifecycle?.hide(persisted);
+});
+addEventListener("pageshow", () => {
+  if (pagePresence === "disposed") return;
+  pagePresence = "active";
+  void pageLifecycle?.show();
+});
 const visitStartedAtMs = performance.now();
 const preferredLanguage = navigator.languages[0] ?? navigator.language;
 const reducedMotionMediaQuery = "(prefers-reduced-motion: reduce)";
@@ -37,16 +53,15 @@ const toCareerIntroductionOutputMode = (
   prefersReducedMotion: boolean,
 ): CareerIntroductionOutputMode => (prefersReducedMotion ? "complete" : "streaming");
 
-const generateCareerIntroduction = async (
+const createCareerIntroductionSession = async (
   engine: Engine,
   hello: XHello,
   Controller: typeof CareerIntroductionController,
   visitorContext: CareerIntroductionVisitorContext,
   reducedMotion: MediaQueryList,
-): Promise<void> => {
+): Promise<LiteRtLmPageSession> => {
   const { cvData } = await import("../data/load-cv.js");
   const controller = new Controller(engine, cvData, visitorContext);
-  activeCareerIntroduction = controller;
   const synchronizeVisibility = ({ detail }: CustomEvent<GreetingVisibilityChangeDetail>): void => {
     if (detail.visible) {
       controller.resume();
@@ -54,8 +69,6 @@ const generateCareerIntroduction = async (
       controller.pause();
     }
   };
-
-  hello.addEventListener("greeting-visibility-change", synchronizeVisibility);
 
   if (!hello.greetingVisible) {
     controller.pause();
@@ -66,18 +79,23 @@ const generateCareerIntroduction = async (
   };
 
   synchronizeMotionPreference(reducedMotion);
-  reducedMotion.addEventListener("change", synchronizeMotionPreference);
-  const unsubscribe = controller.subscribe((state) => {
-    hello.careerIntroduction = toPresentationState(state, visitorContext.preferredLanguage);
-  });
-
-  try {
-    await controller.start();
-  } finally {
-    hello.removeEventListener("greeting-visibility-change", synchronizeVisibility);
-    reducedMotion.removeEventListener("change", synchronizeMotionPreference);
-    unsubscribe();
-  }
+  let unsubscribe: (() => void) | undefined;
+  return {
+    cancel: () => controller.cancel(),
+    dispose: () => {
+      hello.removeEventListener("greeting-visibility-change", synchronizeVisibility);
+      reducedMotion.removeEventListener("change", synchronizeMotionPreference);
+      unsubscribe?.();
+    },
+    start: async () => {
+      hello.addEventListener("greeting-visibility-change", synchronizeVisibility);
+      reducedMotion.addEventListener("change", synchronizeMotionPreference);
+      unsubscribe = controller.subscribe((state) => {
+        hello.careerIntroduction = toPresentationState(state, visitorContext.preferredLanguage);
+      });
+      await controller.start();
+    },
+  };
 };
 
 const initializeHome = async (): Promise<void> => {
@@ -91,7 +109,6 @@ const initializeHome = async (): Promise<void> => {
     import("../features/litert-lm/index.js"),
   ]);
   const hello = document.querySelector("x-hello");
-  let careerIntroductionGeneration: Promise<void> | undefined;
   const visitorContext = createCareerIntroductionVisitorContext(
     preferredLanguage,
     visitStartedAtMs,
@@ -101,37 +118,27 @@ const initializeHome = async (): Promise<void> => {
   if (hello instanceof XHello) {
     liteRtLmController.subscribe((state) => {
       hello.modelLoading = state.status === "loading";
-
-      if (state.status === "ready") {
-        const engine = liteRtLmController.engine;
-
-        if (engine === undefined) {
-          throw new Error("LiteRT-LM reached ready state without an engine");
-        }
-
-        careerIntroductionGeneration ??= generateCareerIntroduction(
-          engine,
-          hello,
-          CareerIntroductionController,
-          visitorContext,
-          reducedMotion,
-        );
-        void careerIntroductionGeneration.catch(() => {
-          hello.careerIntroduction = { status: "fallback" };
-        });
-      }
     });
   }
 
-  void liteRtLmController.initialize();
+  pageLifecycle = new LiteRtLmPageLifecycle(
+    liteRtLmController,
+    async (engine) => {
+      if (!(hello instanceof XHello)) throw new Error("Home greeting is unavailable");
+      return createCareerIntroductionSession(
+        engine,
+        hello,
+        CareerIntroductionController,
+        visitorContext,
+        reducedMotion,
+      );
+    },
+    () => {
+      if (hello instanceof XHello) hello.careerIntroduction = { status: "fallback" };
+    },
+  );
+  if (pagePresence === "active") void pageLifecycle.show();
+  else void pageLifecycle.hide(pagePresence === "suspended");
 };
 
 void initializeHome();
-
-addEventListener(
-  "pagehide",
-  () => {
-    activeCareerIntroduction?.cancel();
-  },
-  { once: true },
-);

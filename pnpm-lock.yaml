@@ -15,8 +15,8 @@ importers:
         specifier: 1.1.8
         version: 1.1.8
       '@litert-lm/core':
-        specifier: 0.17.0
-        version: 0.17.0
+        specifier: 0.17.1
+        version: 0.17.1
       lit:
         specifier: 3.3.3
         version: 3.3.3
@@ -248,8 +248,8 @@ packages:
   '@lit/reactive-element@2.1.2':
     resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==}
 
-  '@litert-lm/core@0.17.0':
-    resolution: {integrity: sha512-B6ecqS0hqWc0H2uTppHtrrX4W/Uwzzypg/IzaDcmh5vnOvsqLFYcdW6SSgDs+SThFNuLCvLmR3IBvpoFiYyQlA==}
+  '@litert-lm/core@0.17.1':
+    resolution: {integrity: sha512-eUxw6ggqZrvNA8Uk/w0TwglRWryn/clrjqHYyfxQWRl0uz5Txmte+qss0u3Dt+X6W/io4G8ADk97LmjMxVRHUg==}
 
   '@litertjs/wasm-utils@2.5.3':
     resolution: {integrity: sha512-4fJiw6tBQnIs+0jH/OQ16nYOiSl8/+zZnn5h2ul8aTKHi05sVqZW580Tmk78pC2kT39A9OYBVdFawteZ/sI1kQ==}
@@ -1366,7 +1366,7 @@ snapshots:
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.6.0
 
-  '@litert-lm/core@0.17.0':
+  '@litert-lm/core@0.17.1':
     dependencies:
       '@litertjs/wasm-utils': 2.5.3
 

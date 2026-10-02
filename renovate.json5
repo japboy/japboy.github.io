@@ -18,7 +18,7 @@
     // Vulnerability remediation is not delayed by this schedule.
     timezone: "Asia/Tokyo",
     schedule: ["* 0-5 * * 1"],
-    prCreation: "not-pending",
+    prCreation: "immediate",
 
     // Keep manifest declarations deterministic and merge only after Renovate
     // observes successful status checks. This does not depend on GitHub's

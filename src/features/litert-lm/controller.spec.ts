@@ -73,4 +73,122 @@ describe("LiteRtLmController", () => {
     assert.deepEqual(await controller.initialize(), { error, status: "failed" });
     assert.equal(controller.engine, undefined);
   });
+
+  it("invalidates pending detection without loading and cannot reinitialize", async () => {
+    let detect!: (value: { supported: true }) => void;
+    let loads = 0;
+    const controller = new LiteRtLmController({
+      detectSupport: () =>
+        new Promise((resolve) => {
+          detect = resolve;
+        }),
+      loadEngine: async () => {
+        loads += 1;
+        return {} as Engine;
+      },
+    });
+    const initialization = controller.initialize();
+    await Promise.resolve();
+    const disposal = controller.dispose();
+    detect({ supported: true });
+    await Promise.all([initialization, disposal]);
+    assert.deepEqual(await controller.initialize(), { status: "disposed" });
+    assert.equal(loads, 0);
+  });
+
+  it("releases an initialized engine exactly once", async () => {
+    let deletes = 0;
+    const controller = new LiteRtLmController({
+      detectSupport: async () => ({ supported: true }),
+      loadEngine: async () =>
+        ({
+          delete: async () => {
+            deletes += 1;
+          },
+        }) as unknown as Engine,
+    });
+    await controller.initialize();
+    await Promise.all([controller.dispose(), controller.dispose()]);
+    assert.equal(controller.engine, undefined);
+    assert.equal(deletes, 1);
+  });
+
+  it("publishes disposal with no engine and shares cleanup with reentrant observers", async () => {
+    let release!: () => void;
+    let observerDisposal: Promise<void> | undefined;
+    const controller = new LiteRtLmController({
+      detectSupport: async () => ({ supported: true }),
+      loadEngine: async () =>
+        ({
+          delete: () =>
+            new Promise<void>((resolve) => {
+              release = resolve;
+            }),
+        }) as unknown as Engine,
+    });
+    await controller.initialize();
+    controller.subscribe((state) => {
+      if (state.status !== "disposed") return;
+      assert.equal(controller.engine, undefined);
+      observerDisposal = controller.dispose();
+    });
+    const disposal = controller.dispose();
+    assert.equal(observerDisposal, disposal);
+    let completed = false;
+    void disposal.then(() => {
+      completed = true;
+    });
+    await Promise.resolve();
+    assert.equal(completed, false);
+    release();
+    await disposal;
+  });
+
+  it("reports late-engine cleanup failure to initialization and every disposal caller", async () => {
+    const cleanupError = new Error("engine deletion failed");
+    let completeLoad!: (engine: Engine) => void;
+    let enteredLoad!: () => void;
+    let failDeletion!: (error: Error) => void;
+    let enteredDeletion!: () => void;
+    let deletes = 0;
+    const loadingStarted = new Promise<void>((resolve) => {
+      enteredLoad = resolve;
+    });
+    const deletionStarted = new Promise<void>((resolve) => {
+      enteredDeletion = resolve;
+    });
+    const controller = new LiteRtLmController({
+      detectSupport: async () => ({ supported: true }),
+      loadEngine: () => {
+        enteredLoad();
+        return new Promise<Engine>((resolve) => {
+          completeLoad = resolve;
+        });
+      },
+    });
+    const initialization = controller.initialize();
+    await loadingStarted;
+    const disposal = controller.dispose();
+    const repeatedDisposal = controller.dispose();
+    assert.equal(repeatedDisposal, disposal);
+    const resultsPromise = Promise.allSettled([initialization, disposal, repeatedDisposal]);
+    completeLoad({
+      delete: () => {
+        deletes += 1;
+        enteredDeletion();
+        return new Promise<void>((_resolve, reject) => {
+          failDeletion = reject;
+        });
+      },
+    } as unknown as Engine);
+    await deletionStarted;
+    failDeletion(cleanupError);
+    for (const result of await resultsPromise) {
+      assert.equal(result.status, "rejected");
+      if (result.status === "rejected") assert.equal(result.reason, cleanupError);
+    }
+    assert.deepEqual(controller.state, { status: "disposed" });
+    assert.equal(controller.engine, undefined);
+    assert.equal(deletes, 1);
+  });
 });

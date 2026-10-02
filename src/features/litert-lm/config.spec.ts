@@ -21,7 +21,7 @@ describe("liteRtLmConfiguration", () => {
       model: {
         name: "Gemma 4 E2B IT",
         sizeInBytes: 2_008_432_640,
-        url: "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/main/gemma-4-E2B-it-web.litertlm",
+        url: "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/b3ca0d2f076785a8f4b2219ddbd2bdb99954eae1/gemma-4-E2B-it-web.litertlm",
       },
       runtime: {
         maxNumTokens: 4_096,

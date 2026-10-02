@@ -13,19 +13,21 @@ export type LiteRtLmState =
   | { reason: LiteRtLmUnsupportedReason; status: "unsupported" }
   | { status: "loading" }
   | { status: "ready" }
-  | { error: Error; status: "failed" };
+  | { error: Error; status: "failed" }
+  | { status: "disposed" };
 
 export type LiteRtLmStateListener = (state: LiteRtLmState) => void;
 
 type LiteRtLmStatus = LiteRtLmState["status"];
 
 const allowedTransitions = {
-  detecting: ["failed", "loading", "unsupported"],
-  failed: [],
-  idle: ["detecting"],
-  loading: ["failed", "ready"],
-  ready: [],
-  unsupported: [],
+  detecting: ["disposed", "failed", "loading", "unsupported"],
+  disposed: [],
+  failed: ["disposed"],
+  idle: ["detecting", "disposed"],
+  loading: ["disposed", "failed", "ready"],
+  ready: ["disposed"],
+  unsupported: ["disposed"],
 } as const satisfies Record<LiteRtLmStatus, readonly LiteRtLmStatus[]>;
 
 export interface LiteRtLmControllerDependencies {
@@ -56,6 +58,7 @@ export class LiteRtLmController {
   #dependencies: LiteRtLmControllerDependencies;
   #engine: Engine | undefined;
   #initialization: Promise<LiteRtLmState> | undefined;
+  #disposal: Promise<void> | undefined;
   #listeners = new Set<LiteRtLmStateListener>();
   #state: LiteRtLmState = { status: "idle" };
 
@@ -72,8 +75,22 @@ export class LiteRtLmController {
   }
 
   initialize(): Promise<LiteRtLmState> {
-    this.#initialization ??= this.#initialize();
+    if (this.#state.status === "disposed") return Promise.resolve(this.#state);
+    this.#initialization ??= Promise.resolve().then(() => this.#initialize());
     return this.#initialization;
+  }
+
+  dispose(): Promise<void> {
+    if (this.#disposal !== undefined) return this.#disposal;
+    const engine = this.#engine;
+    this.#engine = undefined;
+    this.#disposal = Promise.resolve().then(async () => {
+      await engine?.delete();
+      await this.#initialization;
+    });
+    this.#transition({ status: "disposed" });
+    this.#listeners.clear();
+    return this.#disposal;
   }
 
   subscribe(listener: LiteRtLmStateListener): () => void {
@@ -84,6 +101,7 @@ export class LiteRtLmController {
   }
 
   async #initialize(): Promise<LiteRtLmState> {
+    if (this.#isDisposed()) return this.#state;
     this.#transition({ status: "detecting" });
 
     let support: LiteRtLmSupport;
@@ -91,8 +109,11 @@ export class LiteRtLmController {
     try {
       support = await this.#dependencies.detectSupport();
     } catch (cause) {
+      if (this.#isDisposed()) return this.#state;
       return this.#transition({ error: this.#toError(cause), status: "failed" });
     }
+
+    if (this.#isDisposed()) return this.#state;
 
     if (!support.supported) {
       return this.#transition({ reason: support.reason, status: "unsupported" });
@@ -100,12 +121,24 @@ export class LiteRtLmController {
 
     this.#transition({ status: "loading" });
 
+    let engine: Engine;
     try {
-      this.#engine = await this.#dependencies.loadEngine();
-      return this.#transition({ status: "ready" });
+      engine = await this.#dependencies.loadEngine();
     } catch (cause) {
+      if (this.#isDisposed()) return this.#state;
       return this.#transition({ error: this.#toError(cause), status: "failed" });
     }
+
+    if (this.#isDisposed()) {
+      await engine.delete();
+      return this.#state;
+    }
+    this.#engine = engine;
+    return this.#transition({ status: "ready" });
+  }
+
+  #isDisposed(): boolean {
+    return this.#state.status === "disposed";
   }
 
   #toError(cause: unknown): Error {

@@ -121,18 +121,20 @@ export class LiteRtLmController {
 
     this.#transition({ status: "loading" });
 
+    let engine: Engine;
     try {
-      const engine = await this.#dependencies.loadEngine();
-      if (this.#isDisposed()) {
-        await engine.delete();
-        return this.#state;
-      }
-      this.#engine = engine;
-      return this.#transition({ status: "ready" });
+      engine = await this.#dependencies.loadEngine();
     } catch (cause) {
       if (this.#isDisposed()) return this.#state;
       return this.#transition({ error: this.#toError(cause), status: "failed" });
     }
+
+    if (this.#isDisposed()) {
+      await engine.delete();
+      return this.#state;
+    }
+    this.#engine = engine;
+    return this.#transition({ status: "ready" });
   }
 
   #isDisposed(): boolean {

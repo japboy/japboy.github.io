@@ -34,22 +34,22 @@
   },
   "devDependencies": {
     "@lit-labs/ssr": "4.1.0",
-    "@types/node": "24.19.0",
+    "@types/node": "24.19.1",
     "ajv": "8.20.0",
-    "browserslist": "4.29.2",
+    "browserslist": "4.29.3",
     "browserslist-to-esbuild": "2.1.1",
-    "lefthook": "2.1.14",
+    "lefthook": "2.1.16",
     "oxfmt": "0.71.0",
     "oxlint": "1.86.0",
     "tsx": "4.23.15",
     "typescript": "7.0.2",
-    "vite": "8.3.1",
+    "vite": "8.3.2",
     "vitest": "4.1.11",
     "yaml": "2.9.1"
   },
   "engines": {
     "node": "24.21.0",
-    "pnpm": "11.28.2"
+    "pnpm": "11.28.4"
   },
-  "packageManager": "pnpm@11.28.2"
+  "packageManager": "pnpm@11.28.4"
 }

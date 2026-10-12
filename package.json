@@ -29,7 +29,7 @@
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "7.3.1",
     "@lit-labs/ssr-client": "1.1.8",
-    "@litert-lm/core": "0.17.1",
+    "@litert-lm/core": "0.18.0",
     "lit": "3.3.3"
   },
   "devDependencies": {
@@ -38,18 +38,18 @@
     "ajv": "8.20.0",
     "browserslist": "4.29.3",
     "browserslist-to-esbuild": "2.1.1",
-    "lefthook": "2.1.16",
-    "oxfmt": "0.71.0",
-    "oxlint": "1.86.0",
+    "lefthook": "2.2.1",
+    "oxfmt": "0.72.0",
+    "oxlint": "1.87.0",
     "tsx": "4.23.15",
     "typescript": "7.0.2",
-    "vite": "8.3.2",
+    "vite": "8.3.4",
     "vitest": "4.1.11",
     "yaml": "2.9.1"
   },
   "engines": {
     "node": "24.21.0",
-    "pnpm": "11.28.4"
+    "pnpm": "11.28.5"
   },
-  "packageManager": "pnpm@11.28.4"
+  "packageManager": "pnpm@11.28.5"
 }
